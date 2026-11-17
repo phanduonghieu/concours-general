@@ -1,0 +1,102 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+\usepackage{pst-eucl}
+\usepackage{pstricks-add}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize 1995\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 1995
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\pagestyle{cg}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\parindent0pt
+\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice I}}
+\end{center}
+
+Dans un plan $P$, on se donne un triangle ABC. 
+
+À toute droite $D$, non parallèle à l'un de ses côtés, on associe le point G$_{\text{D}}$, isobarycentre des trois points communs à D et aux droites (AB), (BC) et (CA). 
+
+L'objet de cet exercice est de déterminer l'ensemble $\mathcal{F}$ des points G$_{\text{D}}$ lorsque $D$ varie.
+
+\medskip
+
+\begin{enumerate}
+\item Démontrer, que lorsque $D$ se déplace en restant parallèle à une droite $\delta$, le point G$_{\text{D}}$ décrit une droite $\Delta_{\delta}$.
+\item On suppose, dans cette question seulement, ABC équilatéral. 
+
+Montrer que, lorsque $\delta$ varie, les droites $\Delta_{\delta}$ sont toutes tangentes à un même cercle et déterminer l'ensemble $\mathcal{F}$ dans ce cas.
+\item On revient au cas général. 
+
+Montrer que l'on peut trouver un triangle équilatéral A$'$B$'$C$'$ de l'espace dont le projeté orthogonal sur le plan $P$ est le triangle ABC et en déduire l'ensemble $\mathcal{F}$.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice II}}
+\end{center}
+
+\medskip
+
+Etudier la convergence de la suite $\left(u_n\right)_{n\in \N}$ définie par 
+
+\[\left\{\begin{array}{l c l}
+u_0		&\geqslant 	&0\: \text{et pour tout } n \in  \N :\\
+u_{n+1}	& =			&\sqrt{u_n} + \dfrac{1}{n + 1}\\
+\end{array}\right.\]
+
+\begin{center}\textbf{{\color{blue} Exercice III}}
+\end{center}
+
+\medskip
+
+Dans le plan, on considère $\Gamma_1, \: \Gamma_2$ et $\Gamma_3$ trois cercles de rayon $R$ passant par le point O,et on note $D$ l'ensemble des points du plan intérieurs à au moins deux de ces cercles.
+
+Comment doit-on placer $\Gamma_1, \: \Gamma_2$ et $\Gamma_3$ pour que l'aire de $D$ soit minimale ? 
+
+Justifier votre réponse.
+
+\begin{center}\textbf{{\color{blue} Exercice IV}}
+\end{center}
+
+\medskip
+
+Soient A$_1$, A$_2$, A$_3$, B$_1$, B$_2$, B$_3$ six points du plan tels que l'on ait pour tous les entiers $i$ et $j$ de $\{1,\: 2,\: 3\}$ :
+
+\[\text{A}_i\text{B}_j = i + j.\]
+
+Que peut-on dire de ces six points ?
+
+\end{document}

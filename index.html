@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concours Général des Lycées — Mathématiques (1990–2025)</title>
+<style>
+  :root{
+    --bg:#f6f4ef; --paper:#fffdf9; --ink:#1d2430; --muted:#6b7280;
+    --accent:#8a1f1f; --accent2:#b4863c; --line:#e5e0d6; --shadow:0 10px 30px rgba(31,41,55,.10);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* ---------- Hero ---------- */
+  header.hero{
+    background:
+      radial-gradient(1200px 400px at 80% -10%, rgba(180,134,60,.18), transparent 60%),
+      linear-gradient(180deg,#20160f 0%,#3a271a 100%);
+    color:#f4ede2;padding:56px 24px 48px;text-align:center;position:relative;
+    border-bottom:4px solid var(--accent2);
+  }
+  header.hero .kicker{letter-spacing:.32em;text-transform:uppercase;font-size:.72rem;color:#d9c49b;margin:0 0 14px}
+  header.hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);margin:0;line-height:1.1}
+  header.hero .sub{font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.5vw,1.5rem);color:#e8dcc6;margin:10px 0 0}
+  header.hero .meta{margin-top:22px;font-size:.9rem;color:#cbb9a0}
+  header.hero .meta a{color:#f0d9ad}
+
+  /* ---------- Layout ---------- */
+  main{max-width:1120px;margin:0 auto;padding:0 20px 80px}
+
+  .intro{
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:22px 26px;margin:-34px auto 34px;max-width:860px;position:relative;z-index:2;
+  }
+  .intro p{margin:.4em 0}
+  .intro .small{color:var(--muted);font-size:.86rem}
+
+  h2.section-title{
+    font-family:var(--serif);font-size:1.5rem;margin:40px 0 16px;padding-bottom:8px;
+    border-bottom:2px solid var(--line);color:#2a211a;
+  }
+
+  /* ---------- Table of contents ---------- */
+  .decade{margin-bottom:30px}
+  .decade h3{
+    font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent2);margin:0 0 12px;font-weight:700
+  }
+  .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px}
+  .toc-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 12px;
+    text-align:center;cursor:pointer;transition:.15s ease;box-shadow:0 1px 2px rgba(0,0,0,.03);
+    display:flex;flex-direction:column;gap:4px;align-items:center;color:var(--ink)
+  }
+  .toc-card:hover{transform:translateY(-3px);border-color:var(--accent2);box-shadow:var(--shadow);text-decoration:none}
+  .toc-card .yr{font-family:var(--serif);font-size:1.5rem;font-weight:700;line-height:1}
+  .toc-card .pp{font-size:.72rem;color:var(--muted)}
+  .toc-card.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .toc-card.active .pp{color:#f1d6d6}
+
+  /* ---------- Viewer ---------- */
+  #reader{margin-top:28px;scroll-margin-top:16px}
+  .reader-bar{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    background:#2a211a;color:#f4ede2;border-radius:12px 12px 0 0;padding:14px 18px;
+  }
+  .reader-bar .yr-title{font-family:var(--serif);font-size:1.35rem;font-weight:700;margin:0}
+  .reader-bar .spacer{flex:1}
+  .reader-bar .nav-btn,.reader-bar .dl{
+    font-size:.85rem;border:1px solid rgba(255,255,255,.3);color:#f4ede2;background:transparent;
+    padding:6px 12px;border-radius:999px;cursor:pointer;transition:.15s
+  }
+  .reader-bar .nav-btn:hover,.reader-bar .dl:hover{background:rgba(255,255,255,.14);text-decoration:none;color:#fff}
+  .reader-bar .nav-btn[disabled]{opacity:.35;cursor:not-allowed}
+  .viewer-wrap{
+    background:#3a3a3a;border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;
+    overflow:hidden;box-shadow:var(--shadow)
+  }
+  #pdfFrame{width:100%;height:82vh;min-height:520px;border:0;display:block;background:#525252}
+  .fallback{padding:16px 18px;background:#fff6f6;color:#7a2b2b;font-size:.9rem;border-top:1px solid var(--line)}
+
+  footer{max-width:1120px;margin:0 auto;padding:30px 20px 60px;color:var(--muted);font-size:.85rem;text-align:center}
+  .backtop{position:fixed;right:18px;bottom:18px;background:var(--accent);color:#fff;border-radius:999px;
+    padding:10px 16px;font-size:.85rem;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s}
+  .backtop.show{opacity:1;pointer-events:auto}
+
+  /* Bouton principal « ouvrir le PDF » — surtout utile sur mobile */
+  .open-pdf{display:inline-block;margin:14px 0 2px;background:var(--accent);color:#fff;
+    padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;box-shadow:var(--shadow)}
+  .open-pdf:hover{background:#731919;text-decoration:none;color:#fff}
+  .mobile-hint{display:none;margin:4px 0 0;color:var(--muted);font-size:.82rem}
+
+  /* ---------- Responsive / mobile ---------- */
+  @media (max-width:640px){
+    header.hero{padding:40px 18px 34px}
+    main{padding:0 13px 60px}
+    .intro{margin:-24px auto 24px;padding:17px 17px}
+    h2.section-title{font-size:1.25rem;margin:30px 0 14px}
+    .toc-grid{grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:9px}
+    .toc-card{padding:11px 7px}
+    .toc-card .yr{font-size:1.25rem}
+    .toc-card .pp{font-size:.66rem}
+    .reader-bar{gap:8px;padding:12px 13px}
+    .reader-bar .yr-title{font-size:1.1rem;flex-basis:100%}
+    .reader-bar .spacer{display:none}
+    .reader-bar .nav-btn,.reader-bar .dl{padding:8px 13px;font-size:.82rem}
+    #pdfFrame{height:66vh;min-height:380px}
+    .mobile-hint{display:block}
+    .backtop{right:12px;bottom:12px;padding:9px 14px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <p class="kicker">Annales · APMEP</p>
+  <h1>Concours Général des Lycées</h1>
+  <p class="sub">Mathématiques — Recueil des énoncés 1990 → 2025</p>
+  <p class="meta">36 années · source&nbsp;:
+    <a href="https://www.apmep.fr/Annales-Concours-General-des-lycees" target="_blank" rel="noopener">apmep.fr</a>
+  </p>
+</header>
+
+<main>
+  <section class="intro">
+    <p>Recueil complet des sujets du <strong>Concours Général de mathématiques</strong>, classés par année.
+       Choisissez une année dans le sommaire ci-dessous pour lire le sujet directement dans la page ;
+       chaque année peut aussi être téléchargée en <strong>PDF</strong> et en source <strong>LaTeX</strong>.</p>
+    <p class="small">Les formules et les figures sont reproduites à l'identique à partir des PDF originaux de l'APMEP.</p>
+  </section>
+
+  <h2 class="section-title">Sommaire — choisissez une année</h2>
+  <div id="toc"></div>
+
+  <section id="reader">
+    <div class="reader-bar">
+      <h3 class="yr-title" id="yrTitle">Concours Général 1990</h3>
+      <span class="spacer"></span>
+      <button class="nav-btn" id="prevBtn" title="Année précédente">◀ Précédent</button>
+      <button class="nav-btn" id="nextBtn" title="Année suivante">Suivant ▶</button>
+      <a class="dl" id="dlPdf" href="#" target="_blank">⤓ PDF</a>
+      <a class="dl" id="dlTex" href="#" target="_blank">⤓ .tex</a>
+    </div>
+    <div class="viewer-wrap">
+      <iframe id="pdfFrame" src="" title="Énoncé"></iframe>
+      <div class="fallback">
+        Si le sujet ne s'affiche pas, votre navigateur bloque peut-être la lecture des PDF locaux —
+        cliquez alors pour <a id="openDirect" href="#" target="_blank">ouvrir directement le PDF</a>.
+      </div>
+    </div>
+    <div style="text-align:center">
+      <a class="open-pdf" id="openPdfBig" href="#" target="_blank">📄 Ouvrir le sujet en plein écran</a>
+      <p class="mobile-hint">Sur téléphone, c'est la meilleure façon de lire le sujet (visionneuse PDF du téléphone).</p>
+    </div>
+  </section>
+</main>
+
+<a href="#top" class="backtop" id="backtop">↑ Haut de page</a>
+
+<footer>
+  Recueil généré à partir des annales APMEP · fichiers par année dans
+  <code>pdf/</code> et <code>tex/</code> · recueil complet&nbsp;:
+  <a href="Concours_General_Maths_1990-2025.pdf">PDF relié (84 p.)</a>
+</footer>
+
+<script>
+  // Années + nombre de pages (métadonnée d'affichage)
+  const PAGES = {1990:2,1991:2,1992:2,1993:2,1994:1,1995:1,1996:2,1997:1,1998:2,1999:1,
+    2000:2,2001:6,2002:2,2003:2,2004:3,2005:2,2006:3,2007:2,2008:1,2009:1,
+    2010:2,2011:1,2012:1,2013:1,2014:2,2015:2,2016:3,2017:3,2018:3,2019:3,
+    2020:3,2021:3,2022:4,2023:3,2024:5,2025:5};
+  const YEARS = Object.keys(PAGES).map(Number).sort((a,b)=>a-b);
+  const pdfPath = y => `pdf/CG_${y}.pdf`;
+  const texPath = y => `tex/CG_${y}.tex`;
+
+  // --- Construire la table des matières par décennie ---
+  const toc = document.getElementById('toc');
+  const decades = {};
+  YEARS.forEach(y=>{ const d=Math.floor(y/10)*10; (decades[d]=decades[d]||[]).push(y); });
+  Object.keys(decades).map(Number).sort((a,b)=>a-b).forEach(d=>{
+    const wrap=document.createElement('div'); wrap.className='decade';
+    const h=document.createElement('h3'); h.textContent=`Années ${d}`; wrap.appendChild(h);
+    const grid=document.createElement('div'); grid.className='toc-grid';
+    decades[d].forEach(y=>{
+      const a=document.createElement('a'); a.className='toc-card'; a.href=`#y${y}`; a.id=`card${y}`;
+      a.dataset.year=y;
+      a.innerHTML=`<span class="yr">${y}</span><span class="pp">${PAGES[y]} page${PAGES[y]>1?'s':''}</span>`;
+      a.addEventListener('click',e=>{e.preventDefault(); show(y, true);});
+      grid.appendChild(a);
+    });
+    wrap.appendChild(grid); toc.appendChild(wrap);
+  });
+
+  // --- Afficher une année ---
+  let current=null;
+  const frame=document.getElementById('pdfFrame');
+  const yrTitle=document.getElementById('yrTitle');
+  const dlPdf=document.getElementById('dlPdf');
+  const dlTex=document.getElementById('dlTex');
+  const openDirect=document.getElementById('openDirect');
+  const prevBtn=document.getElementById('prevBtn');
+  const nextBtn=document.getElementById('nextBtn');
+
+  function show(y, scroll){
+    current=y;
+    frame.src=pdfPath(y)+'#view=FitH';
+    yrTitle.textContent=`Concours Général ${y}`;
+    dlPdf.href=pdfPath(y); dlTex.href=texPath(y); openDirect.href=pdfPath(y);
+    document.getElementById('openPdfBig').href=pdfPath(y);
+    document.querySelectorAll('.toc-card').forEach(c=>c.classList.toggle('active', +c.dataset.year===y));
+    const i=YEARS.indexOf(y);
+    prevBtn.disabled=(i<=0); nextBtn.disabled=(i>=YEARS.length-1);
+    if(scroll) document.getElementById('reader').scrollIntoView({behavior:'smooth'});
+    history.replaceState(null,'',`#y${y}`);
+  }
+  prevBtn.addEventListener('click',()=>{const i=YEARS.indexOf(current); if(i>0) show(YEARS[i-1], true);});
+  nextBtn.addEventListener('click',()=>{const i=YEARS.indexOf(current); if(i<YEARS.length-1) show(YEARS[i+1], true);});
+
+  // Année initiale (depuis l'ancre #yXXXX ou la première)
+  const m=location.hash.match(/#y(\d{4})/);
+  show((m && PAGES[+m[1]]) ? +m[1] : YEARS[0], false);
+
+  // Bouton retour en haut
+  const bt=document.getElementById('backtop');
+  addEventListener('scroll',()=>bt.classList.toggle('show', scrollY>500));
+</script>
+</body>
+</html>

@@ -1,0 +1,711 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=0.95cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.7cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	\renewcommand{\footruleskip}{-1pt}						% Ecart vertical entre la ligne du bas et le texte en bas de page (texte foot)
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+%Tapuscrit : Christian Marguerite
+\setlength{\parindent}{0pt}
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+\chapter{Concours général des lycées - Session 2024}
+
+\section{Problème 1 : étude d'une suite}
+
+Pour tout réel $a \geqslant 0$, on appelle suite associée à $\alpha$ la suite $\left(u_n\right)$ définie par $u_0 = \alpha$ et
+\[ u_{n+1} = \dfrac{1}{n + 1} + \sqrt{u_n}\:\: \text{pour tout entier }\:\:n\geqslant 0.\]
+
+
+\begin{center}\textbf{Partie 1 : Généralités}\end{center}
+
+\begin{enumerate}
+\item Soit $\alpha$ un réel positif. Démontrer que la suite $\left(u_n\right)$ associée à $\alpha$ vérifie $u_n \geqslant 0$, pour tout entier $n \geqslant 0$.
+\item Soit $\alpha$ et $\beta$ deux réels tels que $0 \leqslant \alpha \leqslant \beta$. On note $\left(u_n\right)$ la suite associée à $\alpha$ et $\left(v_n\right)$ la suite associée
+à $\beta$.
+
+Démontrer que $u_n \leqslant v_n$, pour tout entier $n \geqslant 0$.
+\item On note $\left(w_n\right)$ la suite associée à 0. Démontrer que $w_n \geqslant 1$, pour tout entier $n \geqslant 1$.
+\item Soit $\alpha$  un réel positif ou nul. On suppose que la suite $\left(u_n\right)$ associée à $\alpha$  converge vers un réel $\ell$.
+
+Déterminer la valeur de $\ell$.
+\item Soit $\alpha$ un réel tel que $\alpha > \dfrac{3 + \sqrt 5}{2}$.
+
+Justifier que la suite associée à $\alpha$ est strictement décroissante.
+
+Que peut-on en déduire en terme de convergence ?
+\end{enumerate}
+
+\begin{center}\textbf{Partie 2 : Un cas particulier}\end{center}
+
+Dans toute cette partie, on note $\left(t_n\right)$ la suite associée à 4 et on définit la suite $\left(s_n\right)$ par 
+\begin{center}$s_n =  n\left(t_n - 1\right)$, pour tout entier $n \geqslant 0$.
+
+\begin{enumerate}[resume]
+\item Démontrer, pour tout entier $n \geqslant 1$ , l'encadrement:
+\[1 + \dfrac 2n \leqslant t_n \leqslant 1 + \dfrac 3n.\]
+
+\item Démontrer, pour tout entier $n \geqslant 1$, l'encadrement:
+\[2 \leqslant s_n \leqslant 2 + \dfrac 6n.\]
+
+\item Déterminer la limite de $\dfrac{t_n - 1 - \dfrac 2n}{\dfrac 1n}$
+ quand $n$ tend vers $+\infty$.
+\end{enumerate}
+
+\bigskip
+
+\begin{center}\textbf{Partie 3 : Retour au cas général}\end{center}
+
+\begin{enumerate}[resume]
+\item Soit $\alpha$  un réel positif ou nul. La suite $\left(u_n\right)$ associée à $\alpha$ est-elle convergente ?
+
+\item Déterminer la limite de $\dfrac{u_n - 1 - \dfrac 2n}{\dfrac 1n}$
+quand $n$ tend vers $+\infty$.
+\end{enumerate}
+
+\medskip
+
+\section{Problème 2 : bonbons cachés}
+
+\bigskip
+
+\textbf{Partie 1 : Sophie et Germain testent trois boîtes}
+\end{center}
+
+\smallskip
+
+Germain dispose de trois boîtes opaques. Il propose un jeu à Sophie qui pourrait permettre à cette dernière de gagner un paquet de bonbons.
+
+\medskip
+
+\begin{enumerate}
+\item Dans un premier temps, après avoir caché un paquet de bonbons dans l'une de ces boîtes en laissant les deux autres boîtes vides, Germain propose à Sophie de choisir une de ces trois boîtes et de l'ouvrir pour en remporter le contenu éventuel.
+
+Comme les boîtes sont opaques, Sophie en choisit une au hasard.
+
+Avec quelle probabilité choisit-elle la boîte contenant le paquet de bonbons ?
+\item Dans un second temps, après avoir caché à nouveau un paquet de bonbons dans l'une de ces trois boîtes en laissant les deux autres boîtes vides, Germain propose à Sophie un jeu qui comporte deux tours:
+
+\begin{itemize}
+\item Au premier tour, Sophie choisit une des trois boîtes disposées devant elle, la désigne à Germain mais ne l'ouvre pas.
+\item Au second tour, Germain élimine une boîte vide parmi les deux boîtes que Sophie n'a pas choisies, puis laisse à Sophie la possibilité de modifier son choix.
+\end{itemize}
+
+Une fois ce second tour achevé, Sophie ouvre la boîte qu'elle a choisie et découvre si elle a gagné le paquet de bonbons.
+
+	\begin{enumerate}
+		\item Si, au second tour, Sophie décide de conserver le choix fait au premier tour, quelle probabilité a-t-elle de gagner?
+		\item Si, au second tour, elle décide de modifier le choix fait au premier tour, quelle probabilité a-t- elle de gagner?
+		\item Quelle est la meilleure stratégie pour Sophie: conserver son choix initial, ou le modifier?
+	\end{enumerate}
+	
+Dans toute la suite du problème, soit $n$ un entier supérieur ou égal à 3.
+
+Germain dispose de $n$ boîtes opaques, numérotées par un entier entre 1 et $n$. Avant le début du jeu, il cache un paquet de bonbons dans l'une de ces boîtes; les $n - 1$ autres boîtes sont vides.
+
+Sophie et Germain vont jouer selon plusieurs règles différentes.
+
+L'enjeu pour Sophie est dans tous les cas de choisir une boîte en maximisant la probabilité de
+gagner le paquet de bonbons.
+\end{enumerate}
+
+\bigskip
+\begin{center}
+\textbf{Partie 2 : Une stratégie pour Sophie}\end{center}
+
+\begin{enumerate}[resume]
+\item  Après que Germain a caché un paquet de bonbons dans l'une de ces boîtes, un premier jeu se déroule en deux tours:
+
+\begin{itemize}
+\item Au premier tour de jeu, Sophie choisit une boîte, la désigne à Germain mais ne l'ouvre pas.
+\item Au second tour, Germain élimine $n - 2$ boîtes vides parmi les $n -1$ boîtes que Sophie n'a pas choisies, et laisse à Sophie la possibilité de modifier son choix.
+\end{itemize}
+
+Une fois ce second tour achevé, Sophie ouvre la boîte qu'elle a choisie et découvre si elle a gagné le paquet de bonbons.
+
+	\begin{enumerate}
+		\item Avec quelle probabilité Sophie a-t-elle choisi la boîte gagnante au premier tour de jeu?
+		\item Au second tour, Sophie a-t-elle intérêt à conserver son choix initial ou à modifier son choix ?
+	\end{enumerate}
+		
+Pour corser la situation, Sophie et Germain inventent un second jeu qui se déroule maintenant en $n - 1$ tours.
+
+Avant le début du jeu, Germain cache un paquet de bonbons dans une des boîtes.
+
+Au premier tour: Sophie choisit l'une de ces boîtes, la désigne à Germain mais ne l'ouvre pas. Pour chaque $\ell$ entier entre 2 et $n - 1$ :
+
+\begin{itemize}
+\item Lors du $\ell$-ième tour de jeu: Germain élimine, selon son bon plaisir, une boîte parmi le boîtes vides autres que celle que Sophie a choisie au tour précédent; puis il laisse à Sophie la possibilité de modifier son choix.
+\end{itemize}
+
+Une fois ces $n -1$ tours de jeu écoulés Sophie ouvre la boîte qu'elle a choisie au dernier tour et découvre si elle a gagné le paquet de bonbons.
+
+À partir de maintenant, et jusqu'à la fin de ce problème, Sophie et Germain jouent à ce jeu.
+
+\item 
+	\begin{enumerate}
+		\item Si Sophie décide de conserver son choix initial pendant les $n -1$ tours, quelle probabilité a-t-elle de gagner?
+		\item Comment peut-elle procéder pour s'assurer de gagner avec probabilité au moins $(n -1)/ n$ ?
+	\end{enumerate}
+\end{enumerate}
+
+\bigskip
+\begin{center}
+\textbf{Partie 3 : Une stratégie pour Germain}\end{center}
+
+Soit un entier $n \geqslant 3$. Germain et Sophie continuent de jouer à ce même jeu en  $n - 1$ tours. Germain souhaite empêcher Sophie de gagner avec une probabilité strictement supérieure à $(n - 1)/ n$. Pour cela, il adopte la stratégie suivante :
+
+\begin{itemize}
+\item Avant le début du jeu, Germain sélectionne au hasard la boite dans laquelle il cache le paquet de bonbons.
+\item À partir du second tour du jeu et jusqu'à la fin, Germain élimine une boite qu'il sélectionne au hasard parmi les boîtes vides (et non encore éliminées) autres que celle que Sophie vient de choisir.
+\end{itemize}
+
+Pour un entier $\ell$ tel que $1 \leqslant \ell \leqslant n - 1$, on note $s_{\ell}$ le numéro de la boite qu'a choisie Sophie lors du $\ell$-ième tour de jeu.
+
+Pour un entier $\ell$ tel que $2 \leqslant \ell \leqslant n - 1$, on note $g_{\ell}$ le numéro de la boîte qu'a éliminée Germain lors du $\ell$-ième tour de jeu.
+
+Plaçons nous au tour $\ell$ après que Germain a éliminé la boîte numéro $g_{\ell}$.
+
+Soit $b$ le numéro d'une boîte non encore éliminée; on note $p_{\ell}(b)$ la probabilité, connaissant les numéros $s_1,\:s_2, \ldots, S_{\ell - 1}$ et $g_2,\:g_3, \ldots, g_{\ell}$, que la boîte numéro $b$ contienne le paquet de bonbons.
+
+\begin{enumerate}[resume]
+\item Donner, pour tout entier $b$ tel que $1 \leqslant \leqslant  n$, la probabilité $p_1(b)$. 
+\item Soit $\ell$ un entier tel que $2 \leqslant \ell \leqslant n-1$, et soit $b$ un numéro de boîte distinct de $g_2,\:g_3, \ldots, g_{\ell}$.
+
+Démontrer:
+\[\dfrac{p_{\ell}\left(s_{\ell}- 1\right)}{p_{\ell}(b)} = \dfrac{n - \ell}{n + 1 - \ell} \dfrac{p_{\ell - 1}\left(s_{\ell} - 1\right)}{p_{\ell -1}(b)}.\]
+
+\item Soit $\ell$ un entier tel que $2 \leqslant \ell \leqslant n - 1$, et soit $b$ et $c$ deux numéros de boîtes distincts de $g_2,\:g_3, \ldots, g_{\ell}$.
+
+Démontrer :
+
+\[p_{\ell}(b) \geqslant \dfrac{n - \ell}{n - 1}p_{ \ell}(c).\]
+
+\item En déduire que, si Germain applique la stratégie présentée ci-dessus, Sophie ne pourra jamais s'assurer de gagner avec une probabilité strictement supérieure à $(n - 1)/ n$.
+\end{enumerate}
+
+\bigskip
+\begin{center}
+
+\textbf{Partie 4 : Une stratégie pour Sophie et Germain}\end{center}
+
+Évariste, un ami de Sophie et Germain, décide de leur donner un paquet de bonbons s'ils refont une dernière partie (toujours sous les mêmes modalités) et si, à l'issue de ce jeu, Sophie trouve la bonne boite.
+
+Germain a pour obligation de placer le paquet dans une boîte au hasard, sans avoir le droit de communiquer à Sophie la boîte où il a placé le paquet.
+
+Avant de commencer cette ultime partie, Sophie et Germain, peuvent discuter d'une stratégie commune.
+\begin{enumerate}[resume]
+\item Pour quelles valeurs de $n \geqslant 3$, Sophie et Germain peuvent-ils mettre au point une stratégie, commune qui assurera à Sophie de trouver la boîte avec le paquet ?
+\end{enumerate}
+\bigskip
+\section{Problème 3 : intersections et réunions}
+
+\smallskip
+
+Ci-dessous, on note $\N^*$ l'ensemble des entiers naturels non nuls.
+
+Pour tout réel $x$, on note ent$(x)$ la \emph{partie entière inférieure} de $x$ ; il s'agit de l'unique entier relatif $n$ tel que $n \leqslant  x < n + 1$.
+
+Par exemple, ent$(2) = 2$, ent$(9,99) = 9$, ent$(\pi) = 3$, ent$(-2) = -2$, et ent$(- \e) = - 3$.
+
+On note aussi frac$(x)$ la \emph{partie fractionnaire} de $x$ ; il s'agit du réel$ x - \text{ent}(x)$, qui appartient à l'intervalle [0~;~ 1[.
+
+Ainsi, frac$(-2) =$ frac$(2) = 0$, frac$(9,99) = 0,99$, frac$(\pi) = \pi - 3$, et frac$(-\e) = 3 - \e$.
+
+Pour tous les réels $x$ et $y$, on note également max$\{x~;~y\}$ le plus grand des nombres $x$ et $y$, c'est-à-dire leur maximum, et min$\{x~;~y\}$  le plus petit des nombres $x$ et $y$, c'est-à-dire leur minimum.
+
+On rappelle qu'un nombre réel est rationnel lorsqu'il est égal à une fraction de la forme $\dfrac pq$ où $p$ est un entier relatif, $q$ un 
+entier naturel non nul ; lorsque PGCD$(p,\:q) = 1$, on dit que $\dfrac pq$ est une fraction \emph{irréductible}. Un réel est \emph{irrationnel} lorsqu'il n'est pas rationnel.
+
+Enfin, pour tout réel $x > 0$, on note $\mathcal{E}(x)$ l'ensemble
+
+\[\left\{\text{ent}\left(\dfrac nx\right) : n \in \N^*\right\} = \left\{\text{ent}\left(\dfrac 1x\right); \text{ent}\left(\dfrac 2x\right); \text{ent}\left(\dfrac 3x\right) ; \text{ent}\left(\dfrac 4x\right) ; \ldots \right\};\]
+
+il s'agit de l'ensemble des entiers $k \geqslant 0$ pour lesquels il existe un entier $n \geqslant 1$ tel que 
+
+$k \leqslant \dfrac nx < k + 1.$
+
+Cet exercice vise à identifier les réels $\alpha > 0$ et $\beta > 0$ satisfaisant l'une ou l'autre des propriétés suivantes 
+\begin{center}
+\begin{description}
+\item[ ] Propriété \textbf{P}{\small $\cap$} : l'intersection des deux ensembles $\mathcal{E}(\alpha)$ et $\mathcal{E}(\beta)$ est vide;
+\item[ ] Propriété \textbf{P}{\small $\cup$} : la réunion des deux ensembles $\mathcal{E}(\alpha)$ et $\mathcal{E}(\beta)$ est égale à $\N^*$.
+\end{description}
+\end{center}
+
+\bigskip
+
+\begin{center}
+\textbf{Partie 1 : Quelques cas particuliers}\end{center}
+
+\smallskip
+
+\begin{enumerate}
+\item Soit $x$ un réel quelconque.
+	\begin{enumerate}
+		\item Démontrer que $x - 1 < \text{ent}(x) \leqslant x$.
+		\item Soit $n$ un entier relatif et $y$ un réel tel que $0 \leqslant y < 1$. On suppose que $x = n + y$.
+		
+Exprimer $n$ et $y$ en fonction de ent$(x)$ et frac$(x)$.
+	\end{enumerate}
+\item Soit $x$ un réel strictement positif. Calculer $\mathcal{E}(x)$.
+	\begin{enumerate}
+		\item lorsque $x = 1$ ;
+		\item lorsque $x > 1$.
+	\end{enumerate}
+\item Lesquelles des propriétés \textbf{P}{\small $\cap$} et \textbf{P}{\small $\cup$} sont satisfaites 
+	\begin{enumerate}
+		\item lorsque max$\{\alpha~;~\beta\}= 1$ ?
+		\item lorsque max$\{\alpha~;~\beta\} > 1$ ?
+	\end{enumerate}
+\item Soit $x$ un réel quelconque et $n$ un entier naturel non nul.
+	\begin{enumerate}
+		\item Démontrer, pour tout entier $k \geqslant 0$, que ent$\{n\text{frac}(kx))$ appartient à l'ensemble $\{0~;~ 1~;~ \ldots~;~ n -1\}$.
+		\item Démontrer qu'il existe deux entiers $k$ et $\ell$ tels que $0 \leqslant k < \ell \leqslant  n$ et
+\begin{center}ent$(n \text{frac}(kx)) = \text{ent}(n\text{frac}(\ell x))$.\end{center}
+		\item On pose $m = \ell - k$. Démontrer que le nombre frac$(mx)$ appartient à l'un des deux intervalles
+\[\left[0~;~\dfrac 1n\right[ \quad \text{ou}\quad \left[1 - \dfrac 1n~~;~1\right[\]
+		\item On suppose dans cette question que $1 -\dfrac 1n < \text{frac}(mx) < 1$, et on pose 
+
+$u = \text{ent}\left(\dfrac{1}{1 - \text{frac}(mx)}\right)$.
+
+Démontrer que ent$(umx) = u\text{ent}(mx) + u - 1$ et que $0 \leqslant \text{frac}(umx) < \dfrac 1n$.
+		\item Démontrer que, dans tous les cas, il existe un entier $v \geqslant 1$ pour lequel $0 \leqslant \text{frac}(vx) < \dfrac 1n$.
+	\end{enumerate}
+\item On suppose dans cette question que max$\{\alpha~;~ \beta\} < 1$ et que $\alpha$ est égal à un rationnel $\dfrac pq$, où $p$ et $q$ sont des entiers naturels non nuls.
+	\begin{enumerate}
+		\item Déduire de la question 4. que, pour tout réel $\epsilon > 0$, il existe deux entiers naturels non nuls $k$ et $\ell$ tels que $qk \leqslant \dfrac{\ell}{\beta} < qk + \epsilon$.
+		\item Lesquelles des propriétés \textbf{P}{\small $\cap$} et \textbf{P}{\small $\cup$} sont satisfaites?
+	\end{enumerate}
+\end{enumerate}
+	
+\bigskip
+
+\begin{center}
+\textbf{Partie 2 : Partition}\end{center}
+
+\smallskip
+
+L'objectif de cette partie est de démontrer le résultat suivant, que l'on appellera \emph{théorème} A :
+
+Les propriétés \textbf{P}{\small $\cap$} et \textbf{P}{\small $\cup$} sont simultanément satisfaites si et seulement si $\alpha$ et $\beta$ sont deux nombres irrationnels tels que $\alpha + \beta = 1$.
+
+\medskip
+
+\begin{enumerate}[resume]
+\item On suppose dans cette question que $\alpha$ et $\beta$ sont deux nombres irrationnels tels que max$\{\alpha~;~\beta\} < 1$. 
+	\begin{enumerate}
+		\item Démontrer, pour tout entier $n \geqslant 1$, que l'ensemble $\mathcal{E}(a)$ compte ent$(na)$ éléments compris entre 1 et $n - 1$.
+		\item Démontrer que, si $\alpha + \beta > 1$, la propriété \textbf{P}{\small $\cap$} n'est pas satisfaite.
+		\item Démontrer que, si $\alpha + \beta < 1$, la propriété \textbf{P}{\small $\cup$} n'est pas satisfaite.
+	\end{enumerate}
+\item On suppose dans cette question que $\alpha$ et $\beta$ sont deux nombres irrationnels tels que $\alpha + \beta = 1$.
+	\begin{enumerate}
+		\item Démontrer, pour tout entier $n \geqslant 1$, que ent$(n\alpha) + \text{ent}(n\beta) = n - 1$.
+		\item Démontrer, pour tout entier $n \geqslant 1$, que l'on est dans l'une des deux situations suivantes:
+		
+\qquad 1\up{0} ent$((n + 1)\alpha) = \text{ent}(n\alpha) + 1,\: \text{ent}((n + 1)\beta = \text{ent}(n\beta), \:n \in \mathcal{E}(a)$ et $n \notin \mathcal{E}(\beta)$  
+
+\qquad 2\up{0} ent$((n + 1)\alpha) = \text{ent}(n\alpha),\: \text{ent}((n + 1)\beta= \text{ent}(n\beta) + l, n \notin  \mathcal{E}(a)$ et $n \in   \mathcal{E}(\beta)$.
+	\end{enumerate}
+\item Démontrer le théorème A.
+\end{enumerate}
+
+\bigskip
+
+\begin{center}
+\textbf{Partie 3 : Intersection vide}\end{center}
+
+L'objectif de cette partie est de démontrer le résultat suivant, que l'on appellera \emph{théorème} B :
+
+La propriété \textbf{P}{\small $\cap$} est satisfaite si et seulement si $\alpha$ et $\beta$ sont deux nombres irrationnels pour lesquels il existe deux entiers $u \geqslant 1$ et $v \geqslant 1$ tels que $u\alpha  + v\beta = 1$.
+
+\medskip
+
+\begin{enumerate}[resume]
+\item Démontrer que, si $\alpha$ et $\beta$ sont irrationnels et s'il existe deux entiers $u \geqslant 1$ et $v \geqslant 1$ tels que $u\alpha  + v\beta = 1$, la propriété \textbf{P}{\small $\cap$} est bien satisfaite.
+\end{enumerate}
+
+On suppose désormais, pour les questions 10 à 18, que $\alpha$ et $\beta$ sont deux réels strictement positifs pour lesquels la propriété \textbf{P}{\small $\cap$} est satisfaite.
+
+\begin{enumerate}[resume]
+\item Démontrer que $\alpha$ et $\beta$ sont irrationnels et que max$\{\alpha ~;~ \beta\} < 1$.
+\end{enumerate}
+
+\medskip
+
+On adopte maintenant un point de vue géométrique sur le problème. On identifie chaque point du plan à ses coordonnées, et chaque rectangle à un produit cartésien d'intervalles ; ainsi, lorsque $I$ et $J$ sont deux intervalles, on pourra noter $I \times J$ l'ensemble des points de coordonnées $(x~;~y)$ pour lesquels $x \in I$ et $y \in J$.
+
+On note O l'origine du repère, et $\Omega$ l'ensemble des points du plan dont les coordonnées sont de la forme $(k\alpha + m~;~k\beta + n)$, où $k,\:m$ et $n$ sont des entiers relatifs.
+
+\begin{enumerate}[resume]
+\item
+	\begin{enumerate}
+		\item Soit A et B deux points de $\Omega$. Démontrer que la translation de vecteur $\vect{\text{AB}}$ transforme tout point de $\Omega$ en un point de $\Omega$.
+		\item Soit $\ell$ un entier relatif. Démontrer que la symétrie centrale de centre O et l'homothétie de centre O et de rapport $\ell $ c'est-à dire la transformation qui envoie tout point X sur le point Y tel que $\vect{\text{OY}} = \ell \vect{\text{OX}}$, transforment chaque point de $\Omega$ en un point de $\Omega$.
+	\end{enumerate}
+\item Démontrer que, pour chaque point P dans $\Omega$, de coordonnées $(x~;~y)$, il existe un unique triplet d'entiers relatifs $(k~;~m~;~n)$ pour lesquels $x = k\alpha + m$ et $y = k\beta + n$ ; on notera désormais $f$(P) l'entier $k$ ainsi défini.
+\item%13
+	\begin{enumerate}
+		\item Démontrer que l'ensemble $\mathcal{E}(\alpha)$ est formé des entiers $k \geqslant 0$ pour lesquels 
+		
+$0 < \text{frac}((k + 1)\alpha) < \alpha$.
+		\item En déduire que le rectangle $]0~;~\alpha[ \times ]0~;~\beta[$ ne contient aucun point $X$ de $\Omega$ tel que $f(X) \geqslant 1$.
+		\item Soit $\epsilon$ un réel strictement positif. Démontrer que le rectangle $]- \epsilon~;~\epsilon[ \times ]- \epsilon~;~\epsilon[$ contient un
+point $Y$ de $\Omega$ tel que $f(Y) \geqslant 1$.
+		\item En déduire que le rectangle $]0~;~\alpha[ \times [ \times ]0~;~\beta[$ ne contient aucun point de $\Omega$.
+	\end{enumerate}
+\item%14
+	\begin{enumerate}
+		\item Soit $\epsilon$ un réel tel que $0 < \epsilon < \text{min}\{\alpha~;~\beta\}$.
+
+Démontrer que le rectangle $]0~;~\epsilon[ \times ]-\epsilon~;~0[$ contient un point de $\Omega$.
+
+On note Q un point ainsi obtenu lorsque $\epsilon = \dfrac{\text{min}\{\alpha~;~\beta\}}{2}$ et et $(s~;~t)$ ses coordonnées. Pour tout point de coordonnées $(x~;~y)$, on note désormais $g$(P) la quantité : $\dfrac xs - \dfrac yt$.
+		\item Démontrer que, pour tout entier relatif $k$, le rectangle $]ks~;~ (k + 2)s] \times ]kt~;~ (k - 2)t]$ ne contient aucun point de $\Omega$.
+		\item Démontrer que $\Omega$ ne contient aucun point P tel que $1 < g(P)\leqslant  2$.
+		\item Démontrer que tout point P de $\Omega$ tel que $|g(\text{P})| \leqslant 2$ appartient à la droite (OQ).
+		\item Démontrer que, pour tout réel $\epsilon > 0$, il existe un point qui appartient à la fois à la droite (OQ), au rectangle $]0~;~\epsilon[ \times ] -\epsilon~;~0[$ et à l'ensemble $\Omega$.
+		\item Démontrer que toute droite parallèle à (OQ) et passant par un point du rectangle $]0~;~\alpha[ \times [ \times ]0~;~\beta[$ ne contient aucun point de $\Omega$.
+	\end{enumerate}
+\item%15
+Soit $x$ un réel strictement positif, et $\mathcal{H}$ un ensemble de réels contenant $x$ mais aucun élément de l'intervalle ]$0~;~x[$. On suppose, pour tous réels $y$ et $z$ dans $\mathcal{H}$, que $y - z \in \mathcal{H}$.
+
+Démontrer que $\mathcal{H} = \{kx : k \in \Z\}$, c'est-à-dire que $\mathcal{H}$ est l'ensemble des réels de la forme $kx$ où $k$ est un entier relatif.
+
+\item %16
+On note $\Lambda$ l'ensemble des réels $x$ pour lesquels le point de coordonnées $(x~;~0)$ appartient à une droite parallèle à (OQ) et passant par un point de $\Omega$. On pose également $\lambda : \alpha - \dfrac st \beta$.
+
+	\begin{enumerate}
+		\item Démontrer que $\Lambda$ contient $\lambda$ mais aucun élément de l'intervalle $]0~;~\lambda[$.
+		\item En déduire que $\Lambda = \{k \lambda: k \in \Z\}$.
+	\end{enumerate}
+\item%17
+On note $\Gamma$ l'ensemble des entiers $f$(P) obtenus lorsque P est un point de $\Omega$ situé sur la droite (OQ).
+	\begin{enumerate}
+		\item Démontrer que l'ensemble $\Gamma$ contient au moins un entier naturel non nul.
+		\item Soit $\gamma$ le plus petit entier naturel non nul tel que $\gamma \in \Gamma$. Démontrer que $\Gamma= \{k\gamma : k \in  \Z\}$.
+		\item En déduire que la fraction $- \dfrac st$ est un nombre rationnel.
+	\end{enumerate}
+\item%18
+Enfin, on note $\dfrac uv$ le nombre  $- \dfrac st$ sous forme d'une fraction irréductible, puis on note $W$ l'ensemble des entiers relatifs $\ell$ tels que $\dfrac{\ell}{v} \in \Lambda$.
+	\begin{enumerate}
+		\item Démontrer que $u$ et $v$ appartiennent à $W$.
+		\item En déduire que $W = \Z$.
+	\end{enumerate}
+\item%19
+Démontrer le théorème B.
+\end{enumerate}
+
+\bigskip
+\begin{center}
+\textbf{Partie 4 : Réunion et intersections multiples
+}\end{center}
+
+\begin{enumerate}[resume]
+\item Démontrer que la propriété \textbf{P}{\small $\cup$} est satisfaite si et seulement si max$\{\alpha~;~\beta\} = 1$, ou $\alpha$ et $\beta$ sont deux irrationnels strictement plus petits que 1 pour lesquels il existe deux entiers $u \geqslant 1$
+et $v \geqslant 1$ tels que $u(1 - \alpha) + v(1 - \beta) = 1$.
+\item Existe-t-il trois réels strictement positifs $\alpha,\: \beta$ et $\gamma$ pour lesquels les ensembles $\mathcal{E}(\alpha),\: \mathcal{E}(\beta)$ et $\mathcal{E}(\gamma)$ sont deux à deux disjoints ?
+\end{enumerate}
+\end{document}

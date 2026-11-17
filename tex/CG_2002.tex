@@ -1,0 +1,423 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+\chapter{Concours général des lycées - Session 2002}
+
+
+\n \textit{Dans tout le problème, un triangle $A B C$ est la figure déterminée par les trois points $A$, $B$, $C$ supposés non alignés. Conformément à la tradition, les longueurs de ses côtés seront notées $a = B C$, $b = C A$ et $c = A B$, et $\widehat{A}$, $\widehat{B}$ et $\widehat{C}$ sont les mesures en radians, comprises entre 0 et $\pi$, de ses angles.}\\
+
+\n \textit{Les trois premières parties se déroulent dans le plan rapporté à un repère orthonormé direct $(O ; \vec{u}, \vec{v})$ associé aux coordonnées $(x, y)$ (ou $(X, Y))$.}
+
+\section{Première partie}
+
+\n Soit $A B C$ un triangle. On note $P$ le projeté orthogonal du point $A$ sur la droite $(B C)$ et $D$ le symétrique du point $C$ par rapport à la droite $(A P)$.\\
+
+\n On dit que ce triangle est \textit{pseudo-rectangle} en $A$ si $|\widehat{B}-\widehat{C}|=\frac{\pi}{2}$.\\
+On précise qu'il est \textit{pseudo-rectangle en $A$, obtus en $B$} dans le cas où $\widehat{B}-\widehat{C}=\frac{\pi}{2}$.
+
+\begin{enumerate}
+	\item Montrer que le triangle $A B C$ est pseudo-rectangle en $A$ si et seulement si le triangle $A B D$ est rectangle en $A$.
+	\item Montrer que $P A^{2}=P B . P C$ si et seulement si le triangle $A B C$ est rectangle en $A$ ou pseudo-rectangle en $A$.
+	\item Montrer que le triangle $A B C$ est pseudo-rectangle en $A$ si et seulement si son orthocentre est le symétrique du point $A$ par rapport à la droite $(B C)$.
+	\item Soit $R$ le rayon du cercle circonscrit au triangle $A B C$. Montrer que $P B+P C=2 R$ si et seulement si $A B C$ est rectangle en $A$ ou pseudo-rectangle en $A$.
+	\item Montrer que le triangle $A B C$ est pseudo-rectangle en $A$ si et seulement si la droite $(A P)$ est tangente au cercle circonscrit au triangle $A B C$.
+	\item Dans le plan complexe associé au repère orthonormé direct $(O ; \vec{u}, \vec{v})$, on note $\alpha$, $\beta$, $\gamma$ les affixes des points non alignés $A$, $B$, $C$.
+	\begin{enumerate}
+		\item Donner une condition nécessaire et suffisante sur $\frac{(\alpha-\beta)(\alpha-\gamma)}{(\beta-\gamma)^{2}}$ pour que le triangle $A B C$ soit pseudo-rectangle en $A$.
+		\item On suppose $\beta=-\gamma=\e^{i \frac{\pi}{4}}$. Déterminer l'ensemble $\left(E_{1}\right)$ des points $A$ du plan tels que le triangle $A B C$ soit pseudo-rectangle en $A$.
+		\item On suppose $\beta=-\gamma=1$. Déterminer l'ensemble $\left(E_{2}\right)$ des points $A$ du plan tels que le triangle $A B C$ soit pseudo-rectangle en $A$.
+		\item Par quelle transformation géométrique simple passe-t-on de $\left(E_{2}\right)$ à $\left(E_{1}\right)$ ?
+	\end{enumerate}
+\end{enumerate}
+
+\newpage
+
+\section{Deuxième partie}
+
+
+\begin{enumerate}
+	\item Soit $(a, b, c)$ un triplet de réels strictement positifs. Établir l'équivalence des conditions suivantes :
+	\begin{enumerate}
+		\item[i.] il existe un triangle $A B C$ pseudo-rectangle en $A$ et obtus en $B$ tel que $A B=c, B C=a$ et $C A=b$;
+		\item[ii.] $b^{2}-c^{2}=a \sqrt{b^{2}+c^{2}}$;
+		\item[iii.] il existe deux réels $\rho$ et $\theta$ vérifiant $\rho>0,0<\theta<\frac{\pi}{4}$ et $a=\rho \cos 2 \theta, b=\rho \cos \theta$ et $c=\rho \sin \theta$.
+	\end{enumerate}
+	Ces conditions étant réalisées, montrer que $\theta$ mesure l'un des angles du triangle $A B C$. Comment peut-on interpréter géométriquement $\rho$ ?
+	\item Soit $A B C$ un triangle pseudo-rectangle en $A$, obtus en $B$ et dont les longueurs des côtés sont des nombres rationnels; soit $\rho$ et $\theta$ les deux réels définis au \textbf{1.iii.}\\
+	\textit{Dans cette question, on pourra utiliser sans justification les formules trigonométriques suivantes vérifiées par tout réel $\varphi$ pour lequel $\tan \varphi$ est définie :}
+	$$\cos 2 \varphi=\frac{1-\tan ^{2} \varphi}{1+\tan ^{2} \varphi}, \quad \sin 2 \varphi=\frac{2 \tan \varphi}{1+\tan ^{2} \varphi}$$
+	\begin{enumerate}
+		\item Montrer que $\rho$ est rationnel et en déduire que tan $\frac{\theta}{2}$ est rationnel. Soient $p$ et $q$ les entiers strictement positifs et premiers entre eux tels que $\tan \frac{\theta}{2}=\frac{p}{q}$.
+		\item Vérifier que $0<p<q(\sqrt{2}-1)$ et établir l'existence d'un rationnel strictement positif $r$ tel que :
+		\begin{align*}
+		a &=r\left(p^{4}-6 p^{2} q^{2}+q^{4}\right) \\
+		b &=r\left(q^{4}-p^{4}\right) \\
+		c &=2 p q r\left(p^{2}+q^{2}\right)
+		\end{align*}
+	\end{enumerate}
+	\item Montrer réciproquement que les formules du \textbf{2.b.} définissent les longueurs des côtés d'un triangle pseudo-rectangle en $A$, obtus en $B$ et dont les longueurs des côtés sont rationnelles.
+	\item \begin{enumerate}
+		\item Soient $p$ et $q$ deux entiers strictement positifs premiers entre eux. Déterminer le plus grand diviseur commun aux trois entiers $p^{4}-6 p^{2} q^{2}+q^{4}$, $q^{4}-p^{4}$, $2 p q\left(p^{2}+q^{2}\right)$ (on discutera suivant la parité de $p$ et $q$ ).
+		\item Décrire les triplets d'entiers $(a, b, c)$ tels qu'il existe un triangle $A B C$, pseudo-rectangle en $A$ obtus en $B$, tel que $A B=c$, $B C=a$ et $C A=b$.
+	\end{enumerate}
+	\item Résoudre dans $\mathbb{N}^{*}$ l'équation $x^{2}\left(y^{2}+z^{2}\right)=\left(y^{2}-z^{2}\right)^{2}$.
+	\item Résoudre dans $\mathbb{Q}^{*}$ l'équation $x^{2}\left(y^{2}+z^{2}\right)=\left(y^{2}-z^{2}\right)^{2}$.
+	\item Résoudre dans $\mathbb{N}^{*}$ l'équation $x^{2}\left(y^{2}-z^{2}\right)^{2}=\left(y^{2}+z^{2}\right)^{3}$.
+\end{enumerate}
+
+\newpage
+
+\section{Troisième partie}
+
+\n Soit $\mathcal{H}$ la courbe définie par $x \geq 1$ et $y=\sqrt{x^{2}-1}$. Soient $A$ un point de $\mathcal{H}$ et $(r, s)$ le couple de ses coordonnées. On note $\mathcal{A}$ l'aire de la partie du plan définie par les relations $1 \leq x \leq r$ et $y^{2} \leq x^{2}-1$.
+
+\begin{enumerate}
+	\item Calculer $\mathcal{A}$ en fonction de $r$ et de $s$ (on pourra par exemple effectuer une rotation du repère d'angle $-\pi / 4$ ). 
+	\item \textit{Le but de cette question est de retrouver le résultat précédent en utilisant une méthode dont le principe remonte à Fermat, sans doute peu après $1658$ : << De æquationum localium transmutatione et emendatione ad ultimodam curvilineorum inter se vel cum rectilineis comparationem, cui annectitur proportionis geometricæ in quadrandis infinitis parabolis et hyperbolis usu >> (Œuvres complètes, Tome I, pages 225-285)}.\\
+	
+	\n Soient $n$ un entier naturel non nul et $u$ un réel positif tel que $u^{n}=r+s$. Pour tout entier $k$ entre 1 et $n$, on considère le trapèze rectangle $T_{k}$ (éventuellement réduit à un triangle) dont le côté oblique est le segment ayant pour extrémités les points de coordonnées $\left(u^{k-1}, 0\right)$ et $\left(u^{k}, 0\right)$, dont les bases ont pour pente $-1$ et dont l'un des angles droits a pour sommet le point de $\mathcal{H}$ d'abscisse $\frac{u^{k-1}+u^{1-k}}{2}$.
+	\begin{enumerate}
+		\item On définit bien ainsi, pour chaque valeur de $k$, un unique trapèze $T_{k}$ (réduit à un triangle lorsque $k=1$) : illustrer par un croquis.
+		\item Pourquoi peut-on conjecturer que la somme des aires de ces trapèzes admet $\frac{\mathcal{A}+s^{2}}{2}$ comme limite lorsque $n$ tend vers l'infini ?
+		\item Démontrer la conjecture précédente en utilisant une autre suite de trapèzes combinée à la première.
+		\item Retrouver la valeur de $\mathcal{A}$.
+	\end{enumerate}
+	\item Soient $B$ et $C$ les points de coordonnées respectives $(1,0)$ et $(-1,0)$ et $A$ un point de coordonnées $(x, y)$ avec $x \geq 0$ et $y \geq 0$ tel que le triangle $A B C$ soit pseudo-rectangle en $A$.\\
+	
+	\n On note $S$ l'aire du triangle $A B C$ et $S'$ l'aire de la partie du plan constituée des points de la plaque triangulaire définie par le triangle $A B C$ dont les coordonnées $(X, Y)$ vérifient $Y^{2} \leq X^{2}-1$.\\
+	
+	\n Étudier une éventuelle limite lorsque $x$ tend vers l'infini du rapport $\frac{S^{\prime}}{S}$.
+\end{enumerate}
+
+\newpage
+
+\section{Quatrième partie}
+
+\n \textit{Cette partie se déroule dans l'espace rapporté à un repère orthonormé direct $(O ; \vec{u}, \vec{v}, \vec{w})$ associé aux coordonnées $(x, y, z)$.}\\
+
+\n Dans le plan d'équation $z=0$, soit $(C)$ le cercle de centre $O$ et de rayon 1 et soient $T$ et $P$ deux points distincts tels que la droite $(T P)$ soit tangente au cercle $(C)$ en $T$. Soient $B$ et $C$ les intersections de la droite $(O P)$ avec le cercle $(C)$ et $(D)$ la droite perpendiculaire au plan d'équation $z = 0$ passant par $P$.
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item Montrer qu'il existe deux points $A$ et $A^{\prime}$ appartenant à la droite $(D)$ tels que les triangles $A B C$ et $A^{\prime} B C$ soient pseudo-rectangles respectivement en $A$ et $A^{\prime}$; donner une construction simple de ces deux points.
+		\item Montrer que les coordonnées de ces deux points vérifient l'égalité $x^{2}+y^{2}=z^{2}+1$.
+	\end{enumerate}
+	\item Soit $(H)$ l'ensemble des points $A$ et $A^{\prime}$ quand $T$ et $P$ varient.
+	\begin{enumerate}
+		\item Quelle est l'intersection de l'ensemble $(H)$ avec un plan orthogonal à $\vect{w}$ ?
+		\item Quelle est l'intersection de l'ensemble $(H)$ avec un plan contenant la droite $(O ; \vect{w})$ ?
+		\item Montrer que l'ensemble $(H)$ est inclus dans une réunion de droites que l'on précisera.
+	\end{enumerate}
+	\item On s'intéresse dans cette dernière question aux points entiers de l'ensemble $(H)$, c'est-à-dire aux éléments de $(H)$ dont les trois coordonnées sont des nombres entiers.
+	\begin{enumerate}
+		\item Soit $(x, y, z)$ le triplet des coordonnées d'un tel point. Montrer que $x$ ou $y$ est impair.\\
+		On note désormais $\mathcal{S}$ l'ensemble des triplets $(x, y, z)$ d'entiers naturels strictement positifs tels que $x$ est impair et $x^{2}+y^{2}=z^{2}+1$.
+		\item Soit $d$ un entier strictement positif fixé. Démontrer que l'ensemble des éléments $(x, y, z)$ de $\mathcal{S}$ tels que $\operatorname{PGCD}(x+1, y+z)=d$ est l'ensemble vide si $d$ est impair et un ensemble infini si $d$ est pair.
+		\item Soit $m$ un entier naturel impair supérieur ou égal à 3. Combien y a-t-il d'éléments $(x, y, z)$ de $\mathcal{S}$ tels que $x=m$ ?\\
+		Déterminer ces éléments lorsque $m=3$, 5, 7, 9.
+	\end{enumerate}
+\end{enumerate}
+
+
+\end{document}

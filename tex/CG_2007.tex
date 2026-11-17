@@ -1,0 +1,449 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+\chapter{Concours général des lycées - Session 2007}
+
+\section{Problème 1}
+
+\n On appelle fonctions de type $T_{0}$ les fonctions << trinômes >> sur $[-1,1]$, définies par :
+$$t:[-1,1] \rightarrow \mathbb{R}, x \mapsto t(x)=a x^{2}+b x+c$$
+$a$, $b$, $c$ étant des réels quelconques. Pour tout entier naturel non nul $n$, on appelle fonctions de type $T_{n}$ les fonctions de la forme $f+\lambda|g|, \lambda$ étant un réel quelconque et $f$, $g$ des fonctions quelconques de type $T_{n-1}$.
+
+\begin{enumerate}
+	\item Établir que la fonction $\varphi$, définie par $\varphi(x)=0$ pour tout $x$ de $[-1,0]$ et $\varphi(x)=x$ pour tout $x$ de $[0,1]$, est de type $T_{1}$.
+	\item On considère deux fonctions trinômes $t_{1}$ et $t_{2}$ telles que $t_{1}(0)=t_{2}(0)$ et on définit la fonction $f:[-1,1] \rightarrow \mathbb{R}$ telle que :
+	\begin{center}
+	Pour tout réel $x$ de $[-1,0], f(x)=t_{1}(x)$ et pour tout réel $x$ de $[0,1], f(x)=t_{2}(x)$.
+	\end{center}
+	Démontrer qu'il existe un entier naturel $N$ tel que la fonction $f$ soit de type $T_{N}$.
+\end{enumerate}
+
+
+\section{Problème 2}
+
+\n On considère dans cet exercice tous les tableaux carrés à 9 cases dans lesquelles sont placés dans un certain ordre tous les entiers de 1 à 9. Par exemple :
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline 1 & 8 & 7 \\
+\hline 9 & 2 & 4 \\
+\hline 6 & 5 & 3 \\
+\hline
+\end{tabular}
+\end{center}
+
+\n À un tel tableau on associe les produits des éléments de ses lignes (56, 72, 90 dans l'exemple ci-dessus) et les produits des éléments de ses colonnes (54, 80, 84 dans l'exemple ci-dessus).
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item Étant donné un tel tableau, montrer qu'il a au moins une ligne dont le produit des éléments est supérieur ou égal à 72.
+		\item Donner un tableau de ce type dont les trois lignes ont un produit de leurs éléments inférieur ou égal à 72.
+	\end{enumerate}
+	\item Étant donné un tableau de ce type, montrer qu'il a au moins une ligne ou une colonne dont le produit des éléments est supérieur ou égal à 90.
+\end{enumerate}
+
+\newpage
+
+\section{Problème 3}
+
+\n Dans tout l'exercice, étant donné un triangle non aplati $A B C$, on note $a$, $b$ et $c$ les longueurs respectives des côtés $B C$, $C A$ et $A B$. On dira que ce triangle est de type $\mathscr{W}$ si ses médianes issues de $A$ et $B$ sont perpendiculaires.
+
+\subsection{Géométrie}
+
+\begin{enumerate}
+	\item Montrer qu'il existe des triangles $A B C$ tels que l'on ait les relations :
+	$$c^{2}=\frac{b^{2}}{2}=\frac{a^{2}}{3}$$
+	Établir qu'un tel triangle est rectangle en $A$ et qu'il est de type $\mathscr{W}$.
+	\item Dans cette question on se fixe des points $A$ et $B$ et on considère l'ensemble $\Gamma$ des points $C$ tels que le triangle $A B C$ soit de type $\mathscr{W}$.
+	\begin{enumerate}
+		\item Déterminer l'ensemble des points $G$, isobarycentres de $A$, $B$ et $C$, lorsque $C$ décrit $\Gamma$.
+		\item En déduire l'ensemble $\Gamma$. 
+		\item Déterminer l'ensemble des valeurs prises par le rapport $\frac{b}{c}$.
+		\item Représenter l'ensemble des points $H$, orthocentres des triangles $A B C$, lorsque $C$ décrit $\Gamma$ (on se placera dans un repère $(O ; \vec{i}, \vec{j})$ tel que $A$ et $B$ aient pour coordonnées respectives $(-1,0)$ et $(1,0)$ et l'on déterminera une fonction $f$ telle que l'ensemble des points $H$ soit la réunion des deux courbes d'équations respectives $y=f(x)$ et $y=-f(x)$).
+	\end{enumerate}
+	\item Dans cette question on se fixe des points $A$ et $C$ et on considère l'ensemble $\Gamma^{\prime}$ des points $B$ tels que le triangle $A B C$ soit de type $\mathscr{W}$.
+	\begin{enumerate}
+		\item Déterminer l'ensemble $\Gamma^{\prime}$.
+		\item Déterminer l'ensemble des valeurs prises par le rapport $\frac{a}{b}$.
+		\item Déterminer les triangles $A B C$ de type $\mathscr{W}$ ayant un rayon du cercle circonscrit minimal.
+		\item Représenter l'ensemble des points $H$, orthocentres des triangles $A B C$, lorsque $B$ décrit $\Gamma^{\prime}$ (on se placera dans un repère $(O ; \vec{i}, \vec{j})$ tel que $A$ et $C$ aient pour coordonnées respectives $(-1,0)$ et $(-5,0)$).
+	\end{enumerate}
+	\item \begin{enumerate}
+		\item Montrer qu'un triangle $A B C$ est de type $\mathscr{W}$ si, et seulement si, l'on a la relation :
+		\begin{equation}\tag{$\star$}
+		a^{2}+b^{2}=5 c^{2}
+		\end{equation}
+		\item Étant donné des réels strictement positifs $a, b$ et $c$ vérifiant la relation $(\star)$, donner une condition nécessaire et suffisante portant sur le rapport $\frac{a}{b}$ pour que $a$, $b$ et $c$ soient les longueurs des côtés d'un triangle de type $\mathscr{W}$.
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Arithmétique}
+
+\subsubsection{Deux familles de triangles}
+
+\n Dans la suite de l'exercice, on se propose de rechercher les triangles de type $\mathscr{W}$ dont les côtés ont des longueurs entières, en commençant par rechercher l'ensemble $\mathscr{T}$ des triplets $(a, b, c)$ d'entiers naturels strictement positifs vérifiant la relation $(\star)$.\\
+
+\n On remarque que pour qu'un triplet $(a, b, c)$ d'entiers strictement positifs soit élément de $\mathscr{T}$, il suffit qu'il existe un entier strictement positif $m$ tel que le triplet $(m a, m b, m c)$ soit élément de $\mathscr{T}$, de sorte qu'on peut se limiter à rechercher l'ensemble $\mathscr{T}_{1}$ des éléments de $\mathscr{T}$ sans facteur premier commun.
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item Montrer que si $(a, b, c)$ est élément de $\mathscr{T}_{1}$ alors les entiers $a, b$ et $c$ sont premiers entre eux deux à deux.
+		\item Établir que si $(a, b, c)$ est élément de $\mathscr{T}_{1}$ alors $a$ et $b$ sont de parités différentes.
+		\item Montrer que si $(a, b, c)$ est élément de $\mathscr{T}_{1}$ alors $a$ et $b$ ne sont divisibles ni par 3, ni par 4, ni par $5$.
+		\item Soit $(a, b, c)$ un élément de $\mathscr{T}_{1}$. Montrer que $b^{2}-4 a^{2}$ et $a^{2}-4 b^{2}$ sont des multiples de 5.\\
+		En déduire qu'il existe un couple d'entiers $(\alpha, \beta)$ tels que l'on ait $\syst{2 a+b=5 \alpha}{-a+2 b=5 \beta}$ ou $\syst{2 a-b=5 \alpha}{a+2 b=5 \beta}$. Vérifier alors que l'on a $\alpha^{2}+\beta^{2}=c^{2}$, et que $\alpha$ et $\beta$ sont premiers entre eux.
+		\item Si $\alpha$ et $\beta$ sont des entiers premiers entre eux, les entiers $a$ et $b$ qui leur sont associés par les relations ci-dessus sont-ils premiers entre eux ?
+	\end{enumerate}
+\end{enumerate}
+
+\n On admet désormais le résultat suivant : les triplets $(x, y, z)$ d'entiers strictement positifs sans facteur premier commun, vérifiant la relation $x^{2}+y^{2}=z^{2}$ et tels que $y$ soit pair, sont donnés par $x=u^{2}-v^{2}$, $y=2 u v$ et $z=u^{2}+v^{2}$, où $u$ et $v$ sont des entiers strictement positifs premiers entre eux, de parités différentes et tels que $u>v$, déterminés de manière unique.
+
+\begin{enumerate}\setcounter{enumi}{1}
+	\item On dira qu'un triangle est de type $\mathscr{W}_{e}$ s'il est de type $\mathscr{W}$ et si les longueurs $a$, $b$ et $c$ de ses côtés sont des entiers sans facteur premier commun. Montrer que pour tout triangle de type $\mathscr{W}_{e}$, il existe des entiers strictement positifs $u$ et $v$, premiers entre eux, de parités différentes et vérifiant $u>v$, tels que l'une des deux relations suivantes soit vérifiée :
+	\item \begin{equation}\tag{$1$}
+	(a, b, c)=\left(2\left(u^{2}-u v-v^{2}\right), u^{2}+4 u v-v^{2}, u^{2}+v^{2}\right)
+	\end{equation}
+	\begin{equation}\tag{$2$}
+	(a, b, c)=\left(2\left(u^{2}+u v-v^{2}\right),-u^{2}+4 u v+v^{2}, u^{2}+v^{2}\right)
+	\end{equation}
+	\item Déterminer les ensembles de couples $(u, v)$ d'entiers positifs tels que la relation $(1)$ (respectivement $(2)$) conduise à un triangle de type $\mathscr{W}_{e}$.
+	\item Établir qu'un triangle de type $\mathscr{W}_{e}$ est donné par une seule des deux relations $(1)$ ou $(2)$.\\
+	On classe ainsi les triangles de type $\mathscr{W}_{e}$ en deux catégories disjointes, que l'on notera $\mathscr{W}_{1}$ et $\mathscr{W}_{2}$.
+	\item Donner les longueurs des côtés des triangles de type $\mathscr{W}_{e}$ dont le << petit >> côté $c$ a une longueur inférieure ou égale à 50.
+\end{enumerate}
+
+
+\subsubsection{Entiers de la forme $u^{2}-u v-v^{2}$ et leurs diviseurs}
+
+\n On se propose d'étudier les facteurs premiers supérieurs ou égaux à 7 des entiers a et $b$, longueurs des côtés $B C$ et $C A$ d'un triangle de type $\mathscr{W}_{e}$.
+
+\begin{enumerate}
+	\item On note $\omega$ et $\omega^{\prime}$ les solutions de l'équation $x^{2}-x-1=0$.\\
+	Établir la relation $u^{2}-u v-v^{2}=(u-\omega v)\left(u-\omega^{\prime} v\right)$. En déduire que l'ensemble des entiers de la forme $u^{2}-u v-v^{2}$, où $u$ et $v$ sont des entiers relatifs arbitraires, est stable par multiplication.\\
+	Que peut-on dire de l'ensemble des entiers de la forme $u^{2}+4 u v-v^{2}$, où $u$ et $v$ sont des entiers relatifs arbitraires ?
+	\item Soit $p=2 q+1$ un nombre premier strictement supérieur à 5 qui divise un entier de la forme $u^{2}-u v-v^{2}$, où $u$ et $v$ sont des entiers relatifs premiers entre eux.
+	\begin{enumerate}
+		\item Établir les congruences $(2 u-v)^{2} \equiv 5 v^{2}$ modulo $p$ et $(u+2 v)^{2} \equiv 5 u^{2}$ modulo $p$.
+		\item En déduire que $5^{q} \equiv 1$ modulo $p$.
+		\item Soit $j$ un entier compris entre 1 et $q$, on note $r_{j}$ le reste de la division de $5 j$ par $p$. Si $r_{j} \leq q$ on pose $f(j)=r_{j}$ et $\varepsilon(j)=1$; dans le cas contraire on pose $f(j)=p-r_{j}$ et $\varepsilon(j)=-1$, de sorte que l'on a dans tous les cas $1 \leq f(j) \leq q$ et $5 j \equiv \varepsilon(j) f(j)$ modulo $p$.\\
+		Montrer que les entiers $f(1), f(2), \ldots, f(q)$ sont deux à deux distincts et en déduire que le nombre d'entiers $j$, compris entre 1 et $q$ et tels que $\varepsilon(j)=-1$, est pair.
+		\item Pour tout nombre réel $x$, on note $\lfloor x\rfloor$ sa partie entière, à savoir le plus grand entier relatif inférieur ou égal à $x$.\\
+		Montrer que $\left\lfloor\frac{4 p}{10}\right\rfloor-\left\lfloor\frac{3 p}{10}\right\rfloor+\left\lfloor\frac{2 p}{10}\right\rfloor-\left\lfloor\frac{p}{10}\right\rfloor$ est pair, puis que $p \equiv \pm 1$ modulo 10.
+	\end{enumerate}
+	\item Soient $(a, b, c)$ les longueurs des côtés d'un triangle de type $\mathscr{W}_{e}$.
+	\begin{enumerate}
+		\item Montrer que tous les facteurs premiers impairs de $a$ sont congrus à 1 ou à 9 modulo 10.
+		\item Que peut-on dire des facteurs premiers de $b$ ?
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}

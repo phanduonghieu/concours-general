@@ -1,0 +1,393 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+
+\chapter{Concours général des lycées - Session 2011}
+
+
+\section{Problème 1 : C'est dans la boite}
+
+
+\begin{center}
+\psset{xunit=1.45cm,yunit=1.45cm,arrowsize=4pt,plotpoints=1000,algebraic=true,CodeFigColor=black,
+PointSymbol=none}
+\begin{pspicture}(0,0)(6,5)
+\pspolygon(0,0)(6,0)(6,5)(0,5)
+\pspolygon[fillstyle=solid, fillcolor=lightgray](0.44,0.11)(5.82,4.59)(5.56,4.89)(0.18,0.41)
+\pstGeonode[PosAngle={-135,-45,45,135,0,-90,180,90},PointSymbol=none, PointNameSep=0.3](0,0){H}(6,0){E}(6,5){F}(0,5){G}(0.44,0.11){A}(5.82,4.59){B}(5.56,4.89){C}(0.18,0.41){D}
+\pstRightAngle[RightAngleSize=0.2]{F}{E}{H}{}
+\pstRightAngle[RightAngleSize=0.2]{G}{F}{E}{}
+\pstRightAngle[RightAngleSize=0.2]{H}{G}{F}{}
+\pstRightAngle[RightAngleSize=0.2]{E}{H}{G}{}
+\pstRightAngle[RightAngleSize=0.15]{B}{A}{D}{}
+\pstRightAngle[RightAngleSize=0.15]{C}{B}{A}{}
+\pstRightAngle[RightAngleSize=0.15]{D}{C}{B}{}
+\pstRightAngle[RightAngleSize=0.15]{A}{D}{C}{}
+\uput[ul](2.87,2.65){\large 7}
+\uput[u](3,0){\large 6}
+\uput[l](6,2.5){\large 5}
+\pstGeonode[PosAngle={-135,-45},PointSymbol=none,PointName=none](0.28,0.3){I}%(-0.28,0.3){J}
+\cnodeput(-0.4,0.35){J}{$a$}
+\nccurve[angleA=-30,angleB=-160,arrows=->]{J}{I} 
+\end{pspicture}
+\end{center}
+\begin{center}
+Quelles valeurs de $a$ conviennent ?
+\end{center}
+
+\vspace{-0.5cm}
+
+\section{Problème 2 : Rendez la monnaie !}
+
+
+\n Un acheteur a dans son porte-monnaie $n$ pièces. Notons $a_{1}, \ldots, a_{n}$ la valeur faciale de ces pièces - ce sont des nombres entiers strictement positifs. Convenons d'appeler \textit{capacité} de ce porte monnaie le plus grand nombre entier $M$ tel que l'on puisse payer sans rendu de monnaie toute somme (entière) de 1 à $M$. Notons $C\left(a_{1}, \ldots, a_{n}\right)$ la capacité du porte monnaie contenant les pièces $a_{1}, \ldots, a_{n}$.
+
+\begin{enumerate}
+	\item \textbf{Sans rendu.} On suppose dans cette question que l'on a $a_{1}=1$ et $a_{1} \leq a_{2} \leq \ldots \leq a_{n}$.
+	\begin{enumerate}
+		\item Calculer les capacités $C(1,2,4)$, $C(1,2,5)$ et $C(1,2,3,4,5)$.
+		\item Soit $j$ un nombre entier compris entre 1 et $n-1$ et fixons les nombres $a_{1}, \ldots, a_{j}$. À quelle condition sur $a_{j+1}$ a-t-on $C\left(a_{1}, \ldots, a_{j}\right) \neq C\left(a_{1}, \ldots, a_{j}, a_{j+1}\right)$ ?
+		\item Donner une méthode pour calculer $C\left(a_{1}, \ldots, a_{n}\right)$.
+		\item On fixe $n$. Comment choisir les nombres entiers $a_{1}, \ldots, a_{n}$ pour que la capacité $C\left(a_{1}, \ldots, a_{n}\right)$ soit la plus grande possible ?
+	\end{enumerate}
+	\item \textbf{Avec rendu de monnaie.} Le marchand chez qui notre acheteur va faire ses courses possède aussi un porte-monnaie, lui permettant de rendre la monnaie.\\
+	Fixons des nombres entiers $n$ et $p$. Nommons \textit{capacité commune} le plus grand nombre entier $M$ tel que l'on puisse payer (c'est-à-dire accomplir la transaction) toute somme qui soit un nombre entier de 1 à $M$. Comment choisir les porte-monnaies $\left(a_{1}, \ldots, a_{n}\right)$ de l'acheteur et $\left(v_{1}, \ldots, v_{p}\right)$ du vendeur afin qu'ils offrent la plus grande capacité commune possible ?
+\end{enumerate}
+
+\newpage
+
+\section{Problème 3 : La racine du carré}
+
+\n On considère l'ensemble $\mathbb{U}_{m}=\left\{\exp \left(\frac{2 i k \pi}{m}\right) \mid 0 \leq k \leq m-1\right\}$; on rappelle que c'est aussi l'ensemble des racines $m$-ièmes complexes de l'unité, c'est-à-dire l'ensemble des nombres complexes $z$ vérifiant $z^{m}=1$.\\
+
+\n On se donne un entier strictement positif $n$ et on cherche s'il existe une fonction $f: \mathbb{U}_{2n} \longrightarrow \mathbb{U}_{2n}$ vérifiant $f(f(z))=z^{2}$ pour tout $z$ dans $\mathbb{U}_{2n}$.
+
+
+\begin{enumerate}
+	\item Montrer que l'ensemble $\left\{z^{2} \mid z \in \mathbb{U}_{2n}\right\}$ est égal à $\mathbb{U}_{n}$ et qu'il est inclus dans $\mathbb{U}_{2n}$
+	\item On suppose qu'il existe une solution $f$ au problème considéré.
+	\begin{enumerate}
+		\item Vérifier que $f\left(z^{2}\right)=(f(z))^{2}$ pour tout $z$ dans $\mathbb{U}_{2n}$.
+		\item Montrer que $f(z)=f\left(z^{\prime}\right) \Longrightarrow z=\pm z^{\prime}$ et que $f(1)=f(-1)=1$.
+	\end{enumerate}
+	\item Selon la valeur de $n$, existe-t-il un élément de $z$ de $\mathbb{U}_{2n}$ qui vérifie $z^{2}=-1$ ? Si oui, vérifier qu'alors il n'y a pas de fonction $f$ solution.
+	\item Selon la valeur de $n$, existe-t-il un élément de $z$ de $\mathbb{U}_{2n}$ qui vérifie $z^{3}=1$ avec $z \neq 1$ ? Si oui, vérifier qu'alors il n'y a pas de fonction $f$ solution.
+	\item On suppose dans toute la suite de l'énoncé que l'entier $n$ est impair.
+	\begin{enumerate}
+		\item Vérifier que la fonction $g$ de $\mathbb{U}_{n}$ dans lui-même qui à $z$ appartenant à $\mathbb{U}_{n}$ associe $z^{2}$ est bijective.
+		\item On suppose qu'il existe une solution $f$ au problème. Vérifier qu'il existe une application $\varphi: \mathbb{U}_{n} \longrightarrow \mathbb{U}_{n}$ telle que $\varphi \circ \varphi=g$.
+		\item Réciproquement, on suppose qu'il existe une fonction $\varphi: \mathbb{U}_{n} \longrightarrow \mathbb{U}_{n}$ telle que $\varphi \circ \varphi=g$. Construire alors une solution $f$ au problème.
+		\item Exemple : on prend $n=5$, dire s'il existe une solution au problème, si oui en construire une.
+		\item Même question avec $n=7$ puis $n=9$.
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}

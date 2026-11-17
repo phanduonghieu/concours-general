@@ -1,0 +1,493 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+\chapter{Concours général des lycées - Session 2005}
+
+\section{Problème 1}
+
+\n \textit{Dans cet exercice, on se place dans un plan $\mathscr{P}$ muni d'un repère orthonormal direct $(O ; \vec{u}, \vec{v})$.}
+
+\subsection{Préliminaires de géométrie élémentaire}
+
+\begin{enumerate}
+	\item Soient $D$ et $D^{\prime}$ deux droites sécantes en un point $I$, $s$ et $s^{\prime}$ les symétries axiales respectivement d'axes $D$ et $D^{\prime}$.\\
+	Montrer que $s^{\prime} \circ s$ est une rotation, et déterminer ses éléments caractéristiques.
+	\item Soit $A B C$ un triangle équilatéral direct, $O$ le centre du cercle circonscrit à $A C$.\\
+	On désigne par $s_{1}$, $s_{2}$ et $s_{3}$ les symétries axiales respectivement par rapport aux droits $(O A)$, $(O B)$ et $(O C)$ et par $r$ la rotation de centre $O$ d'angle $\frac{2 \pi}{3}$.\\
+	Soit $M$ un point de plan, $M_{1}=s_{1}(M)$, $M_{2}=s_{2}(M)$, $M_{3}=s_{3}(M)$.
+	\begin{enumerate}
+		\item Montrer que $M_{2}=r^{2}\left(M_{1}\right)$ et $M_{3}=r\left(M_{1}\right)$ où $r^{2}$ désigne $r \circ r$.
+		\item Quelle est la nature du triangle $M_{1} M_{2} M_{3}$ ?
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Nombres complexes}
+
+\n L'affixe du vecteur $\vec{u}$ étant 1 et celle du vecteur $\vec{v}$ étant notée $i$ (avec $i^{2}=-1$), comme il est d'usage, on pose $j=\e^{2 i \pi / 3}=-\frac{1}{2}+i \frac{\sqrt{3}}{2}$.\\
+On considère, dans le plan $\mathscr{P}$, les points $O$, $A$, $B$ et $C$ d'affixes respectives 0, 1, $j$ et $j^{2}$.\\
+On désigne par $s_{1}, s_{2}$ et $s_{3}$ les symétries axiales respectivement par rapport aux droites $(O A)$, $(O B)$ et $(O C)$.\\
+Soit enfin $M$ un point quelconque du plan $\mathscr{P}$, d'affixe $z=\rho \e^{i \theta}$, $\rho \in \mathbb{R}^{+}$, $\theta \in \mathbb{R}$.
+
+\begin{enumerate}
+	\item Soient $M_{1}=s_{1}(M)$, $M_{2}=s_{2}(M)$, $M_{3}=s_{3}(M)$.\\
+	Montrer que les points $M_{1}$, $M_{2}$ et $M_{3}$ ont pour affixes respectives $\bar{z}$, $j^{2} \bar{z}$ et $j \bar{z}$.
+	\item Soit $M_{4}$ le symétrique de $M$ par rapport à la droite $(B C)$.\\
+	Montrer le point $J$ d'affixe $-\frac{1}{2}$ est le milieu du segment $\left[M_{1} M_{4}\right]$.\\
+	En déduire l'affixe de $M_{4}$.
+	\item \begin{enumerate}
+		\item À quelle condition les points $M_{2}$, $M_{3}$ et $M_{4}$ sont-ils alignés ?
+	\end{enumerate}
+\end{enumerate}
+
+\n \textit{On suppose désormais que $M_{2}$, $M_{3}$ et $M_{4}$ ne sont pas alignés; on note $\Omega$ le centre du cercle circonscrit au triangle $M_{2} M_{3} M_{4}$.}
+\begin{enumerate}\setcounter{enumi}{3}
+	\item[]	\begin{enumerate}\setcounter{enumii}{1}
+		\item Justifier le fait que $\Omega$ appartient à la droite $\left(O M_{1}\right)$.\\
+		Dans la suite, on note son affixe $\lambda \e^{-i \theta}$ avec $\lambda$ réel.
+		\item Montrer que $\lambda=-\frac{1+2 \rho \cos (\theta)}{\rho+2 \cos (\theta)}$.
+		\item En déduire une expression du rayon $R$ du cercle circonscrit au triangle $M_{2} M_{3} M_{4}$.
+		\item Montrer que ce rayon est égal à 1 si et seulement si : << $\rho=1$ ou $(\rho+\cos (\theta))^{2}=1-3 \cos ^{2}(\theta)$ >>.
+	\end{enumerate}
+	\item Montrer que le cercle circonscrit au triangle $M_{2} M_{3} M_{4}$ est de même rayon que le cercle circonscrit au triangle $M_{1} M_{2} M_{3}$ si et seulement si $M$ appartient à un ensemble $\Gamma$ que l'on précisera géométriquement. Que peut-on dire dans ce cas des deux cercles circonscrits ?
+\end{enumerate}
+
+
+\subsection{Étude de fonctions}
+
+\n On considère l'application $s$ définie pour tout $\theta \in[-\pi ; \pi]$ par $s(\theta)=1-3 \cos ^{3}(\theta)$.
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item Étudier les variations de $s$. Préciser ses extremums, les valeurs de $\theta$ pour lesquelles $s(\theta)$ est nul, l'ensemble $E$ des $\theta \in[-\pi ; \pi]$ tels que $s(\theta) \geq 0$.
+		\item En déduire l'allure de la courbe décrite par le point d'affixe $s(\theta) \e^{i \theta}$ lorsque $\theta$ varie.\\
+		On précisera les points d'intersection avec les axes et éventuellement quelques points particuliers (pour $\theta=\frac{\pi}{6}$, $\frac{\pi}{4}$, $\frac{\pi}{3}$ par exemple).\\
+		On pourra aussi justifier les symétries de la courbe.
+	\end{enumerate}
+	\item Soit la fonction $r_{1}$ définie pour tout $\theta \in E$ par $r_{1}(\theta)=\sqrt{1-3 \cos ^{2}(\theta)}-\cos (\theta)$.
+	\begin{enumerate}
+		\item Déterminer les valeurs de $\theta$ pour lesquelles $r_{1}(\theta)$ est nul.
+		\item En déduire l'allure de la courbe décrite par le point d'affixe $r_{1}(\theta) \e^{i \theta}$ lorsque $\theta$ varie.
+	\end{enumerate}
+	\item Dessiner, sans chercher à être extrêmement précis, l'ensemble des points $M$ tels que le triangle $M_{2} M_{3} M_{4}$ défini dans la partie 2 ait un cercle circonscrit de rayon 1.
+\end{enumerate}
+
+\section{Problème 2}
+
+\n Soit $f:[0 ; 1] \longrightarrow \mathbb{R}$ une fonction numérique définie et continue sur l'intervalle $[0 ; 1]$.\\
+On suppose que $f(0)=f(1)=0$ et que pour tout $x$ réel de l'intervalle $\left[0 ; \frac{7}{10}\right]$, $f\left(x+\frac{3}{10}\right) \neq f(x)$.
+
+\begin{enumerate}
+	\item Démontrer que l'équation $f(x)=0$ a au moins sept solutions sur $[0 ; 1]$.
+	\item Donner un exemple de fonction $f$ vérifiant les hypothèses; on pourra se contenter d'une représentation graphique claire.
+\end{enumerate}
+
+
+\section{Problème 3}
+
+\n On considère dans le plan trois points $A_{0}$, $B$, $C$ non alignés.
+
+\begin{enumerate}
+	\item On désigne par $A_{1}$ le centre du cercle inscrit dans le triangle $A_{0} B C$ (c'est-à-dire le point d'intersection des bissectrices intérieures du triangle $A_{0} B C$ ).\\
+	On poursuit le processus en considérant $A_{2}$, centre du cercle inscrit dans le triangle $A_{1} B C$, etc.\\
+	Ainsi, pour tout $i$ entier naturel, $A_{i+1}$ est le centre du cercle inscrit dans le triangle $A_{i} B C$.\\
+	Démontrer qu'il existe un point $A$, limite de la suite $\left(A_{n}\right)$, c'est-à-dire tel que $A A_{n}$ tende vers 0 et préciser sa position.
+	\item Que devient le résultat précédent si, à chaque étape, pour $i=0,1,2, \ldots$, on prend pour $A_{i+1}$ l'orthocentre du triangle $A_{i} B C$ au lieu du centre du cercle inscrit ?
+\end{enumerate}
+
+
+\section{Problème 4}
+
+\n \textit{Si $m_{1}$ et $m_{2}$ sont deux entiers tels que $m_{1} \leq m_{2}$, on désigne par $\llbracket m_{1} ; m_{2}\rrbracket$ l'ensemble des entiers $k$ tels que $m_{1} \leq k \leq m_{2}$.\\
+Si $a$, $b$ et $n$ sont trois entiers, on note $a=b$ (modulo $n$) lorsque $a$ et $b$ sont congrus modulo $n$, c'est-à-dire lorsque $b-a$ est multiple de $n$.\\
+Dans tout cet exercice, $p$ désigne un nombre premier.}
+
+\subsection{Définition du logarithme discret}
+
+\n Pour tout $A \in \mathbb{N}$, on note $(A \bmod p)$ le reste de la division euclidienne de $A$ par $p$. C'est l'unique entier de $\llbracket 0 ; p-1\rrbracket$ congru à $A$ modulo $p$.\\
+Un entier $x \in\llbracket 1 ; p-1\rrbracket$ est appelé une racine primitive modulo $p$ lorsque l'ensemble des $\left(x^{k} \bmod p\right)$ pour $k \in N$ est l'ensemble $\llbracket 1 ; p-1\rrbracket$, c'est-à-dire lorsque les puissances de $x$, calculées modulo $p$, décrivent $\llbracket 1 ; p-1\rrbracket$ tout entier.\\
+
+\n Ainsi pour $p=5$ :
+\begin{itemize}
+	\item 1 n'est pas racine primitive modulo 5 puisque ses puissances valent toujours 1.
+	\item 2 est racine primitive modulo 5 , puisque :
+	$$\left(2^{0} \bmod 5\right)=1,\left(2^{1} \bmod 5\right)=2,\left(2^{2} \bmod 5\right)=4, \left(2^{3} \bmod 5\right)=3$$
+	\item 3 est racine primitive modulo 5 puisque : 
+	$$\left(3^{0} \bmod 5\right)=1,\left(3^{1} \bmod 5\right)=3,\left(3^{2} \bmod 5\right)=4,\left(3^{3} \bmod 5\right)=2$$
+	\item 4 n'est pas racine primitive de 5 puisque $\left(4^{k} \bmod 5\right)$, $k \in N$ vaut alternativement 1 ou 4.
+\end{itemize}
+
+\begin{enumerate}
+	\item On prend dans cette question $p=7$. Déterminer les racines primitives modulo 7.
+\end{enumerate}	
+
+\n \textit{On admet désormais que, quel que soit le nombre premier $p$, il existe au moins une racine primitive modulo $p$. Dans la suite, on désigne par $g$ une racine primitive modulo $p$.}
+
+\begin{enumerate}\setcounter{enumi}{1}
+	\item \begin{enumerate}
+		\item Montrer que l'ensemble des $\left(g^{k} \bmod p\right)$ pour $k \in\llbracket 0 ; p-2\rrbracket$ est $\llbracket 1 ; p-1\rrbracket$.
+		\item Soit $A \in\llbracket 1 ; p-1\rrbracket$.\\
+		Justifier l'existence et l'unicité d'un entier $a \in\llbracket 1 ; p-2\rrbracket$ tel que $A=\left(g^{a} \bmod p\right)$.
+	\end{enumerate}
+\end{enumerate}	
+
+\n \textit{$a$ est appelé logarithme de base $g$ modulo $p$ de $A$; on le note $\ell(A)$.}
+
+\begin{enumerate}\setcounter{enumi}{2}
+	\item[]	\begin{enumerate}\setcounter{enumii}{2}
+		\item Soit $b$ un entier naturel congru à $a$ modulo $p-1$. Calculer $\left.g^{b} \bmod p\right)$.
+	\end{enumerate}
+	\item Une solution élémentaire pour déterminer $\ell(A)$ consiste à calculer les entiers $\left(g^{k} \bmod p\right)$, pour $k=0,1, \ldots$ jusqu'à trouver $A$.
+	\begin{enumerate}
+		\item Décrire un algorithme qui réalise ce travail.
+		\item Dans cette question, on prend : $p=53$, $A=40$, $g=20$ (on admettra que 20 est bien une racine primitive modulo 53).\\
+		En programmant l'algorithme précédent sur une calculatrice, déterminer $\ell(A)$.
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Calcul du logarithme discret par la méthode d'Adleman}
+ 
+\n \textit{Cette partie exploite le fait que la connaissance des logarithmes de quelques entiers permet de déterminer rapidement le logarithme de tout entier.}
+
+\begin{enumerate}
+	\item On se place dans le cas $p=113$, $g=55$ et on donne $\ell(2)=60$, $\ell(3)=5=$. Trouver $\ell(54)$.
+\end{enumerate}
+
+\n \textit{On suppose choisis, pour la suite de cette partie, des nombres premiers distincts $p_{1}, \ldots, p_{n}$ strictement inférieurs à $p$ et des entiers $a_{1}, \ldots, a_{n}$ tels que, pour tout $i \in\llbracket 1 ; n\rrbracket$, les facteurs premiers de $\left(g^{i} \bmod p\right)$ appartiennent à $\left\{p_{1} ; \cdots ; p_{n}\right\}$.\\
+Pour chaque $i \in\llbracket 1 ; n\rrbracket$, on a ainsi une relation $\left(g^{a_{i}} \bmod p\right)=p_{1}^{e_{i, 1}} p_{2}^{e_{i, 2}} \cdots p_{n}^{e_{i, n}}$ où les $e_{i, j}$ pour $(i, j) \in\llbracket 1 ; n\rrbracket^{2}$, sont des entiers naturels.}
+
+\begin{enumerate}\setcounter{enumi}{1}
+	\item Montrer que, pour tout $i \in\llbracket 1 ; n\rrbracket$,
+	$$a_{i}=e_{i, 1} \ell\left(p_{1}\right)+e_{i, 2} \ell\left(p_{2}\right)+\cdots+e_{i, n} \ell\left(p_{n}\right) \quad(\text { modulo }(p-1))$$
+	\item On prend dans cette question $p=53$, $g=20$, $n=2$, $p_{1}=2$, $p_{2}=5$.
+	\begin{enumerate}
+		\item A l'aide de $g$ et $g^{3}$, déterminer $\ell(2)$ et $\ell(5)$.
+		\item En déduire $\ell(40)$.
+		\item Combien d'entiers de $\llbracket 1 ; 52\rrbracket$ peuvent s'écrire sous la forme $2^{\alpha} 5^{\beta}$, avec $\alpha$ et $\beta$ entiers naturels ?
+	\end{enumerate}
+	\item Soit $A \in\llbracket 1 ; p-1\rrbracket$.
+	\begin{enumerate}
+		\item Montrer que l'ensemble des $\left(g^{s} A \bmod p\right)$ pour $s \in\llbracket 0 ; p-2\rrbracket$ est $\llbracket 1 ; p-1\rrbracket$.
+		\item On suppose connu $s \in N$ tel que $\left(g^{s} A \bmod p\right)$ se factorise à l'aide de $p_{1}, \ldots, p_{n}$ uniquement. Si on suppose connus $\ell\left(p_{1}\right), \ldots \ell\left(p_{n}\right)$, en déduire $\ell(A)$.
+		\item Avec $p=53$ et $g=20$, déterminer $\ell(30)$.
+	\end{enumerate}
+	\item On revient au cas général.
+	\begin{enumerate}
+		\item Quel est le nombre d'entiers de $\llbracket 1 ; p-1\rrbracket$ qui sont une puissance de $p_{1}$ ?
+		\item En déduire la probabilité pour qu'un entier $s \in\llbracket 0 ; p-2\rrbracket$ soit tel que $\left(g^{s} A \bmod p\right)$ soit une puissance de $p_{1}$.
+		\item Montrer que la probabilité $P$ pour qu'un entier $s \in\llbracket 0 ; p-2\rrbracket$ soit tel que $\left(g^{s} A \bmod p\right)$ se factorise à l'aide de $p_{1}$ et $p_{2}$ uniquement vérifie :
+		$$\frac{(\ln (p-1))^{2}}{2(p-1)\left(\ln p_{1}\right)\left(\ln p_{2}\right)} \leq P \leq \frac{1}{p-1}\left(\frac{\ln (p-1)}{\ln p_{1}}+1\right)\left(\frac{\ln (p-1)}{\ln p_{2}}+1\right)$$
+		\item Généraliser le résultat au cas de $n$ nombres premiers $p_{1}, \ldots, p_{n}$.
+	\end{enumerate}
+\end{enumerate}
+
+\end{document}

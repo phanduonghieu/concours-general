@@ -1,0 +1,113 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize Mercredi 22 Mars 2000\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 2000
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\pagestyle{cg}
+\usepackage[left=3.cm, right=3.cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\parindent0pt
+\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice 1}}
+\end{center}
+
+On dispose de $b$ boules blanches et $n$ boules noires - au moins une de
+chaque -, que l'on répartit entre deux urnes de façon qu'aucune d'elles ne
+soit vide~; on note $s$ le nombre de boules dans la première, et $r$ celui
+de ces boules qui sont blanches. L'évènement considéré est le tirage d'une
+boule au hasard dans l'une des urnes choisie au hasard~; le but de
+l'exercice est de déterminer les répartitions rendant maximale la
+probabilité $p$ de tirer une boule blanche.
+
+\medskip
+
+\begin{enumerate}
+\item Exprimer $p$ en fonction de $b, n, r$ et $s$.
+\item Dans cette question, l'on fixe la valeur de $s$ ;
+comment choisir $r$ pour augmenter $p$~?
+\item Résoudre l'exercice.
+\item Quelles généralisations proposez-vous en augmentant les nombres
+de couleurs et d'urnes~?
+\end{enumerate}
+
+\begin{center}\textbf{\color{blue} Problème}
+\end{center}
+
+Ce problème traite des triangles $ABC$ dits cartésiens, c'est-à-dire à
+cotés entiers $BC = a$, $CA = b$ et $AB = c$ dont l'angle en A mesure
+$\frac{2\pi}3$ radians. Sauf avis contraire $ABC $ est supposé cartésien.
+\begin{enumerate}
+\item Notant $H$ son orthocentre orthogonalement projeté en $(U,V,W)$
+	sur les trois cotés, déterminer les nombres rationnels parmi
+	\begin{center}
+$AU,\: BV,\: CW,\: HA,\: HB,\: HC,\: HU, HV,\: HW,\: AW,\: AV,\: BU,\: BW,\: CV $ et $CU$.
+	\end{center}
+\item Notant $I$ son son centre du cercle inscrit, $J$ l'intersection de
+	la bissectrice intérieure en $A$ et des bissectrices extérieures en les
+	autres sommets, et $P, Q $ les intersections de la droite $BC$ et des deux
+	bissectrices en $A$, déterminer les nombres rationnels parmi 
+	
+	\begin{center}$PB,\: PC,\: QB,\:
+	QC,\: AI,\: AJ,\: AP$ et $AQ$.\end{center}
+	
+\item On suppose désormais $b$ et $c$ premiers entre eux. Montrer que,
+	quitte à échanger $b$ et $c$, $a + b - c$ est multiple de $3$ et
+	$a- b + c$  ne l'est pas.
+\item On pose $\dfrac {a + b - c}{3c}=\dfrac pq$ où $p$ et $q$ sont des entiers
+	strictement positifs premiers entre eux.
+	
+Notant $d$ le PGCD de $p(3p + 2q)$
+	et de $q(2p + q)$, calculer $a, b$ et $c$ en fonction de $p, q$ et $d$.
+\item Montrer que $q$ n'est pas multiple de $3$, puis que $d = 1$.
+\item En déduire une condition nécéssaire et suffisante pour qu'un
+	triangle soit cartésien de cotés premiers entre eux puis, par des remarques
+	géométriques, une caractérisation analogue des triangles à cotés entiers
+	$BC = a,\ CA = b$ et $AB = c$ premiers entre eux dont l'angle en $A$ mesure
+	$\frac \pi 3$ radians.
+\end{enumerate}
+
+\begin{center}\textbf{\color{blue} Exercice 2}
+\end{center}
+
+Soient $A, B, C$ trois points deux à deux distincts dans l'espace, $(A)$
+une sphère de centre $A$ et de rayon $r$, et $E$ l'ensemble des nombres
+$R > 0$ tels qu'il existe une sphère $(H)$ de centre $H$ et de rayon $R$ par
+rapport à laquelle les points $B$ et $C$ sont strictement extérieurs
+(c'est à dire par exemple tels que $HB > R$), et les points de $(A)$
+strictement intérieurs.
+
+\medskip
+
+\begin{enumerate}
+\item Dans cette question, $B$ et $C$ sont alignés et strictement extérieurs à $(A)$.
+
+Montrer que $E$ est non vide et majoré.
+	Calculer le plus petit de ses majorants en fonction des données.
+\item Déterminer une condition nécéssaire et suffisante pour $E$ soit non
+	vide et majoré.
+\item Calculer, lorsqu'il existe, le plus petit des majorants de $E$.
+\end{enumerate}
+\end{document}

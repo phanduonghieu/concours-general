@@ -1,0 +1,416 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+
+\chapter{Concours général des lycées - Session 2015}
+
+\section{Problème 1 : Petits poids}
+
+\n Pour tout entier $n$ supérieur ou égal à 2, et toute suite finie de $n$ réels $\left(x_{1}, x_{2}, \ldots, x_{n}\right)$, on appelle \textit{poids} de la suite la plus grande des valeurs $\left|x_{1}\right|,\left|x_{1}+x_{2}\right|, \ldots,\left|x_{1}+x_{2}+\cdots+x_{n}\right|$.\\
+Par exemple, pour $n=4$ et $\left(x_{1}, x_{2}, x_{3}, x_{4}\right)=(4,4,0,-9)$, le poids de la suite est égal à 8, car :
+
+$$\left|x_{1}\right|=4,\left|x_{1}+x_{2}\right|=8,\left|x_{1}+x_{2}+x_{3}\right|=8 \text { et } \quad\left|x_{1}+x_{2}+x_{3}+x_{4}\right|=1$$
+
+\n Pour $\left(x_{1}, x_{2}, x_{3}, x_{4}\right)=(-9,4,0,4)$, le poids est égal à 9, car :
+
+$$\left|x_{1}\right|=9,\left|x_{1}+x_{2}\right|=5,\left|x_{1}+x_{2}+x_{3}\right|=5 \text { et } \quad\left|x_{1}+x_{2}+x_{3}+x_{4}\right|=1$$
+
+\n On remarque que les deux suites finies ci-dessus sont formées des mêmes nombres dans un ordre différent et qu'elles ont des poids différents.
+
+\begin{enumerate}
+	\item Déterminer le poids des suites finies suivantes :
+	\begin{enumerate}
+		\item $(3,5,-6,-8,2)$ (et donc $n=5$).
+		\item $(1,2,3, \ldots, 2014,2015,-2015,-2014, \ldots,-2,-1)$ (et donc $n=4030$).
+		\item Dans chacun des deux exemples précédents, réordonner les termes de façon à obtenir un poids plus petit.
+	\end{enumerate}
+\end{enumerate}
+
+\n On donne à Isabelle et Clara la même suite finie de $n$ réels $\left(x_{1}, x_{2}, \ldots, x_{n}\right)$.\\
+Isabelle veut la réordonner de façon à obtenir une suite finie de poids minimal. Pour cela, elle considère tous les ordres possibles de ces $n$ réels, détermine pour chacun le poids de la suite correspondante, et choisit un ordre pour lequel le poids est minimal. On note $I$ ce poids minimal.\\
+
+De son côté, Clara, plus pressée qu'Isabelle, adopte l'algorithme suivant.\\
+Elle commence par choisir parmi les $n$ réels un nombre, noté $c_{1}$, de sorte que la valeur de $\left|c_{1}\right|$ soit la plus petite possible. Elle choisit ensuite le nombre $c_{2}$ parmi les $n-1$ réels qui restent, afin que la valeur de $\left|c_{1}+c_{2}\right|$ soit la plus petite possible. Plus généralement, après avoir choisi les nombres $c_{1}, \ldots, c_{i}$ parmi les $n$ réels donnés au départ, elle choisit $c_{i+1}$ parmi les $n-i$ restants de sorte que la valeur de $\left|c_{1}+\cdots+c_{i}+c_{i+1}\right|$ soit la plus petite possible.\\
+Elle obtient finalement une suite finie $\left(c_{1}, \ldots, c_{n}\right)$ de $n$ réels. On note $C$ son poids.
+
+\begin{enumerate}\setcounter{enumi}{1}
+	\item Déterminer $I$ et $C$ dans les deux cas suivants.
+	\begin{enumerate}
+		\item $n=3$ et $x_{1}=1$, $x_{2}=2$, $x_{3}=-4$.
+		\item $n=4$ et $x_{1}=1$, $x_{2}=-1$, $x_{3}=2$, $x_{4}=-2$.
+	\end{enumerate}
+	\item Si $n=2$, montrer que $I=C$.
+	\item Si $n=3$, montrer que $C \leq \frac{3}{2} I$.
+	\item Soit $n$ un entier supérieur ou égal à 4 et soit $\left(x_{1}, x_{2}, \ldots, x_{n}\right)$ la suite finie donnée à Isabelle et Clara. On pose :
+	$$M=\max \left(\left|x_{1}\right|,\left|x_{2}\right|, \ldots,\left|x_{n}\right|\right) \quad S=\left|x_{1}+x_{2}+\cdots+x_{n}\right| \quad N=\max (M, S)$$
+	Autrement dit, $M$ est le plus grand des nombres $\left|x_{1}\right|,\left|x_{2}\right|, \ldots,\left|x_{n}\right|$. De même, $N$ est le plus grand des nombres $M$ et $S$.
+	\begin{enumerate}
+		\item Montrer que $S \leq I$.
+		\item Montrer que $M \leq 2 I$.
+		\item Montrer que $C \leq N$.
+		\item En déduire que $C \leq 2 I$.
+		\item Déterminer $n$ réels $x_{1}, x_{2}, \ldots, x_{n}$ tels que $C=2 I$.
+	\end{enumerate}
+\end{enumerate}
+
+
+\section{Problème 2 : Tétraèdres}
+
+\n On appelle \textit{tétraèdre} la donnée, dans l'espace, de quatre points non coplanaires $A$, $B$, $C$, $D$. Les \textit{arêtes} du tétraèdre sont les segments $[A B]$, $[A C]$, $[A D]$, $[B C]$, $[B D]$, $[C D]$.\\
+Dans les questions 3. à \textbf{3.}, $A B C D$ désigne un tétraèdre.
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item Montrer qu'il existe un unique point $G$ tel que $\overrightarrow{G A}+\overrightarrow{G B}+\overrightarrow{G C}+\overrightarrow{G D}=\overrightarrow{0}$.
+		\item Montrer que $\overrightarrow{A G}=\frac{3}{4} \overrightarrow{A G_{A}}$, où $G_{A}$ est le centre de gravité du triangle $B C D$.
+		\item On appelle \textit{médiane} issue de $A$ la droite reliant $A$ au centre de gravité du triangle $B C D$, et on définit de façon analogue les trois autres médianes, issues de $B$, de $C$ et de $D$. Montrer que les médianes sont concourantes au point $G$.
+	\end{enumerate}
+	\item Montrer qu'il existe une unique sphère qui passe par $A$, $B$, $C$, $D$. On l'appelle sphère circonscrite au tétraèdre $A B C D$ et on note $O$ son centre.
+	\item On appelle \textit{hauteur} issue de $A$ la droite passant par $A$ et orthogonale au plan $B C D$. On définit de façon analogue les trois autres hauteurs, issues de $B$, de $C$ et de $D$. On dit qu'un tétraèdre de l'espace est \textit{régulier} si toutes ses arêtes sont de même longueur.
+	\begin{enumerate}
+		\item Est-il vrai que les hauteurs sont concourantes en $O$ si et seulement si le tétraèdre est régulier ?
+		\item Les hauteurs sont-elles nécessairement concourantes ?
+		\item Est-il vrai que les hauteurs sont concourantes en $G$ si et seulement si le tétraèdre est régulier ?
+	\end{enumerate}
+	\item Dans ce qui suit, le produit scalaire de deux vecteurs $\vec{v}$ et $\vec{w}$ est noté $\vec{v} \cdot \vec{w}$.\\
+	Soient $\Delta_{1}, \ldots, \Delta_{4}$ quatre droites distinctes non coplanaires concourantes en un point $H$. Pour $1 \leq i \leq 4$ on choisit un vecteur directeur unitaire $\vec{u}_{i}$ de $\Delta_{i}$ et, pour $1 \leq i, j \leq 4$, on note $c_{i j}=\vec{u}_{i} \cdot \vec{u}_{j}$.
+	\begin{enumerate}
+		\item On suppose qu'il existe un tétraèdre $A_{1} A_{2} A_{3} A_{4}$ dont les hauteurs sont concourantes en $H$ et tel que $A_{j} \in \Delta_{j}$ pour tout $j \in\{1,2,3,4\}$. Montrer que $c_{12} c_{34}=c_{13} c_{24}=c_{14} c_{23}$.
+		\item Réciproquement, si $c_{12} c_{34}=c_{13} c_{24}=c_{14} c_{23} \neq 0$, montrer qu'il existe un tétraèdre $A_{1} A_{2} A_{3} A_{4}$ dont les hauteurs sont concourantes en $H$ et tel que $A_{j} \in \Delta_{j}$ pour tout $j \in\{1,2,3,4\}$.
+	\end{enumerate}
+\end{enumerate}
+
+\newpage
+
+\section{Problème 3 : Moyennes prévisionnelles}
+
+\n Dans ce problème, on considère des suites $\left(u_{n}\right)_{n \in \mathbb{N}^{*}}=\left(u_{1}, u_{2}, \ldots\right)$ à valeurs réelles indexées par les entiers naturels non nuls. On dit que la suite $\left(u_{n}\right)_{n \in \mathbb{N}}$ est de type $\mathscr{M}$ si, pour tout $n \in \mathbb{N}^{*}$, $u_{n}$ est la moyenne des $n$ termes suivants, c'est-à-dire :
+
+$$u_{n}=\frac{u_{n+1}+u_{n+2}+\cdots+u_{2 n-1}+u_{2 n}}{n}$$
+
+\begin{enumerate}
+	\item Soient $\left(u_{n}\right)_{n \in \mathbb{N}^{*}}$ une suite de type $\mathscr{M}$ et $C$ un nombre réel. Que dire de la suite $\left(u_{n}-C\right)_{n \in \mathbb{N}^{*}} ?$
+	\item Montrer que toute suite croissante de type $\mathscr{M}$ est constante.
+	\item Soit $\left(u_{n}\right)_{n \in \mathrm{N}}^{*}$ une suite de type $\mathscr{M}$. On suppose qu'il existe des réels $a$, $b$, $c$ tels que $u_{n}=a n^{2}+b n+c$ pour tout $n \in \mathbb{N}^{*}$. Montrer que $a=b=0$.
+	\item L'objectif de cette question \textbf{4.} est de montrer que toute suite majorée ou minorée de type $\mathscr{M}$ est constante.\\
+	Dans les questions \textbf{a.} et \textbf{b.}, on suppose que $\left(u_{n}\right)_{n \in \mathbb{N}^{*}}$ est une suite de type $\mathscr{M}$ à valeurs positives ou nulles, et on considère un entier $r \in \mathbb{N}^{*}$.
+	\begin{enumerate}
+		\item Soit $p$ un entier tel que $p>r$. Montrer qu'il existe des entiers naturels non nuls $q$ et $q^{\prime}$ tels que $q<p \leq q^{\prime} \leq 2 q$ et $u_{q^{\prime}} \leq u_{q} \leq u_{r}$. En déduire que $u_{p} \leq 3 u_{r}$.
+		\item Pour tout $p \in \mathbb{N}^{*}$, montrer que $u_{v} \leq 3 u_{r}$.\\
+		Dans les questions \textbf{c.} et \textbf{d.}, on suppose que $\left(u_{n}\right)_{n \in \mathbb{N}^{*}}$ est une suite minorée de type $\mathscr{M}$.
+		\item Soit $D$ un réel strictement positif et soit $p \in \mathbb{N}^{*}$. Montrer que si $u_{p}-D$ n'est pas un minorant de la suite $\left(u_{n}\right)$, alors $u_{p}-\frac{3}{2} D$ n'est pas non plus un minorant.
+		\item En déduire que la suite $\left(u_{n}\right)_{n \in N^{*}}$ est constante.
+		\item Conclure.
+	\end{enumerate}
+	\item Existe-t-il une suite non constante de type $\mathscr{M}$ ?
+\end{enumerate}
+
+\end{document}

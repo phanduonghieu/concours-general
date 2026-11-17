@@ -1,0 +1,552 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+
+\chapter{Concours général des lycées - Session 2006}
+
+
+\section{Problème 1}
+
+\n Si $n$ est un entier naturel strictement positif, on note $\overline{a_{i} a_{i-1} \ldots a_{1} a_{0}}$ son écriture décimale. On a donc $n=10^{i} a_{i}+10^{i-1} a_{i-1}+\cdots+10 a_{1}+a_{0}$, les entiers $a_{j}$, $0 \leq j \leq i$, sont compris entre 0 et 9, et $a_{i} \neq 0$.\\
+On désigne par $q$ un entier compris, au sens large, entre 1 et 9, on pose $p=10 q-1$ et l'on considère la fonction $f_{q}$ qui à l'entier $n=\overline{a_{i}} a_{i-1} \ldots a_{1} a_{0}$ associe l'entier :
+
+$$f_{q}(n)=\overline{a_{i} a_{i-1} \ldots a_{1}}+q a_{0} \text{ si } i=0, \text{ alors } f_{q}(n)=q a_{0} )$$
+
+\n Enfin, l'entier $q$ étant fixé, on associe à tout entier $n$ la suite $\left(n_{k}\right)$ définie par les relations $n_{0}=n$ et, pour tout entier naturel $k$, $n_{k+1}=f_{q}\left(n_{k}\right)$. Par exemple, si l'on fixe $q=5$, la suite associée à 4907 est $4907$, $525$, $77$, 42, 14, 21, 7, 35, 28, 42, 14,$\ldots$
+
+\begin{enumerate}
+	\item Vérifier que $f_{q}(n)=\frac{n+p a_{0}}{10}$. En déduire que $f_{q}(p)=p$.
+	\item \begin{enumerate}
+		\item Montrer que, si $m>p$, alors $f_{q}(m)<m$.
+		\item En déduire que pour tout entier $n$, il existe un entier $j$ tel que $n_{j} \leq p$.
+	\end{enumerate}
+	\item \begin{enumerate}
+		\item Montrer que, si $m<p$, alors $f_{q}(m)<p$.
+		\item En déduire que pour tout entier $n$, la suite $\left(n_{k}\right)$ est périodique à partir d'un certain rang, c'est-à-dire qu'il existe des entiers $k$ et $T$ $(T>0)$ tels que $n_{j+T}=n_{j}$ pour tout $j \geq k$.
+	\end{enumerate}
+	\item Établir que, pour tout entier $n$, $f_{q}(n)$ est congru à $q \times n$ modulo $p$.
+	\item Pour quelles valeurs de $q$ la fonction $f_{q}$ a-t-elle des points fixes (c'est-à-dire des entiers $m$ tels que $f_{q}(m)=m$) autres que $p$ ? Quels sont alors ces points fixes ?
+	\item Montrer que, pour des choix convenables de $q$, l'étude de la suite $\left(n_{k}\right)$ associée à un entier $n$ fournit des critères de divisibilité de $n$ par 9, 19, 29, 13, 49 et 7. Énoncer ces critères.
+\end{enumerate}
+
+
+\section{Problème 2}
+
+\subsection{Partie 1}
+
+\n Soit $a$ un nombre réel tel que $0<a<1$.\\
+Dans le plan rapporté à un repère orthonormal, soit $\mathscr{H}$ l'ensemble d'équation $(1-x)(1-y)=a$ et soit $\mathscr{H}_{1}$ l'ensemble des points de coordonnées $(x, y)$ de $\mathscr{H}$ tels que $0 \leq x \leq 1$ et $0 \leq y \leq 1$.
+
+\begin{enumerate}
+	\item Préciser la nature de $\mathscr{H}$. Représenter $\mathscr{H}$ et $\mathscr{H}_{1}$.
+	\item Montrer que, quand le point de coordonnées $(x, y)$ décrit $\mathscr{H}_{1}$, la somme $x+y$ décrit un intervalle que l'on précisera.
+	\item Déterminer l'ensemble des valeurs de $x^{2}+y^{2}$ quand le point de coordonnées $(x, y)$ décrit $\mathscr{H}_{1}$.\\
+	\textit{Indication} : On pourra montrer que si $(x, y)$ sont les coordonnées d'un point de $\mathscr{H}$ et si $s=x+y$, alors :
+	$$x^{2}+y^{2}=s^{2}-2 s+2-2 a$$
+	\textit{Les résultats des deux questions suivantes n'interviennent pas dans le reste de l'exercice.}
+	\item Déterminer, en discutant selon la valeur de $a$, le nombre de points d'intersection de $\mathscr{H}_{1}$ et du cercle de centre $O$ et de rayon $\sqrt{2}\left(1-\sqrt{a}\right)$.
+	\item Déterminer l'aire du domaine limité par $\mathscr{H}_{1}$ et les axes de coordonnées.\\
+	En déduire, pour $a \in\left[\frac{1}{4}, 1[\right[$, l'inégalité :
+	$$\frac{\pi}{2}(1-\sqrt{a})^{2} \leq 1-a+a \ln a$$
+	L'équation
+	$$\frac{\pi}{2}(1-\sqrt{a})^{2}=1-a+a \ln a$$
+	admet-elle une solution appartenant à $]0,1[$ ?
+\end{enumerate}
+
+
+\subsection{Partie 2}
+
+\n Étant donné deux points distincts $P$ et $Q$ du plan, on note $]P Q[$ l'ensemble des points du segment $[P Q]$ distincts de $P$ et $Q$.\\
+Dans le plan, on considère un triangle $A B C$ et on désigne par $h$ la longueur de la hauteur issue de $A$.\\
+On note $\Gamma$ le cercle inscrit dans le triangle, $I$ son centre et $r$ son rayon.\\
+On rappelle que $I$ est le point d'intersection des bissectrices intérieures de $A B C$, c'est-à-dire le point intérieur au triangle vérifiant $\widehat{I A B}=\widehat{I A C}$, $\widehat{I B C}=\widehat{I B A}$ et $\widehat{I C A}=\widehat{I C B}$.\\
+On note $\Delta_{B}$ (respectivement $\Delta_{C}$) la droite passant par $B$ et orthogonale à $(B I)$ (respectivement passant par $C$ et orthogonale à $(C I)$).
+
+\begin{enumerate}
+	\item Soit $J$ le point d'intersection de $\Delta_{B}$ et $\Delta_{C}$.\\
+	Montrer que les distances de $J$ aux trois droites $(A B)$, $(B C)$, $(C A)$ sont égales. En déduire que $J$ appartient à la droite $(A I)$ et est le centre d'un cercle $\Gamma^{\prime}$ tangent aux droites $(A B)$, $(B C)$, $(C A)$.\\
+	Le cercle $\Gamma^{\prime}$ est le \textit{cercle exinscrit} dans l'angle $A$ du triangle $A B C$.
+	\item En examinant les angles des triangles en question, montrer que $A I C$ est semblable à $A B J$ et que $A I B$ est semblable à $A C J$.\\
+	En déduire $A I \cdot A J=A B \cdot A C$.
+	\item Soit $f$ l'homothétie de centre $A$ qui envoie $J$ sur $I$.\\
+	Préciser l'image par $f$ du cercle $\Gamma^{\prime}$ et de la droite $(B C)$. En déduire :
+	$$\frac{A I}{A J}=\frac{h-2 r}{h}$$
+\end{enumerate}
+
+\n Soit $D$ un point de $]B C[$.\\
+\n On note $I_{1}$ et $I_{2}$ les centres des cercles inscrits dans les triangles $A B D$ et $A C D$ et on note $r_{1}$ et $r_{2}$ leurs rayons; on note enfin $J_{1}$ et $J_{2}$ les centres des cercles exinscrits dans l'angle $A$ des triangles $A B D$ et $A C D$.
+
+\begin{enumerate}\setcounter{enumi}{3}
+	\item Montrer que les triangles $A I_{1} J_{2}$ et $A I C$ sont semblables. De même, les triangles $A I_{2} J_{1}$ et $A I B$ sont semblables
+	\item En exprimant $\frac{A I_{1}}{A J_{2}} \frac{A I_{2}}{A J_{1}}$ de deux façons différentes, établir la relation :
+	$$h(h-2 r)=\left(h-2 r_{1}\right)\left(h-2 r_{2}\right)$$
+\end{enumerate}
+
+
+\subsection{Partie 3}
+
+
+\n On conserve les notations $A B C$, $h$, $r$ données dans la deuxième partie.\\
+Dans les questions \textbf{1.} et \textbf{2.}, pour tout point $D$ de $]B C[$, les rayons des cercles inscrits dans les triangles $A B D$ et $A C D$ sont notés $r_{1}(D)$ et $r_{2}(D)$, ou simplement $r_{1}$ et $r_{2}$ s'il n'y a pas ambiguïté.
+
+\begin{enumerate}
+	\item Montrer qu'il existe un unique point $E$ de $] B C\left[\right.$ tel que $r_{1}(E)=r_{2}(E)$.
+	\item \begin{enumerate}
+		\item Montrer que $E$ est le point de $]B C[$ pour lequel $r_{1}+r_{2}$ est maximal.
+		\item Montrer que $E$ est le point de $]B C[$ pour lequel $r_{1}^{2}+r_{2}^{2}$ est minimal si et seulement si $8 r \leq 3 h$.
+	\end{enumerate}
+	\item Dans cette question, $n$ désigne un entier naturel non nul et on note $N=2^{n}$.\\
+	On considère $N+1$ points distincts $D_{0}, D_{1}, \ldots, D_{N-1}, D_{N}$ placés dans cet ordre sur le segment $[B C]$ : autrement dit, pour tout entier $i$ de $[1, N-1]$, le point $D_{i}$ appartient à $]D_{i-1} D_{i+1}[$.\\
+	On suppose de plus que $D_{0}=B$ et $D_{N}=C$.\\
+	Pour tout entier $i$ de $[1, N]$, on note $r_{i}$ le rayon du cercle inscrit dans le triangle $A D_{i-1} D_{i}$.
+	\begin{enumerate}
+		\item L'entier $n$ étant donné, déterminer la valeur maximale de $r_{1}+r_{2}+\cdots+r_{N}$ quand $D_{1}, \ldots, D_{N-1}$ varient dans $]B C[$ en respectant les conditions décrites ci-dessus.\\
+		On montrera, par exemple par récurrence sur $n$, que cette valeur maximale est atteinte lorsque $r_{1}=r_{2}=\ldots=r_{N}$.
+		\item On note $u_{n}$ la valeur maximale trouvée au \textbf{a.}.\\
+		Exprimer $u_{n}$ en fonction de $r$, $h$, $n$.\\
+		Montrer que la suite $\left(u_{n}\right)$ converge vers une limite que l'on exprimera en fonction de $r$ et $h$.
+		\item On suppose $8 r \leq 3 h$.\\
+		L'entier $n$ étant donné, déterminer la valeur minimale $v_{n}$ de $r_{1}^{2}+\cdots+r_{N}^{2}$.\\
+		Montrer que la suite $\left(2^{n} v_{n}\right)$ converge.
+	\end{enumerate}
+\end{enumerate}
+
+\newpage
+
+\section{Problème 3}
+
+\n \textit{Le but de cet exercice est d'étudier les intersections d'un cube avec des plans passant par son centre, et d'encadrer l'aire des sections planes ainsi obtenues.}
+
+\subsection{Une formule pour calculer des aires planes}
+
+\n L'espace est rapporté à un repère orthonormal $(O ; \vec{i}, \vec{j}, \vec{k})$.\\
+Soit $\mathscr{P}$ un plan, de vecteur normal unitaire $\vec{n}$. On pose $\vec{n} \cdot \vec{k}=\cos \gamma$, et l'on désigne par $\mathscr{P}_{0}$ le plan de repère $(O, \vec{i}, \vec{j})$.
+
+\begin{enumerate}
+	\item On suppose dans cette question que $\mathscr{P}$ et le plan $\mathscr{P}_{0}$ ne sont pas parallèles.\\
+	Soit $\mathscr{D}$ la droite d'intersection des plans $\mathscr{P}$ et $\mathscr{P}_{0}$, $A$ et $B$ des points de $\mathscr{D}$, $C$ un point de $\mathscr{P}$,$ C^{\prime}$ le projeté orthogonal de $C$ sur le plan $\mathscr{P}_{0}$ et enfin $H$ le projeté orthogonal de $C$ sur la droite $(A B)$.
+	\begin{enumerate}
+		\item Justifier le fait que $H$ est également le projeté orthogonal de $C^{\prime}$ sur la droite $(A B)$.
+		\item En déduire une relation entre les longueurs $C H$, $C^{\prime} H$ et l'angle $\gamma$, puis entre les aires $S$ et $S^{\prime}$ des triangles $A B C$ et $A B C^{\prime}$.
+		\item Soit $Q$ un polygone contenu dans le plan $\mathscr{P}$, $Q^{\prime}$ son projeté orthogonal sur le plan $\mathscr{P}_{0}$, $S$ et $S^{\prime}$ leurs aires respectives. Montrer que :
+		$$S^{\prime}=S|\cos \gamma|$$
+	\end{enumerate}
+	\item Que dire dans le cas particulier où $\mathscr{P}$ et le plan $(O, \vec{i}, \vec{j})$ sont parallèles ?
+	\item On pose $\vec{n} \cdot \vec{i}=\cos \alpha$ et $\vec{n} \cdot \vec{j}=\cos \beta$.
+	\begin{enumerate}
+		\item Montrer que les valeurs absolues des coordonnées de $\vec{n}$ dans la base $(\vec{i}, \vec{j}, \vec{k})$ sont $|\cos \alpha|$, $|\cos \beta|$ et $|\cos \gamma|$.
+		\item Soit $Q$ un polygone contenu dans le plan $\mathscr{P}$, $S$ son aire, $S^{\prime}, S^{\prime \prime}$ et $S^{\prime \prime \prime}$ les aires de ses projetés respectifs sur les plans de repères $(O, \vec{i}, \vec{j})$, $(O, \vec{j}, \vec{k})$ et $(O, \vec{k}, \vec{i})$.\\
+		 Montrer que :\quad $ S^{2}=S^{\prime 2}+S^{\prime \prime 2}+S^{\prime \prime \prime 2}$.
+	\end{enumerate}
+\end{enumerate}
+
+\newpage
+
+\subsection{Sections planes d'un cube}
+
+\subsubsection{Généralités}
+
+\n \boite{6.5}{ L'espace étant rapporté au repère orthonormal $(O ; \vec{i}, \vec{j}, \vec{k})$, on considère le cube $\mathscr{K}$ de centre $O$ représenté ci-contre, dont les sommets ont pour coordonnées :\\
+$A(1,1,1)$\\
+$B(-1,1,1)$\\
+$C (-1,-1,1)$\\
+$D (1,-1,1)$\\
+$A^{\prime} (-1,-1,-1)$\\
+$B^{\prime} (1,-1,-1)$\\
+$C^{\prime} (1,1,-1)$\\
+$D^{\prime} (-1,1,-1)$\\
+ainsi qu'un plan $\mathscr{P}$ passant par $O$, dont l'intersection avec $\mathscr{K}$ est un polygone $\mathscr{A}$.}
+\boite{6.5}{
+\begin{center}
+\psset{coorType=6,xunit=2cm,yunit=2cm}
+\begin{pspicture}(-1.1,-0.2)(1,0.4)
+\pstThreeDCoor[xMin=0,xMax=2,yMin=0,yMax=2,zMin=0,zMax=2,linecolor=black,nameX = $ $, nameY = $ $, nameZ = $ $,linestyle=dashed]
+\pstThreeDCoor[xMin=0,xMax=1,yMin=0,yMax=1,zMin=0,zMax=1,linecolor=black,nameX = $ $, nameY = $ $, nameZ = $ $,linewidth=1pt]
+\pstThreeDBox[hiddenLine=true,linewidth=1pt](-1,-1,-1)(2,0,0)(0,2,0)(0,0,2)
+%\pstThreeDLine[linecolor=red,linewidth=1pt](1,0,1)(0,1,1)
+%\pstThreeDLine[linecolor=magentafonce,linewidth=1pt](1,0.75,0)(1,1,1)
+\pstThreeDDot(0,0,0)
+\pstThreeDPut(-1.3,-1.3,-1){\footnotesize $A'$}
+\pstThreeDPut(1.1,-1.1,-1.1){\footnotesize $B'$}
+\pstThreeDPut(1.1,1.1,-1.1){\footnotesize $C'$}
+\pstThreeDPut(-1,1.15,-1){\footnotesize $D'$}
+
+\pstThreeDPut(1,.95, 1.08){\footnotesize $A$}
+\pstThreeDPut(-1,1.1,1.1){\footnotesize $B$}
+\pstThreeDPut(-1,-1.1,1.1){\footnotesize $C$}
+\pstThreeDPut(1.1,-1.1,1.1){\footnotesize $D$}
+
+\pstThreeDPut(0.5,0, 0.15){\footnotesize $\vec{i}$}
+\pstThreeDPut(0,0.6, 0.15){\footnotesize $\vec{j}$}
+\pstThreeDPut(0,-0.15, 0.5){\footnotesize $\vec{k}$}
+\pstThreeDPut(0,0.05,-0.1){ \footnotesize $O$}
+\end{pspicture}
+\end{center}}
+
+\begin{enumerate}
+	\item Montrer que $\mathscr{P}$ contient 0, 2 ou 4 sommets de $\mathscr{K}$.
+	\item Combien y a-t-il de plans $\mathscr{P}$ contenant 4 sommets de $\mathscr{K}$ ? Déterminer dans ce cas la nature de $\mathscr{A}$ ainsi que son aire.
+	\item On suppose que $\mathscr{P}$ contient exactement deux sommets de $\mathscr{K}$, $A$ et $A^{\prime}$.
+	\begin{enumerate}
+		\item Montrer que $\mathscr{P}$ rencontre une des trois arêtes $[B C]$, $[C D]$ ou $\left[B D^{\prime}\right]$.
+		\item On suppose que $\mathscr{P}$ rencontre l'arête $[B C]$ en un point $N$ de coordonnées $(-1, y, 1)$.\\
+		Déterminer, selon la valeur de $y$, la nature exacte de $\mathscr{A}$ et calculer son aire.
+		\item Donner, dans ce cas de figure, le meilleur encadrement possible de l'aire de $\mathscr{A}$ lorsque $y$ varie.
+	\end{enumerate}
+	\item On suppose que $\mathscr{P}$ ne contient aucun sommet de $\mathscr{K}$.
+	\begin{enumerate}
+		\item Montrer que chacun des demi-espaces limités par $\mathscr{P}$ contient exactement 4 sommets de $\mathscr{K}$.
+		\item Prouver que $\mathscr{P}$ rencontre 4 ou 6 arêtes de $\mathscr{K}$.
+	\end{enumerate}
+\end{enumerate}
+
+\n \textit{Dans toute la suite on ne considère que des plans $\mathscr{P}$ ne contenant aucun sommet de $\mathscr{K}$.}
+
+\subsubsection{Plans $\mathscr{P}$ rencontrant 4 arêtes de $\mathscr{K}$}
+
+\n On considère un plan $\mathscr{P}$ rencontrant l'arête $[A B]$ en un point $M$ de coordonnées $(u, 1,1)$ et l'arête $[C D]$ en un point $N$ de coordonnées $(v,-1,1)$.
+
+\begin{enumerate}
+	\item Déterminer, selon la valeur de $u$ et $v$, la nature exacte de $\mathscr{A}$ et calculer son aire.
+	\item Donner, dans ce cas de figure, le meilleur encadrement possible de l'aire de $\mathscr{A}$ lorsque $u$ et $v$ varient.
+\end{enumerate}
+
+\subsubsection{Plans $\mathscr{P}$ rencontrant 6 arêtes de $\mathscr{K}$}
+
+\n On considère un plan $\mathscr{P}$ rencontrant l'arête $[A B]$ en un point $M$ de coordonnées $(x, 1,1)$ et l'arête $[B C]$ en un point $N$ de coordonnées $(-1, y, 1)$.
+
+\begin{enumerate}
+	\item Montrer que $\mathscr{P}$ rencontre l'arête $\left[C A^{\prime}\right]$ en un point $R$ de coordonnées $(-1,-1, z)$. Donner, sur un croquis à main levée, la construction géométrique du point $R$, les points $M$ et $N$ étant donnés.
+	\item Établir que les trois nombres réels $x, y$ et $z$ sont liés par la relation :
+	\begin{equation}\tag{1}
+	x+y+z+x y z=0
+	\end{equation}
+	\item Dessiner le polygone $\mathscr{A}$ pour $x=y=z=0$ et calculer son aire.
+	\item Montrer que l'aire $S$ de $\mathscr{A}$ vérifie la relation :
+	$$S^{2}=(3-x+y+x y)^{2}+(3+x-z+x z)^{2}+(3-y+z+y z)^{2}$$
+	On pose désormais :
+	$$f(x, y, z)=(3-x+y+x y)^{2}+(3+x-z+x z)^{2}+(3-y+z+y z)^{2}$$
+	\item Déterminer l'ensemble des valeurs de $S$ lorsque les points $M$ et $N$ varient de manière que $x+y=0$.
+	\item Étant donné des réels strictement positifs $u$, $v$ et $w$, on pose $x=\frac{u-1}{u+1}$, $y=\frac{v-1}{v+1}$ et $z=\frac{w-1}{w+1}$.
+	\begin{enumerate}
+		\item Vérifier que, lorsque le triplet $(x, y, z)$ vérifie la relation $(1)$, on a $u v w=1$ et $z=\frac{1-u v}{1+u v}$.
+		\item On pose :
+		$$g(u, v)=f\left(\frac{u-1}{u+1}, \frac{v-1}{v+1}, \frac{1-u v}{1+u v}\right)$$
+		et l'on admet que l'on a la relation :
+		$$g(u, v)=32 \frac{(1+v+u v)^{2}\left(1+u+u^{2}+u v+u^{2} v+u^{2} v^{2}\right)}{(1+u)^{2}(1+v)^{2}(1+u v)^{2}}$$
+		Montrer que l'on a, pour tout couple $(u, v)$ de réels strictement positifs, l'encadrement :
+		$$24 \leq g(u, v) \leq 32$$
+		En déduire, dans ce cas de figure, le meilleur encadrement possible de l'aire de $\mathscr{A}$ lorsque $x$ et $y$ varient.
+	\end{enumerate}
+\end{enumerate}
+
+
+\end{document}

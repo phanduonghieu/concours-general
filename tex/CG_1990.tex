@@ -1,0 +1,133 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd,yhmath}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+\usepackage{pst-eucl}
+\usepackage{pstricks-add}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize 1990\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 1990
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\pagestyle{cg}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\parindent0pt
+%\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice I}}
+\end{center}
+
+Soit $\left(u_n\right)_{n \in \N}$ la suite de nombres entiers définie par : 
+
+\[\left\{\begin{array}{l c l}
+u_0			&=&0 \: \text{et pour tout entier naturel}\: n\\
+u_{2n}		&=& u_n \: \text{et}\\
+u_{2n+ 1} 	&=& 1 - u_n.
+\end{array}\right.\]
+
+\medskip
+
+\begin{enumerate}
+\item Calculer $u_{\np{1990}}$.
+\item Déterminer le nombre d'indices $n$, inférieurs ou égaux à \np{1990}, tels que $u_n = 0$.
+\item Soit $p$ un nombre entier naturel et $N = (2p - 1)^2$. 
+
+Calculer $u_N$.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice II}}
+\end{center}
+
+Un jeu est constitué de pièces en forme de tétraèdres réguliers d'arêtes de longueur 1.
+
+Toutes ces pièces ont été peintes à l'aide d'une palette de $n$ couleurs : chaque face d'un tétraèdre est peinte d'une seule couleur et on précise que les quatre faces d'un tétraèdre ne sont pas nécessairement de couleurs distinctes. 
+
+Déterminer le nombre maximum de pièces de ce jeu sachant que le jeu ne contient pas deux pièces identiques.
+
+\begin{center}\textbf{{\color{blue} Exercice III}}
+\end{center}
+
+\begin{enumerate}
+\item Trouver trois nombres entiers naturels $a, b, c$, distincts ou non, tels que:
+
+\[\dfrac14 = \dfrac1{a^2}  + \dfrac1{b^2} + \dfrac1{c^2}\]
+
+\item Déterminer tous les nombres entiers naturels $n$ tels qu'il existe $n$ nombres entiers naturels $x_1, x_2, ... , x_n$ , distincts ou non, vérifiant :
+
+
+\[1 = \dfrac1{x_1^2}  + \dfrac1{x_2^2} + \ldots+ \dfrac1{x_n^2}.\]
+
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice IV}}
+\end{center}
+
+\begin{enumerate}
+\item Quelle est l'aire maximale d'un triangle dont les sommets sont dans un carré donné?
+\item Quelle est le volume maximal d'un tétraèdre dont les sommets sont dans un cube donné?
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice V}}
+\end{center}
+Pour tout triangle ABC, on note :
+\begin{itemize}
+\item[$\bullet~~$]$\Gamma$ son cercle exinscrit dans l'angle du triangle de sommet A ;
+\item[$\bullet~~$]A$'$, B$'$, C$'$ les points de contact respectifs de $\Gamma$ avec les droites (BC), (CA) et (AB) ; 
+$\Gamma$$S$(ABC) l'aire de la portion du plan délimitée par les segments [AB$'$], [AC$'$] et l'arc $\wideparen{\text{C}'\text{A}'\text{B}'}$ de $\Gamma$.
+\end{itemize}
+
+\begin{center}
+\psset{unit=1cm}
+\begin{pspicture}(10,8)
+%\psgrid
+\pscircle(5.7,3.8){2.9}
+\psline(8,0.58)(0.2,1.6)(5.4,8)
+
+\uput[l](0.2,1.6){A}\uput[ul](2.8,4.8){B} \uput[d](2.8,1.24){C} 
+\uput[ur](7.6,6){$\Gamma$}
+\uput[d](5.4,0.92){B$'$}\uput[ul](3.42,5.57){C$'$}\uput[r](2.8,3.7){A$'$}
+\pscustom[fillstyle=solid,fillcolor=lightgray]
+{
+\psline(5.4,0.92)(0.2,1.6)(3.42,5.57)
+\psarc(5.7,3.8){2.9}{133}{264}
+}
+\psline(2.8,4.8)(2.8,1.24)
+\psdots[dotscale=0.8](0.2,1.6)(2.8,4.8)(2.8,1.24)(2.8,3.7)(5.4,0.92)(3.42,5.57)
+\end{pspicture}
+\end{center}
+
+Montrer qu'il existe des triangles ABC, de périmètre $2p$ donné, pour lesquels l'aire $S$(ABC) est maximale. 
+
+Pour un tel triangle, donner une valeur approchée, à un degré
+près, de la mesure de l'angle du triangle ABC de sommet A.
+\end{document}

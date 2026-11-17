@@ -1,0 +1,79 @@
+% Recueil — Concours Général des Lycées (Mathématiques) 1990–2025
+% Source : APMEP — https://www.apmep.fr/Annales-Concours-General-des-lycees
+%
+% Ce document assemble les énoncés annuels (PDF) en un seul recueil, avec
+% signets (bookmarks) et table des matières par année.
+%
+% Compilation :  pdflatex Recueil_master.tex   (nécessite le paquet pdfpages)
+% Si vous n'avez pas LaTeX, utilisez directement le fichier déjà assemblé :
+%   Recueil_Concours_General_Maths_1990-2025.pdf
+%
+% Chaque énoncé reste disponible séparément dans  pdf/CG_<année>.pdf
+% et sa source LaTeX d'origine dans  tex/CG_<année>.tex
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{pdfpages}
+\usepackage{hyperref}
+\hypersetup{bookmarksnumbered=false, bookmarksopen=true,
+            pdftitle={Concours General des Lycees - Mathematiques 1990-2025},
+            pdfauthor={APMEP}}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{4cm}
+{\Huge\bfseries Concours Général des Lycées\par}
+\vspace{1cm}
+{\LARGE Mathématiques\par}
+\vspace{0.5cm}
+{\Large Recueil des énoncés 1990--2025\par}
+\vfill
+{\large Source : APMEP\par}
+\url{https://www.apmep.fr/Annales-Concours-General-des-lycees}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% --- Un bloc par année : signet + section dans la table des matières ---
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1990,y1990}]{pdf/CG_1990.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1991,y1991}]{pdf/CG_1991.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1992,y1992}]{pdf/CG_1992.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1993,y1993}]{pdf/CG_1993.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1994,y1994}]{pdf/CG_1994.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1995,y1995}]{pdf/CG_1995.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1996,y1996}]{pdf/CG_1996.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1997,y1997}]{pdf/CG_1997.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1998,y1998}]{pdf/CG_1998.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 1999,y1999}]{pdf/CG_1999.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2000,y2000}]{pdf/CG_2000.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2001,y2001}]{pdf/CG_2001.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2002,y2002}]{pdf/CG_2002.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2003,y2003}]{pdf/CG_2003.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2004,y2004}]{pdf/CG_2004.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2005,y2005}]{pdf/CG_2005.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2006,y2006}]{pdf/CG_2006.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2007,y2007}]{pdf/CG_2007.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2008,y2008}]{pdf/CG_2008.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2009,y2009}]{pdf/CG_2009.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2010,y2010}]{pdf/CG_2010.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2011,y2011}]{pdf/CG_2011.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2012,y2012}]{pdf/CG_2012.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2013,y2013}]{pdf/CG_2013.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2014,y2014}]{pdf/CG_2014.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2015,y2015}]{pdf/CG_2015.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2016,y2016}]{pdf/CG_2016.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2017,y2017}]{pdf/CG_2017.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2018,y2018}]{pdf/CG_2018.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2019,y2019}]{pdf/CG_2019.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2020,y2020}]{pdf/CG_2020.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2021,y2021}]{pdf/CG_2021.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2022,y2022}]{pdf/CG_2022.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2023,y2023}]{pdf/CG_2023.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2024,y2024}]{pdf/CG_2024.pdf}
+\includepdf[pages=-,addtotoc={1,section,1,Concours Général 2025,y2025}]{pdf/CG_2025.pdf}
+
+\end{document}

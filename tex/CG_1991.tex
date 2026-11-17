@@ -1,0 +1,131 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+\usepackage{pst-eucl}
+\usepackage{pstricks-add}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize 1991\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 1991
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\pagestyle{cg}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\parindent0pt
+%\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice I}}
+\end{center}
+
+\begin{enumerate}
+\item Soit $\left(x_n\right)_{n\in \N}$ une suite de nombres réels telle que, pour tout nombre entier naturel $n$:
+
+\[x_0 ^3 + x_1 ^3 +...+ x_n^3 = \left(x_0 + x_1 + \ldots + x_n\right)^2.\]
+
+Montrer que, pour tout entier naturel $n$, il existe un entier naturel $m$ tel que :
+
+\[x_0 + x_1 + \ldots + x_n = \dfrac{m(m + 1)}{2}.\]
+
+\item Si $n$ et $p$ sont deux nombres entiers naturels non nuls, on pose :
+
+\[S_{n, p} = 1^p + 2^p + \ldots + n^p.\]
+
+Déterminer les entiers naturels non nuls $p$ tels que, quel que soit l'entier naturel non nul $n$, \:$S_{n, p}$ soit le carré d'un nombre entier naturel.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice II}}
+\end{center}
+
+À tout nombre entier naturel non nul $n$, on associe l'application $f_n$ de la variable réelle $x$, définie pour $x \geqslant n$ par :
+
+\[f_n(x) = \sqrt{x-n} + \sqrt{x-n+1} + \ldots +\sqrt{x-1} + \sqrt{x} +\sqrt{x+1} +\ldots  + \sqrt{x+n} - (2n+1)\sqrt{x}\]
+
+\begin{enumerate}
+\item Dans cette question, l'entier $n$ est fixé.
+
+Montrer que $f_n$ est croissante et que $\displaystyle\lim_{x \to + \infty}f_n(x) = 0$.
+\item Déterminer la limite de la suite de terme général $f_n(n)$.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice III}}
+\end{center}
+
+Soit S un point fixe d'une sphère fixe $(\sum)$ de centre $\Omega$.
+
+On considère les tétraèdres SABC inscrits dans la sphère $(\sum)$ et dont les arêtes issues de S sont deux à deux orthogonales.
+
+\medskip
+
+\begin{enumerate}
+\item Montrer que les plans (ABC) passent par un point fixe.
+\item Pour un tel tétraèdre SABC, le point S et le centre $\Omega$ de la sphère $(\sum)$ se projettent orthogonalement sur le plan (ABC) respectivement en H et O. 
+
+On note $R$ le rayon du cercle circonscrit au triangle ABC.
+
+Démontrer que : $R^2 = \text{OH}^2 +2\text{SH}^2$.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice IV}}
+\end{center}
+
+Soit $p$ un nombre entier naturel et $n = 2^p$.
+
+On considère les parties $A$ de l'ensemble $E = \{1, 2, \ldots , n\}$ possédant la propriété suivante :
+
+\begin{center}
+si $x$ appartient à $A$, alors $2x$ n'appartient pas à $A$.\end{center}
+
+Déterminer le nombre maximal d'éléments d'un telle partie A.
+
+\begin{center}\textbf{{\color{blue} Exercice V}}
+\end{center}
+
+\begin{enumerate}
+\item On considère l'application $P$ de $\C$ dans $\C$ définie par :
+
+\[P(z) = z^5 + a_4z^4 + a_3z^3 + a_2z^2 + a_1z\]
+
+où $a_1, a_2, a_3$ et $a_4$ sont quatre nombres complexes donnés.
+
+On pose $w_l = \text{e}^{2\text{i}l\pi/5}$ où $l$ désigne un nombre entier compris entre 0 et 4.
+
+Montrer que $P\left(w_0\right) + P\left(w_1\right) + P\left(w_2\right) + P\left(w_3\right) + P\left(w_4\right) = 5$.
+\item Soient A$_1$, A$_2$ A$_3$, A$_4$, A$_5$ cinq points du plan. 
+
+On construit un pentagone régulier inscrit dans le cercle de centre A$_1$ et de rayon donné $R$.
+
+Démontrer qu'il existe un sommet S du pentagone tel que:
+
+\[\text{SA}_1 \cdot \text{SA}_2 \cdot\text{SA}_3 \cdot\text{SA}_4 \cdot\text{SA}_5 \geqslant R^5.\]
+\end{enumerate}
+\end{document}

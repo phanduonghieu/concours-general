@@ -1,0 +1,108 @@
+% Jean-Michel Sarlat - 1999
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[]{palatino,geometry,french}
+\usepackage[dvips]{color}
+%=====================================================================
+% Définition de \exo ... \finexo
+
+\newcount\exonumber\exonumber=0
+\def\Exo{\goodbreak\global\advance\exonumber by 1\par\vskip 15pt
+\noindent{\framebox{\bf \color{blue}Exercice \the\exonumber}}}
+\def\exo{\begin{center}\Exo\end{center}}
+\def\finexo{}
+%=====================================================================
+\geometry{margin=2cm,head=0.5cm,headsep=10pt,foot=1cm}
+\newcommand{\N}{\mathbf{N}}
+\parindent0pt
+\pagestyle{empty}
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}
+	\sf \Large \color{red}
+	Concours général de mathématiques\\
+	1999\\
+	\rule{0.6\linewidth}{0.3mm}
+
+\end{center}
+
+\exo
+
+Qu'est le volume maximum d'un cylindre, ayant même
+
+axe de révolution qu'un cône donné et intérieur à ce cône~?\\
+
+Quel est le volume maximum d'une boule, centrée sur cet axe et intérieure
+
+au cône ?\\
+
+Comparer les deux maximuns trouvés.
+
+\finexo
+
+\exo
+
+Résoudre dans $\N$ l'équation en $n$ : 
+
+$$(n+3)^n=\sum_{k=3}^{n+2} k^n$$
+
+\finexo
+
+\exo 
+
+Pour quels triangles aux angles tous aigus le quotient du plus
+
+petit coté par le rayon du cercle inscrit est-il maximum~?
+
+\finexo 
+
+\exo
+
+Sur une table trônent \np{1999} bonbons rouges et
+\np{6661} bonbons jaunes rendus indiscernables par des emballages uniformes.
+
+Un gourmand applique jusqu'à épuisement du stock l'algorithme ci-dessous~:
+\begin{itemize}
+
+	\item[a)] S'il reste des bonbons, il en tire un au hasard, note sa
+
+	couleur, le mange et va en b)~;
+
+	\item[b)] S'il reste des bonbons, il en tire un au hasard et note sa
+
+	couleur~:
+
+	\begin{itemize}
+
+		\item si elle est la même que celle du dernier bonbon avalé, il le
+
+		mange et retourne en~b),
+
+		\item sinon, il le remmaillote,le pose et retourne en a).
+
+	\end{itemize}
+
+\end{itemize}
+
+Montrer que tous les bonbons seront mangés et donner la probabilité pour
+
+que le dernier bonbon mangé soit rouge.
+
+\finexo
+
+\exo
+
+Montrer que les symétriques de chaque sommet d'un triangle par
+
+rapport au coté opposé sont alignés si, et seulement si,
+
+la distance de l'orthocentre au centre du cercle circonscrit est égale à
+
+son diamètre.
+
+\finexo
+
+\end{document}

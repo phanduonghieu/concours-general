@@ -1,0 +1,130 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+\usepackage{pst-eucl}
+\usepackage{pstricks-add}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize 1996\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 1996
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+
+\pagestyle{cg}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\parindent0pt
+\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice I}}
+\end{center}
+
+Dans le plan, on considère un triangle ABC et les six points D, E, F,
+G, H, I tels que ABED, BCGF et ACHI soient des carrés extérieurs à ABC.
+
+Montrer que les points D, E, F, G, H, I sont cocycliques si et seulement si on est dans
+l'un des deux cas suivants :
+
+\hskip 20mm $\bullet\ $ Le triangle ABC est équilatéral ;
+
+\hskip 20mm $\bullet\ $ Le triangle ABC est rectangle et isocèle.
+
+\begin{center}\textbf{{\color{blue} Exercice II}}
+\end{center}
+
+Soient $a$  un entier naturel impair et $b$ un entier strictement positif.
+On considère la suite réelle $\left(u_n\right)_{n\in\N}$ ainsi définie :
+
+\[\left\{\begin{array}{l c l}
+u_0 &=& b \:\text{et pour tout entier naturel } n :\\
+u_{n+1}&=& \dfrac12 u_n\: \text{si}\: u_n\ \text{est un entier pair,}\\
+u_{n+1}&=&a + u_n\: \text{sinon}
+\end{array}\right.\]
+
+\medskip
+
+\begin{enumerate}
+\item Démontrer qu'on peut trouver un entier naturel $n$ tel que : $u_n\leqslant a$.
+\item Démontrer que la suite est périodique à partir d'un certain rang.
+\end{enumerate}
+
+\vskip 3mm
+
+\begin{center}\textbf{{\color{blue} Exercice III}}
+\end{center}
+
+\medskip
+
+\begin{enumerate}
+\item Soit un parallélépipède rectangle. Montrer qu'on peut choisir
+quatre de ses sommets de façon à obtenir un tétraèdre dont les quatre faces sont
+des triangles rectangles.
+\item Réciproquement, montrer que tout tétraèdre dont les quatre faces sont des
+triangles rectangles peut s'obtenir en choisissant quatre sommets d'un parallélépipède
+rectangle.
+\item Rechercher  parmi ces tétraèdres ceux qui ont aussi au moins deux faces isocèles.
+Donner les longueurs de leurs arêtes en fonction de la longueur a de la plus petite arête.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice IV}}
+\end{center}
+
+\medskip
+
+\begin{enumerate}
+\item Soit la fonction $f$ définie pour tout réel $x$ strictement positif par 
+
+\[f(x) = x^x.\]
+
+Déterminer la valeur minimale prise par cette fonction lorsque $x$ décrit l'ensemble des réels strictement positifs.
+\item Soient $x$ et $y$ deux réels strictement positifs, montrer que : $x^y + y^x > 1$.
+\end{enumerate}
+
+\vskip 3mm
+
+\begin{center}\textbf{{\color{blue} Exercice V}}
+\end{center}
+
+Soit $n$ un entier naturel non nul. On dit qu'un entier naturel non nul $k$ vérifie la
+condition $C_n$ s'il existe $2k$ entiers naturels non nuls $a_1, b_1,....,a_k, b_k$ tous
+distincts, tels que les sommes $a_1 + b_1,\ldots, a_k + b_k$ soient deux à deux distinctes
+et strictement inférieures à $n$.
+
+\medskip
+
+\begin{enumerate}
+\item Montrer que si $k$ vérifie la condition $C_n$, alors $k\leqslant \dfrac{2n - 3}{5}$.
+\item Montrer que $5$ vérifie la condition $C_{14}$.
+\item On suppose $\dfrac{2n - 3}{5}$ entier. Montrer que $\dfrac{2n - 3}{5}$
+vérifie la condition $C_n$.
+\end{enumerate}
+\end{document}

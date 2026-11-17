@@ -1,0 +1,92 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage[dvips]{color}
+\usepackage{times}
+
+% D\0x8efinition de la page
+\pagestyle{plain}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\renewcommand{\labelenumii}{\alph{enumii}~)}
+\let\le\leqslant
+\let\ge\geqslant
+% =========================================================================
+%                               FIN DU PREAMBULE
+% =========================================================================
+\begin{document}
+% \special{header=ps.pro}
+% \special{" cadre1 cadre2}
+
+\begin{center}\Large \color{red}
+\sc CONCOURS GÉNÉRAL 1998\\
+\rule{10cm}{1mm}
+\end{center}
+
+\section*{\color{blue} Exercice 1}
+
+Un tétraèdre ABCD vérifie les conditions suivantes :
+
+\begin{enumerate}
+\item les arêtes AB, AC et AD sont deux  à deux orthogonales
+\item AB $= 3$ et CD $=\sqrt{2}$.
+\end{enumerate}
+
+Déterminer la valeur minimale de $\text{BC}^6 + \text{BD}^6 - \text{AC}^6 - \text{AD}^6$.
+
+\section*{\color{blue} Exercice 2}
+
+Soit $\left(u_n\right)_{n\in \mathbb{N}}$ une suite réelle vérifiant, pour tout
+entier $n$, la relation :
+
+\[u_{n+2}= \left|u_{n+1}\right|-u_n.\]
+
+Montrer qu'il existe un entier $p$ non nul,
+tel que la relation $u_n= u_{n+p}$ ait lieu pour tout entier naturel~$n$.
+
+\section*{\color{blue} Exercice 3}
+
+Pour tout réel $x$ on note $E(x)$, le plus grand entier
+relatif inférieur ou égal à $x$. 
+
+Soit $k$ un entier fixé, supérieur ou égal à 2. 
+
+On considère la fonction $f$ de $\mathbb{N}$ dans $\mathbb{N}$ définie par :
+
+\[f(n)=n+E\big(\root k\of{n+\root k\of{n}}\big)\]
+
+Déterminer l'ensemble des valeurs prises par la fonction $f$.
+
+\section*{\color{blue} Exercice 4}
+
+On considère deux droites $D_1$ et $D_2$ sécantes en $O$,
+et un point $M$ n'appartenant à aucune de ces deux droites. On
+considère deux points variables, $A$ sur $D_1$ et $B$ sur
+$D_2$, tels que le point $M$ appartienne au segment $[A,B]$.
+
+\centerline{(Les questions 1 et 2 sont indépendantes)}
+
+\begin{itemize}
+\item[(1)] Montrer qu'il existe une position des points $A$ et $ B$ pour
+laquelle l'aire du triangle $OAB$ est minimale.
+Construire les points $A$ et $B$ ainsi déterminés.
+\item[(2)]  Montrer qu'il existe une position des points
+$A$ et $B$ pour laquelle le périmètre du triangle $OAB$ est
+minimal et qu'on a alors l'égalité des périmètres des
+triangles $OAM$ et $OBM$, ainsi que la relation~:
+$$\frac {AM}{\tan  {\widehat{OAM}\over 2}} =
+\frac {BM}{\tan  {\widehat{OBM}\over 2}}$$ Construire les point $A$ et
+$B$ ainsi déterminés.
+\end{itemize}
+
+\section*{\color{blue} Exercice 5}
+
+Soit $n$ un entier supérieur ou égal à 3. On
+considère un ensemble $A$ de $n$ points du plan, cet ensemble
+ne contenant pas trois points alignés.
+
+Montrer qu'il existe un ensemble $S$ de $2n-5$ points du plan
+tel que pour tout triangle dont les sommets sont des points de $A$ il
+existe au moins un point de $S$ qui lui soit strictement intérieur.
+\end{document}

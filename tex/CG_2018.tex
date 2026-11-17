@@ -1,0 +1,575 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+
+\chapter{Concours général des lycées - Session 2018}
+
+
+\section{Problème 1 : Approximations de courbes}
+
+\subsection{Les polynômes de Bernstein}
+
+\n Pour tout entier naturel $n$ et pour tout entier naturel $i$ compris entre 0 et $n$, on note $B_{n, i}$ le polynôme défini pour $p$ variant dans l'intervalle $[0 ; 1]$ par :
+$$B_{n, i}(p)=\binom{i}{n}p^{i}(1-p)^{n-i}$$
+avec $\binom{i}{n}$ le coefficient binomial, $i$ parmi $n$. Ainsi $B_{0,0}(p)=1$, $B_{1,0}(p)=1-p$ et $B_{1,1}(p)=p$.\\
+Ces polynômes sont appelés \textit{\textbf{polynômes de Bernstein}}.
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item Donner l'expression de $B_{2,0}(p)$, $B_{2,1}(p)$ et $B_{2,2}(p)$.
+		\item Déterminer l'expression des polynômes de Bernstein pour $n=3$, à savoir $B_{3,0}(p)$, $B_{3,1}(p)$, $B_{3,2}(p)$ et $B_{3,3}(p)$.
+	\end{enumerate}
+	\item \begin{enumerate}
+		\item Quelle est l'expression de $B_{n, 0}(p)$ et de $B_{n, n}(p)$ ?
+		\item Démontrer que pour tout $n \geq 1$ et pour tout $i$ compris entre 1 et $n-1$,
+		$$B_{n, i}(p)=(1-p) B_{n-1, i}(p)+p B_{n-1, i-1}(p)$$
+	\end{enumerate}
+	\item \begin{enumerate}
+		\item En quelle(s) valeur(s) $p \in[0 ; 1]$ s'annule un polynôme de Bernstein ?\\
+		\textit{On raisonnera en distinguant les cas selon les valeurs de $n$ et de $i$.}
+		\item Qu'en est-il de son signe sur $[0 ; 1]$ ?
+	\end{enumerate}
+	\item Démontrer que les polynômes de Bernstein d'un même degré $n$ forment une partition de l'unité : c'est-à dire, pour tout entier naturel $n$,
+	$$\sum_{i=0}^{n} B_{n, i}(p)=B_{n, 0}(p)+B_{n, 1}(p)+\ldots+B_{n, n-1}(p)+B_{n, n}(p)=1$$
+	\item Déterminer la valeur des sommes :
+	$$\sum_{i=0}^{n} i B_{n, i}(p) \q\text { et }\q \sum_{i=0}^{n} i^{2} B_{n, i}(p)$$
+	Que représentent ces sommes en termes probabilistes ?
+\end{enumerate}
+
+\newpage
+
+\subsection{Des courbes de Bézier}
+
+\n On munit le plan d'un repère orthonormé $(O, I, J)$. Soit $n$ un entier naturel. On se donne $n+1$ points non alignés du plan $P_{0}, P_{1}, \ldots, P_{n-1}, P_{n}$.\\
+On appelle courbe de Bézier de degré $n$ et de points de contrôle $P_{0}, P_{1}, \ldots, P_{n-1}, P_{n}$ l'ensemble des points $M(p)$ du plan avec $p$ variant dans l'intervalle $[0 ; 1]$ tels que :
+$$\overrightarrow{O M(p)}=\sum_{i=0}^{n} B_{n, i}(p) \overrightarrow{O P}_{i}$$
+
+\n Dans la suite on va s'intéresser à des courbes de Bézier de degré 0, 1 ou 2.\\
+On se fixe donc $A$, $B$, $C$ trois points du plan non alignés.
+
+\begin{enumerate}
+	\item Reconnaitre la nature géométrique 
+	\begin{enumerate}
+		\item de la courbe de Bézier de degré 0 et de point de contrôle $A$
+		\item de la courbe de Bézier de degré 1 et de points de contrôle $B$ et $C$.
+	\end{enumerate}
+	\item On s'intéresse à la courbe de Bézier de degré 2 et de points de contrôle $A$, $B$ et $C$.
+	\begin{enumerate}
+		\item Justifier que les points $A$ et $C$ appartiennent à cette courbe. Le point $B$ y appartient-il ?
+		\item Dans cette question on prend les points de coordonnées $A(-2 ; 5)$, $B(2 ; 1)$ et $C(4 ; 3)$. Proposer une construction des points de cette courbe pour $p=\frac{1}{4}$, $p=\frac{1}{2}$ et $p=\frac{3}{4}$. Tracer la courbe à main levée.
+	\end{enumerate}
+	\item Démontrer que cette courbe est nécessairement inscrite dans le triangle $A B C$.
+	\item Quelle pourrait être la nature géométrique de cette courbe de Bézier de degré 2 ? Justifier votre réponse.
+\end{enumerate}
+ 
+%\newpage
+
+\section{Problème 2 : Un si discret Monsieur Dirichlet}
+
+\n Soit $\mathscr{S}$ un ensemble fini non vide de points du plan. Certaines paires de points de $\mathscr{S}$ sont reliées par des traits, de sorte qu'en suivant ces traits, éventuellement en plusieurs étapes, il est toujours possible de passer d'un point de $\mathscr{S}$ à n'importe quel autre (les intersections éventuelles entre les traits ne sont pas considérées et un point n'est jamais relié à lui-même).\\
+
+\n Deux points de $\mathscr{S}$ reliés par un trait sont dits \textit{\textbf{voisins}}.\\
+
+\n Si $M$ est un point de $\mathscr{S}$, on note $V(M)$ l'ensemble des voisins de $M$, et on note $d(M)$ le nombre de voisins de $M$, appelé le \textit{\textbf{degré}} de $M$.\\
+
+\n Chaque point de $\mathscr{S}$ a été colorié soit en bleu soit en jaune, et il y a au moins un point jaune dans l'ensemble $\mathscr{S}$. À chaque point jaune, Gustav a attribué un nombre réel de son choix. La mathématicienne Maryam voudrait alors attribuer un réel à chaque point bleu (pas forcément le même nombre d'un point bleu à l'autre) de façon à satisfaire la propriété $(\mathscr{P})$ suivante :
+\begin{center}
+\textbf{$(\mathscr{P})$ Le nombre attribué à tout point bleu est la moyenne des nombres attribués à ses voisins.}
+\end{center}
+
+\subsection{Quelques exemples pour commencer}
+
+\begin{enumerate}
+	\item Dans cette question uniquement, on suppose que $\mathscr{S}=\{A, B, C\}$, avec $A$ voisin de $B$, lui-même voisin de $C$ comme sur dessin ci-dessous.
+\begin{center}
+\psset{unit=1cm,dotstyle=*,dotscale=1,linewidth=0.75pt}
+\begin{pspicture}(0,-.3)(4,0.3)
+\dotnode[dotstyle=o](0,0){A} 	\uput[u](0,0){$A$}	\uput[d](0,0){$a$}
+\dotnode(2,0){B}	\uput[u](2,0){$B$}	
+\dotnode(4,0){C} 	\uput[u](4,0){$C$}			
+\ncline{A}{B}
+\ncline{B}{C}
+\end{pspicture}
+\end{center}
+	\n De plus, $A$ est le seul point jaune et Gustav lui a attribué le réel $a$.\\
+	Quels nombres Maryam doit-elle alors attribuer à $B$ et à $C$ afin de satisfaire la propriété $(\mathscr{P})$ ?
+	\item Pour les trois questions suivantes on suppose que $\mathscr{S}=\{A, B, C, D, E\}$. Les points $A$ et $E$ sont les seuls points jaunes, et Gustav leur a attribué respectivement les réels $a$ et $e$.
+	\begin{enumerate}
+		\item Les liaisons étant indiquées selon le schéma suivant, quels nombres Maryam doit-elle alors attribuer à chacun des points $B, C$ et $D$ afin de satisfaire la propriété $(\mathscr{P})$ ?
+		\begin{center}
+\psset{unit=1cm,dotstyle=*,dotscale=1,linewidth=0.75pt}
+\begin{pspicture}(0,-.3)(8,0.3)
+\dotnode[dotstyle=o](0,0){A} 	\uput[u](0,0){$A$}	\uput[d](0,0){$a$}
+\dotnode(2,0){B}	\uput[u](2,0){$B$}	
+\dotnode(4,0){C} 	\uput[u](4,0){$C$}
+\dotnode(6,0){D} 	\uput[u](6,0){$D$}
+\dotnode[dotstyle=o](8,0){E} 	\uput[u](8,0){$E$}	\uput[d](8,0){$e$}
+\ncline{A}{B}
+\ncline{B}{C}
+\ncline{C}{D}
+\ncline{D}{E}
+\end{pspicture}
+\end{center}
+		\item Même question pour le schéma suivant :
+		\begin{center}
+\psset{unit=1cm,dotstyle=*,dotscale=1,linewidth=0.75pt}
+\begin{pspicture}(0,-.3)(4,2.7)
+\dotnode[dotstyle=o](0,0){A} 	\uput[dl](0,0){$A$}	\uput[ur](0,0){$a$}
+\dotnode(2,0){B}	\uput[dr](2,0){$B$}	
+\dotnode(2,2){C} 	\uput[u](2,2){$C$}
+\dotnode(0,2){D} 	\uput[l](0,2){$D$}
+\dotnode[dotstyle=o](4,2){E} 	\uput[r](4,2){$E$}	\uput[d](4,2){$e$}
+\nccurve[angleA=45,angleB=135,ncurv=0.6]{D}{E} 
+\ncline{A}{B}
+\ncline{B}{C}
+\ncline{C}{D}
+\ncline{C}{E}
+\ncline{D}{A}
+\end{pspicture}
+\end{center}
+		\item Même question pour le schéma suivant :
+		\begin{center}
+\psset{unit=1cm,dotstyle=*,dotscale=1,linewidth=0.75pt}
+\begin{pspicture}(0.2,-.3)(4.2,4.3)
+\dotnode[dotstyle=o](2.3,4){A} 	\uput[u](2.3,4){$A$}	\uput[r](2.3,4){$a$}
+\dotnode(4.4,2.47){B}	\uput[r](4.4,2.47){$B$}	
+\dotnode(3.6,0){C} 	\uput[dr](3.6,0){$C$}
+\dotnode(1,0){D} 	\uput[dl](1,0){$D$}
+\dotnode[dotstyle=o](0.2,2.47){E} 	\uput[l](0.2,2.47){$E$}	\uput[u](0.2,2.47){$e$}
+\ncline{A}{B}
+\ncline{A}{C}
+\ncline{A}{D}
+\ncline{A}{E}
+\ncline{B}{C}
+\ncline{B}{D}
+\ncline{B}{E}
+\ncline{C}{D}
+\ncline{C}{E}
+\ncline{D}{E}
+\end{pspicture}
+\end{center}
+	\end{enumerate}
+	\item Dans cette question uniquement on généralise le schéma de la question \textbf{2.c.} avec un nombre quelconque de points.\\
+	
+	\n On suppose que $n \geq 1$ est un entier, que $\mathscr{S}=\left\{P_{0}, P_{1}, P_{2}, \ldots, P_{n}, P_{n+1}\right\}$ et que tout point de $\mathscr{S}$ est voisin de chaque autre point de $\mathscr{S}$. De plus, $P_{0}$ et $P_{n+1}$ sont les seuls points jaunes, et Gustav leur a attribué respectivement les réels $a$ et $b$. Quels nombres Maryam doit-elle alors attribuer à chacun des points $P_{i}$ pour $i=1, \ldots, n$ afin de satisfaire la propriété $(\mathscr{P})$ ?
+\end{enumerate}
+
+
+\subsection{Étude du cas général}
+
+
+\n On note respectivement $\mathscr{J}$ l'ensemble des points jaunes, et $\mathscr{B}$ l'ensemble des points bleus. Ainsi :
+$$\mathscr{S}=\mathscr{J} \cup \mathscr{B}$$
+
+\n Quand Gustav attribue un réel à chaque point jaune, cela consiste à définir une fonction $k$ de $\mathscr{J}$ dans $\mathbb{R}$. L'objectif de Maryam est donc de construire une fonction $f: \mathscr{S} \longrightarrow \mathbb{R}$ telle que :
+
+$$\left\{\begin{array}{l}
+f(M)=k(M) \text { si } M \text { est jaune (1) } \\
+f(M)=\frac{f\left(P_{1}\right)+\ldots+f\left(P_{d}\right)}{d} \text { si } M \text { est bleu (2) } \\
+\text { où } d=d(M) \text { est le degré de } M \text { (qui dépend de } M \text { ) et } P_{1}, \ldots, P_{d} \text { les voisins de } M \text {. }
+\end{array}\right.$$
+
+\n On dira alors que $f$ est une solution \textbf{\textit{pour l'attribution}} $k$.\\
+Dans cette partie, on suppose donc donnée une telle attribution $k$.\\
+On note $K$ le plus grand des nombres $k(M)$ lorsque $M$ décrit l'ensemble $\mathscr{J}$.
+
+\subsection{Existence d'une solution}
+
+\begin{enumerate}
+	\item On suppose dans cette question que $k(M) \geq 0$ pour tout point $M \in \mathscr{J}$. On construit alors, par récurrence, la suite $\left(f_{n}\right)$ de fonctions suivante :\\
+	On pose $f_{0}(M)=k(M)$ si $M$ est jaune, et $f_{0}(M)=0$ si $M$ est bleu.\\
+	Puis, pour tout entier $n \geq 0$, on pose :
+	$$\left\{\begin{array}{l}
+f_{n+1}(M)=k(M) \text { si } M \text { est jaune, } \\
+f_{n+1}(M)=\frac{f_{n}\left(P_{1}\right)+\ldots+f_{n}\left(P_{d}\right)}{d} \text { si } M \text { est bleu, } \\
+\text { où } d=d(M) \text { est le degré de } M \text { (qui dépend de } M \text { ) et } P_{1}, \ldots, P_{d} \text { les voisins de } M \text {. }
+\end{array}\right.$$
+	\begin{enumerate}
+		\item Prouver que, pour tout $n \geq 0$ et tout point $M \in \mathscr{S}$, on a $0 \leq f_{n}(M) \leq f_{n+1}(M) \leq K$.
+		\item En déduire l'existence d'une solution pour l'attribution $k$.
+	\end{enumerate}
+	\item Prouver que si $f$ est une solution pour l'attribution $k$ et si $\alpha$ est une constante, alors la fonction $f+\alpha$ est aussi une solution pour l'attribution $k+\alpha$.
+	\item En déduire qu'il existe une solution à notre problème en général, c'est-à-dire sans l'hypothèse de la question \textbf{1.} : $k(M) \geq 0$ pour tout point $M \in \mathscr{J}$.
+\end{enumerate}
+
+
+\subsection{Unicité de la solution}
+
+\n On suppose dans cette sous-partie que l'on dispose d'une solution $f$ pour cette attribution $k$.
+
+\begin{enumerate}\setcounter{enumi}{3}
+	\item Prouver que, pour tout point $M \in \mathscr{S}$, on a $f(M) \leq K$.
+	\item Supposons que $g$ soit également une solution pour l'attribution $k$.
+	\begin{enumerate}
+		\item Justifier que la fonction $f-g$ vérifie la condition (2).
+		\item Que vaut $f-g$ sur $\mathscr{J}$ ?
+		\item En déduire que $f=g$.
+	\end{enumerate}
+	\item Que peut-on dire de $f$ s'il n'y a qu'un seul point jaune ?
+\end{enumerate}
+
+\newpage
+
+\section{Problème 3 : Les nombres en or}
+
+\n On note $\varphi$ la plus grande racine réelle de l'équation $x^{2}=x+1$. Le nombre $\varphi$, connu depuis l'Antiquité, est appelé \textit{nombre d'or}. Un réel $x$ est dit un \textit{\textbf{nombre en or}} s'il existe:
+
+\begin{itemize}
+	\item deux entiers naturels $p$ et $q$
+	\item des entiers $a_{p}, a_{p-1}, \cdots, a_{0}, \ldots, a_{-q}$ ne prenant que les valeurs 0 ou 1 tels que :
+	$$x=a_{p} \varphi^{p}+a_{p-1} \varphi^{p-1}+\ldots+a_{1} \varphi+a_{0}+a_{-1} \varphi^{-1}+\cdots+a_{-q} \varphi^{-q}$$
+\end{itemize}
+
+\n Dans ce cas, on notera $x \triangleright a_{p} a_{p-1} \cdots a_{0}, a_{-1} \cdots a_{-q}$.\\
+Par exemple si $x=\varphi^{3}+\varphi^{2}+1+\frac{1}{\varphi}+\frac{1}{\varphi^{4}}$, on notera $x \triangleright 1101,1001$. On dira que alors $1101,1001$ est une \textbf{\textit{représentation en or}} de $x$.\\
+Il est clair que l'on peut ajouter, au début, ou la fin de la représentation autant de 0 que l'on souhaite.\\
+Une séquence de la représentation est une suite de 0 et de 1 qui apparaît dans la représentation. Dans l'exemple précédent, $10110$ est une séquence de la représentation $1\bm{101,10}01$.
+
+\subsection{Tous les entiers naturels sont en or}
+
+
+\begin{enumerate}
+	\item Montrer que, dans la représentation en or de $x$, on peut remplacer toute séquence 011 par 100 et réciproquement afin d'obtenir une autre représentation en or de $x$.\\
+	Par exemple le réel dont la représentation en or est $1101,1001$ admet également $1110,0001$ et $1101,0111$ comme représentation en or.\\
+	On dira que les deux séquences 011 et 100 sont équivalentes.
+	\item Plus généralement, donner une séquence dans laquelle il n'y a jamais deux 1 consécutifs et qui soit équivalente à $011 \cdots 1$ où il y a $n$ occurrences du chiffre $1$.
+	\item Montrer que les entiers 2 et 3 sont des nombres en or et en donner une représentation en or.
+	\item Montrer que tous les entiers naturels admettent une représentation en or.
+\end{enumerate}
+
+
+\subsection{Représentation en or pur}
+
+\n On dira qu'une représentation $x \triangleright a_{p} a_{p-1} \cdots a_{0}, a_{-1} \cdots a_{-q}$ d'un nombre en or est en \textbf{\textit{or pur}} si pour tout $i$,
+$$a_{i} a_{i+1}=0$$
+En d'autres termes, une représentation de $x$ est en or pur si elle ne contient jamais deux 1 consécutifs.\\
+
+\n Soit $x$ un réel non nul, si $x \triangleright a_{p} a_{p-1} \cdots a_{0}, a_{-1} \cdots a_{-q}$, on définit la \textbf{\textit{teneur en or}} de la représentation comme étant égale à l'exposant de la plus grande puissance de $\varphi$ dont le coefficient vaut 1, dans l'égalité $x=a_{p} \varphi^{p}+\ldots \cdots+a_{-q} \varphi^{-q}$.\\
+Par exemple la teneur de la représentation $1101,1001$ est égale à 3 et celle de $0,0010$ est égale à $-3$.
+
+\begin{enumerate}
+	\item Donner une représentation en or pur des entiers $2$, $3$, $4$ et 5.
+	\item Soit $x$ un réel ayant une représentation en or pur de teneur en or égale à $n$.
+	\begin{enumerate}
+		\item Montrer que $$\varphi^{n} \leq x<\varphi^{n+1}$$
+		\item Montrer que la représentation en or pur d'un réel, si elle existe, est unique.
+	\end{enumerate}
+	\item Soit $x$ un réel non nul ayant une représentation en or pur.
+	\begin{enumerate}
+		\item Exprimer la teneur en or de la représentation en or pur de $x$ à l'aide des fonctions logarithme népérien et partie entière.
+		\item Écrire un algorithme permettant de déterminer cette représentation.
+		\item Appliquer votre algorithme pour $x=2018$.
+	\end{enumerate}
+	\item Montrer qu'un réel en or possède forcément une représentation en or pur.
+	\item Montrer qu'il existe des réels strictement positifs qui ne sont pas en or.
+\end{enumerate} 
+
+\end{document}

@@ -1,0 +1,133 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+\usepackage{pst-eucl}
+\usepackage{pstricks-add}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize 1992\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 1992
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\pagestyle{cg}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\parindent0pt
+\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice I}}
+\end{center}
+
+On dit qu'une partie non vide $\Delta$ du plan $\mathcal{P}$ est convexe si elle possède la propriété suivante :
+
+\begin{center}
+Pour tout couple (M, N) de points de $\Delta$, le segment [MN] est contenu dans $\Delta$
+\end{center}
+
+Soit $\Delta$ une partie convexe du plan $\mathcal{P}$. Si A est un point de $\mathcal{P}$, à tout couple (M, N) de points de $\Delta$ on associe le point $m$ défini par
+
+\[\overline{\text{A}m} = \dfrac12 \overline{\text{MN}}\]
+
+et on note $\delta_{\text{A}}(\Delta)$ l'ensemble des points $m$ ainsi obtenus.
+
+\medskip
+
+\begin{enumerate}
+\item 
+	\begin{enumerate}
+		\item Montrer que $\delta_{\text{A}}(\Delta)$ admet un centre de symétrie.
+		\item À quelle condition a-t-on $\delta_{\text{A}}(\Delta) =\Delta$ ?
+		\item Soient B et C deux points du plan $\mathcal{P}$. Par quelle transformation passe-t-on de $\delta_{\text{B}}(\Delta)$ à $\delta_{\text{C}}(\Delta)$ ?
+	\end{enumerate}	
+\item Soit A un point du plan $\mathcal{P}$. Déterminer et représenter $\delta_{\text{A}}(\Delta)$ lorsque:
+	\begin{enumerate}
+		\item $\Delta$ est une bande du plan $\mathcal{P}$ délimitée par deux droites parallèles.
+		\item $\Delta$ est délimitée par un triangle.
+		\item $\Delta$ est un demi-disque.
+	\end{enumerate}	
+\item Montrer que dans les deux cas 2. b. et 2. c., les contours de $\Delta$ et $\delta_{\text{A}}(\Delta)$ ont la même longueur.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice II}}
+\end{center}
+
+Soit $(C)$ un cercle du plan de rayon l.
+
+\medskip
+
+\begin{enumerate}
+\item Déterminer les triangles ABC inscrits dans le cercle $(C)$ pour lesquels la somme
+
+\begin{center}AB$^2$ + BC$^2$ + CA$^2$ \end{center}
+est maximale.
+\item Déterminer les quadrilatères ABCD inscrits dans le cercle $(C)$ pour lesquels la somme
+
+\begin{center}AB$^2$ + AC$^2$ + AD$^2$ + BC$^2$ + BD$^2$ + CD$^2$ \end{center}
+
+est maximale. Représenter un tel quadrilatère.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice III}}
+\end{center}
+
+
+Soit ABCD un tétraèdre inscrit dans une sphère de centre O. 
+
+On note G l'isobarycentre des quatre sommets du tétraèdre et I le centre de la sphère inscrite dans le tétraèdre. Montrer que les trois propriétés suivantes sont équivalentes :
+
+\medskip
+
+\begin{enumerate}
+\item Les deux points O et G sont confondus.
+\item Les quatre faces du tétraèdre sont isométriques. 
+\item Les deux points O et I sont confondus.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice IV}}
+\end{center}
+
+
+Soit $\left(u_n\right)$ la suite numérique définie par la donnée de ses deux premiers termes $u_0$ et $u_1,\: 0 < u_0 < 1$ et $0 < u_1 < 1$, et la relation de récurrence:
+
+\[u_{n+2} = \dfrac12 \left(\sqrt{u_{n+1}} + \sqrt{u_n}\right).\]
+
+\begin{enumerate}
+\item Montrer que la suite $\left(u_n\right)$ est convergente et déterminer sa limite.
+\item Montrer qu'à partir d'un certain rang $n_0$, la suite $\left(u_n\right)$ est monotone ( on ne demande pas de déterminer $n_0$ qui dépend des valeurs initiales $u_0$ et $u_1$).
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice V}}
+\end{center}
+
+Quel est le chiffre des unités du plus grand nombre entier inférieur ou égal à 
+$\dfrac{10^{\np{1992}}}{10^{83} + 7}$ ?
+\end{document}

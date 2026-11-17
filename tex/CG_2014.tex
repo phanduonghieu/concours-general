@@ -1,0 +1,409 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+
+\chapter{Concours général des lycées - Session 2014}
+
+\section{Problème 1 : Stabilité géométrique}
+
+\n Dans tout le problème, $\varepsilon$ et $q$ sont deux réels strictement positifs.\\
+On considère une suite $\left(x_{n}\right)$ de réels telle que $x_{0}>0$ et, pour tout entier naturel $n$,
+
+$$0 \leq x_{n+1}-q x_{n} \leq \varepsilon$$
+
+\begin{enumerate}
+	\item Pour tout entier naturel $n$, on pose $b_{n}=x_{n+1}-q x_{n}$.\\
+	Montrer que, pour tout entier $n \geq 1$, on a :
+	$$x_{n}=q^{n} x_{0}+q^{n-1} b_{0}+q^{n-2} b_{1}+\cdots+q b_{n-2}+b_{n-1}$$
+	\item Dans cette question, on suppose que $0<q<1$.
+	\begin{enumerate}
+		\item Montrer qu'il existe une suite géométrique $\left(y_{n}\right)$ telle que, pour tout $n \geq 0$,
+		$$\left|y_{n}-x_{n}\right| \leq \frac{\varepsilon}{1-q}$$
+		\item Montrer qu'il existe en fait une infinité de telles suites géométriques $\left(y_{n}\right)$.
+	\end{enumerate}
+	\item Dans cette question, on suppose que $q>1$. Pour tout entier $n \geq 1$, on pose $u_{n}=\frac{b_{0}}{q}+\frac{b_{1}}{q^{2}}+\cdots+\frac{b_{n-1}}{q^{n}}$.
+	\begin{enumerate}
+		\item Montrer que la suite $\left(u_{n}\right)$ converge.\\
+		On note $s$ sa limite.
+		\item Pour tout $n \geq 1$, montrer $0 \leq s-u_{n} \leq \frac{\varepsilon}{q^{n}(q-1)}$.
+		\item Montrer qu'il existe une unique suite géométrique $\left(y_{n}\right)$ telle que, pour tout entier naturel $n$,
+		$$\left|y_{n}-x_{n}\right| \leq \frac{\varepsilon}{q-1}$$
+	\end{enumerate}
+\end{enumerate}
+
+\newpage
+
+\section{Problème 2 : Vite << pile >>}
+
+\n Dans ce problème, $k$ et $n$ sont des entiers supérieurs ou égaux à 2.\\
+Un groupe de $k$ joueurs dispose d'une pièce de monnaie non supposée équilibrée, pour laquelle la probabilité d'obtenir << pile >> dans un lancer est notée $p$, avec $0<p<1$.\\
+Chaque joueur lance la pièce au plus $n$ fois en s'arrêtant s'il obtient << pile >> : son score est alors le nombre d'échecs, c'est-à-dire le nombre de << face >>. Ainsi, si un joueur obtient << pile >> au premier lancer, son score est 0 et il s'arrête de lancer; s'il obtient << pile >> au deuxième lancer (après un << face >>), son score est 1; s'il obtient << pile >> au $n$-ième lancer (après $n-1$ << face >>), son score est $n-1$; s'il n'obtient pas << pile >> durant les $n$ lancers, son score est $n$.\\
+Après les lancers, chaque joueur a un score. Le ou les gagnants sont les joueurs qui ont réalisé le plus petit score.
+
+\begin{enumerate}
+	\item Déterminer la loi de probabilité du score d'un joueur donné.
+	\item Déterminer la probabilité qu'il y ait un unique gagnant, puis la limite de cette probabilité quand $n$ tend vers l'infini.
+	\item Déterminer l'espérance du nombre de gagnants, puis la limite de cette espérance quand $n$ tend vers l'infini.
+\end{enumerate}
+
+\newpage
+
+\section{Problème 3 : Des chiffres pour des lettres}
+
+\n Un \textit{mot de longueur} $n$ est une suite de $n$ lettres choisies parmi les 10 lettres $A$, $B$, $C$, $D$, $E$, $F$, $G$, $H$, $I$, $J$. Par exemple, $BEC$, $JJCD$, $AFFICHAGE$, $ABCDEFGHIJ$ sont des mots de longueurs respectives $3$, $4$, $9$, $10$.\\
+Une \textit{attribution} du mot $\omega$ est un nombre dont l'écriture décimale est obtenue en remplaçant chaque lettre de $\omega$ par un des chiffres $0$, $1$, $2$, $3$, $4$, $5$, $6$, $7$, $8$, $9$, de sorte que des lettres identiques sont remplacées par le même chiffre et que deux lettres distinctes sont remplacées par des chiffres différents. Il est permis que le premier chiffre de l'attribution soit égal a 0. Par exemple, 121 et $040=40$ sont deux attributions pour le mot $GAG$, mais 333 et 452 n'en sont pas; 555 et $000=0$ sont des attributions de $A A A$, mais pas 112 ou $789$.\\
+Soit $d$ un entier strictement positif. On dit que le mot $\omega$ est \textit{un bloqueur} de $d$ si toute attribution de $\omega$ est un nombre non divisible par $d$. Ainsi le mot $\omega=A A B C A$ n'est pas un bloqueur de $d=4$, car $66716$ est une attribution de $\omega$ qui est divisible par 4.
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item Montrer que le mot $A B$ est un bloqueur de $d=100$.
+		\item Montrer que tout nombre d'au moins trois chiffres admet un bloqueur.
+	\end{enumerate}
+\end{enumerate}
+
+\n Le nombre $d>0$ est dit \textit{mauvais} s'il admet au moins un bloqueur. Sinon, on dit que $d$ est \textit{bon}. La question précédente montre que tout nombre d'au moins trois chiffres est mauvais.
+
+\begin{enumerate}\setcounter{enumi}{1}
+	\item \begin{enumerate}
+		\item Montrer que 10 est bon.
+		\item Montrer que 8 est bon.
+		\item Montrer que le mot $A A B$ est un bloqueur de 27.
+		\item Montrer que le mot $A B B A B$ est un bloqueur de 32.
+		\item Un diviseur positif d'un nombre bon est-il forcément bon ? Un diviseur positif d'un nombre mauvais est-il forcément mauvais ?
+	\end{enumerate}
+\end{enumerate}
+
+\n Si $k$ est un entier strictement positif et si $X$ est une lettre, on note $X^{k}$ le mot $X X \ldots X$ formé de $k$ lettres $X$.
+
+\begin{enumerate}\setcounter{enumi}{2}
+	\item \begin{enumerate}
+		\item Soit $p$ un nombre premier supérieur ou égal à 7 et soit $\omega$ le mot défini par :
+		$$\omega=A A A^{p-2} B A^{p-2} C A^{p-2} D A^{p-2} B A^{p-2} F A^{p-2} G A^{p-2} H A^{p-2} I A^{p-2} J A^{p-2}$$
+		Montrer que $\omega$ est un bloqueur de $p$.\\
+		\textit{On pourra utiliser librement le petit théorème de Fermat : si $x$ est un entier non divisible par $p$. alors $p$ divise $x^{p-1}-1$.}
+		\item Montrer qu'il existe au plus 27 nombres bons.
+	\end{enumerate}
+	\item Soient $\omega$ un mot de longueur $n$, et $a$ une attribution de $\omega$.\\
+	On note $a^{\prime}$ l'attribution de $\omega$ obtenue à partir de $a$ en permutant circulairement, dans cet ordre, les chiffres $0,1,2,3,4,5,6,7,8$ sans toucher aux 9 : autrement dit, dans l'écriture décimale de $a$, les chiffres $0,1,2,3,4,5,6,7,8,9$ sont respectivement remplacés par $1,2,3,4,5,6,7,8,0,9$. Par exemple, si $n=5$ et $a=01789$, alors $a^{\prime}=12809$.\\
+	Soit $k$ le nombre d'apparitions du chiffre 9 dans l'écriture décimale de $a$.
+	\begin{enumerate}
+		\item Si $a$ est congru à $r$ modulo 9, à quoi est congru $a$ modulo $9$ ?
+		\item En déduire que si $k$ n'est pas congru à $n$ modulo 3, alors il existe une attribution de $\omega$ divisible par 9.
+		\item Montrer qu'il en est de même si $k$ est congru à $n$ modulo 3, mais pas modulo 9.
+		\item Montrer que 9 est bon.
+	\end{enumerate}
+	\item Montrer que 18 est bon.
+	\item Montrer que si un nombre est mauvais, il admet une infinité de bloqueurs.
+\end{enumerate}
+
+\n \textit{Pour information, on peut montrer qu'il existe exactement 22 nombres bons. Ce sont les diviseurs positifs des nombres $18$, $24$, $45$, $50$, $60$, $80$.}
+
+\end{document}

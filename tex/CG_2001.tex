@@ -1,0 +1,322 @@
+%\documentclass[12pt,a4paper]{article}
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8]{inputenc}
+%\usepackage{t1enc}
+%\usepackage{amsmath,amssymb}
+%\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+%\usepackage{pst-eucl}
+%\usepackage{pstricks-add}
+%\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+%\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+%\def\Oij{$\left(\text{O}~;~\vect{\imath},~\vect{\jmath}\right)$}
+%\def\Oijk{$\left(\text{O}~;~\vect{\imath},~\vect{\jmath},~\vect{k}\right)$}
+%\def\Ouv{$\left(\text{O}~;~\vect{u},~\vect{v}\right)$}
+%% Macros
+%\def\Q{\mathbf{Q}}
+%\def\Z{\mathbf{Z}}
+%\def\C{\mathbf{C}}
+%\def\N{\mathbf{N}}
+%\def\R{\mathbf{R}}
+%\renewcommand{\theenumi}{\arabic{enumi}}
+%\def\labelenumi{{\bf \theenumi /}}
+%\def\labelenumii{{\theenumii)}}
+%\parindent0pt
+%\usepackage[french]{babel}
+%\DecimalMathComma
+%\usepackage[np]{numprint}
+%\begin{document}
+%
+%\begin{center}
+%\Large\textsf{CONCOURS GÉNÉRAL DES LYCÉES}\\
+%\rule{2cm}{0.1mm}\\[2mm]
+%\textsf{SESSION DE 2001}\\
+%\rule{2cm}{0.1mm}\\[2mm]
+%\textbf{COMPOSITION DE MATHÉMATIQUES}\\
+%\normalsize
+%\textsf{(Classe de Terminale S)}\\[2mm]
+%\textsc{Durée : 5 heures}\\
+%\rule{2cm}{0.1mm}
+%\end{center}
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize 2001\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 2001
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\pagestyle{cg}
+\usepackage[left=3.25cm, right=3.25cm, top=3cm, bottom=3cm]{geometry}
+\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\newcommand{\vectt}[1]{\overrightarrow{\,\mathstrut\text{#1}\,}}
+%\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+%\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+%\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+%\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\def\Oij{$\left(\text{O}~;~\vect{\imath},~\vect{\jmath}\right)$}
+\def\Oijk{$\left(\text{O}~;~\vect{\imath},~\vect{\jmath},~\vect{k}\right)$}
+\def\Ouv{$\left(\text{O}~;~\vect{u},~\vect{v}\right)$}
+\parindent0pt
+\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice 1}}
+\end{center}
+
+\begin{center}
+La calculatrice de poche est autorisée.\\
+La clarté et la précision seront prises en compte\\
+dans l'appréciation des copies.
+\end{center}
+
+{\bf
+Les premières questions de chacune des quatre parties de ce problème sont
+indépendantes des autres parties. Il n'est donc pas nécessaire de
+commencer son étude dans l'ordre indiqué.
+
+Les candidats peuvent admettre les résultats d'une question, à condition de
+l'indiquer clairement sur la copie.}
+\newpage
+\vspace{1cm}
+
+On appelle \textbf{trio} tout triplet de nombres réels $(a, b, c)$ non tous
+nuls et vérifiant la relation :
+
+\[ab + bc + ca = 0.\]
+
+Lorsque $a + b + c = 1$, on dit que le trio $(a, b, c)$ est un trio \textbf{réduit}.
+
+Les coordonnées sont rapportées à un repère orthonormal direct
+\Oijk{} de l'espace.
+
+
+\section*{\color{blue}Première partie}
+
+On note $\mathcal{C}$ l'ensemble des points de coordonnées $(a, b, c)$ où
+$(a, b, c)$ est un trio.
+
+On note $\Gamma$ l'ensemble des points de coordonnées $(a,b,c)$ où
+$(a, b, c)$ est un trio réduit.
+
+On note $\mathcal{P}$ le plan d'équation $x+y+z=1$.
+
+\begin{enumerate}
+\item Existe-t-il des trios $(a, b, c)$ tels que $a + b + c = 0$ ?
+\item Montrer que $\mathcal{C}$ est une réunion de droites passant par $O$
+et privées de ce point.
+\item Montrer que $\Gamma$ est l'intersection d'un plan et d'une sphère de
+centre $O$.  Quelle est la nature géométrique de $\Gamma$ ?
+\item Donner la nature géométrique de $\mathcal{C}$ et l'illustrer d'un
+croquis.
+\item Soit $ L$ un point fixé de $\Gamma$.
+Montrer que le volume $V$ du tétraèdre OLL$'$L$''$, où L$'$ et L$''$ sont
+deux points distincts de $\Gamma$ et différents de L, est maximal lorsque
+les arêtes issues de O sont deux à deux orthogonales et déterminer alors
+les coordonnées de $L'$ et $L''$ en fonction de celles de L.
+\item Montrer que le produit $abc$ admet un maximum et un minimum lorsque
+le point de coordonnées $(a, b, c)$ décrit $\Gamma$.
+
+Préciser les trios réduits réalisant ces extremums.
+\end{enumerate}
+
+\newpage
+
+\section*{\color{blue}Deuxième partie}
+
+
+Dans cette partie et les suivantes, un trio $(a, b, c)$ est dit
+\textbf{rationnel} lorsque $a, b$ et $c$ sont des nombres rationnels
+(éléments de l'ensemble $\Q$)~; il est dit \textbf{entier}, lorsque $a, b$
+et $c$ sont des nombres entiers relatifs (éléments de l'ensemble $\Z$)~;
+enfin un trio entier est dit \textbf{primitif} si $a, b$ et $c$ n'admettent
+que $1$ et $- 1$ comme diviseurs communs.
+
+\medskip
+
+\begin{enumerate}
+\item Déterminer la nature de l'ensemble $H_1$ des points de coordonnées
+$(x, y, 1)$ tels que $(x, y, 1)$ soit un trio.  Montrer que le point $\Omega_1$
+de coordonnées $(-1,-1,1)$ est un centre de symétrie de $H_1$. Quels sont
+les points de $H_1$ à coordonnées entières ?
+\item Pour tout entier naturel non nul $h$, on note $Z_h$ l'ensemble des
+trios entiers $(a, b, c)$ tels que $c=h$.
+
+Déterminer $Z_h$ pour $h = 1$ et $h = 2$.
+\item Montrer que $Z_h$ est un ensemble fini et exprimer le nombre $N(h)$
+de ses éléments en fonction de celui des diviseurs de $h^2$ dans $\Z$.
+
+Montrer que $4$ divise $N(h)-2$.
+\item Pour tout entier naturel non nul $h$, on note $N'(h)$ le nombre des
+trios entiers $(a, b, c)$ tels que l'un au moins des entiers $a,b$ ou $c$
+soit égal à $h$?
+
+Exprimer $N'(h)$ en fonction de $N(h)$ selon la parité de
+$h$.
+\item Montrer qu'à tout trio entier $(a, b, c)$ on peut associer un triplet
+$(r,s,t)$ d'entiers tels que $r $ et $s$ soient premiers entre eux, $s$
+positif ou nul et tels que l'on ait : $a=r(r+s)t$, $b=s(r+s)t$, $c=-rst$.
+
+Énoncer et démontrer une réciproque. 
+
+Pour quels trios $(a, b, c)$ le triplet
+$(r, s, t)$ n'est-il pas unique ?
+\item Déterminer les triplets $(r, s, t)$ ainsi associés aux trios primitifs.
+
+En déduire que si $(a, b, c)$ est un trio primitif, alors $|abc|,\ |a + b|,\
+|b + c|$, et $|c + a|$ sont des carrés d'entiers.
+\item pour tout entier naturel non nul $h$, on note $P(h)$ le nombre de
+trios primitifs $(a, b, c)$ tels que $c = h$.
+
+Montrer que $P(h)$ est une puissance de $2$.  Pour quels entiers $h$ a-t-on $P(h) = N(h)$ ? 
+
+Expliciter une suite d'entiers $(h_n)$ tels que la suite $\left(\frac
+{P(h_n)}{H(h_n)}\right)$ converge vers zéro.
+\item Soit $(a, b, 1)$ un trio.
+
+Montrer qu'il existe deux suites $(x_n)$ et $(y_n)$ convergeant respectivement vers $a$ et $b$ et telles que pour tout $n$, $(x_n, y_n,1)$ soit un trio rationnel.
+\item Soit $(a, b, c)$ un trio réduit.  Montrer qu'il existe trois suites
+$(x_n),\ (y_n)$ et $(z_n)$ convergeant respectivement vers $a, b$ et $c$ et
+telles que pour tout $n$, $(x_n, y_n, z_n)$ soit un trio rationnel réduit.
+\end{enumerate}
+
+\newpage
+
+\section*{\color{blue}Troisième partie}
+
+On note j le nombre complexe $\text{e}^{\frac{2\text{i}\pi}{3}}$, c'est à dire j$ = - \dfrac12
++ \text{i}\dfrac{\sqrt 3}{2}$.
+
+Pour tout trio $T = (a, b, c)$ on note $\widehat{T} = (a, c, b),\, S(T) = a + b + c$ et
+
+$z(T) = a + b\text{j} + c\text{j}^2$.
+
+\medskip
+
+\begin{enumerate}
+\item Calculer le module de $z(T)$ en fonction de $S(T)$.
+
+Peut-on avoir $z(T) =0$ ?
+
+Calculer le cosinus et le sinus d'un argument $\theta$ de
+$z(T)$ en fonction de $a, b$ et $c$.
+\item Soit $z_0$ un nombre complexe non nul.  Déterminer les trios
+$T=(a, b, c)$ tels que $z(T)=z_0$.
+\item Étant donnés deux trios $T_1$ et $T_2$, montrer qu'il existe un
+unique trio, noté $T_1*T_2$, vérifiant $S(T_1*T_2) = S(T_1)S(T_2)$ et
+$z(T_1*T_2) = z(T_1)z(T_2)$. Calculer $T_1*T_2$ en fonction de $T_1$ et
+$T_2$.
+
+Que peut-on dire d'un argument de $z(T_1*T_2)$ ?
+
+Que peut-on dire d'un argument de $z(T_1*\widehat{T_1})$ ?
+\item si $T_1$ et $T_2$ sont réduits, en est-il de même de $T_1*T_2$ ?
+
+Si $T_1$ et $T_2$ sont entiers, en est-il de même de $T_1*T_2$ ?  Si $T_1$ et
+$T_2$ sont primitifs, en est-il de même de $T_1*T_2$ ?
+\item Comparer les trios $T_1*T_2$ et $T_2*T_1,\ (T_1*T_2)*T_3$ et
+$(T_1*T_2)*T_3,\ T_1$ et $T_1*(1,0,0)$.
+\item Étant donnés les trios $T_1$ et $T_2$, résoudre l'équation
+$T_1*T = T_2$ où le trio $T$ est l'inconnue.
+\item Étant donné un trio $T$, on définit une suite de trios $(T_n)$ par
+$T_0 = (1,0,0)$ et $T_{n+1}=T*T_n$.
+
+Calculer $S(T_n)$.
+
+Étant donné un entier $p$, résoudre l'équation $T_p = T_0$ où le trio $T$ est l'inconnue.
+\end{enumerate}
+
+\newpage
+
+\section*{\color{blue}Quatrième partie}
+On note $A$ l'ensemble des entiers $m$ non nuls tels qu'il existe
+deux entiers $u, v$ tels que $m = u^2 + 3v^2$.
+
+On note $A'$ l'ensemble des nombres complexes $z$ non nuls tels qu'il existe deux entiers
+$u, v$ tels que $z = u + \text{i}v\sqrt 3$ (on remarquera que
+$|z|^2 = u^2 + 3v^2$).
+
+On note $B$ l'ensemble des entiers $n$ non nuls
+tels qu'il existe deux entiers $r,s$ tels que $n=r^2 + rs + s^2$.
+\begin{enumerate}
+\item Montrer que le produit de deux éléments de $A'$ appartient à $A'$,
+puis que le produit de deux éléments de $A$ appartient à $A$.
+\item Montrer que si $p$ est en nombre premier élément de $A$, alors $p=3$
+ou $3$ divise $p-1$.
+\item Montrer que $A=B$ (on pourra notamment remarquer que
+
+$r^2+rs+s^2 = (r+s)^2- (r + s)s + s^2$).
+\item Montrer que $4$ divise les éléments pairs de $A$ et que les quotients
+appartiennent à $A$, puis que tout élément de $A$ est produit d'un élément
+impair de $A$ par une puissance de $4$.
+	\begin{enumerate}
+		\item Soit s'il en existe, un entier impair $m = u^2 + 3v^2$ tel que les
+entiers $u$ et $v$ soient premiers entre eux et qui admet un diviseur
+premier $p$ n'appartenant pas à $A$.
+
+Montrer qu'il existe alors un plus petit entier strictement positif $n_0$ tel que $n_0p$ appartienne à $A$.
+
+Montrer que $n_0$ est impair.
+		\item Établir l'existence de deux entiers $u'$ et $v'$ inférieurs en valeur
+absolue à $\frac p2$ tels que $p$ divise $u'-u$ et $v'-v$.
+
+Montrer que $p$ divise l'entier non nul $u'^2+3v'^2$ et que $n_0<p$.
+		\item Établir l'existence de deux entiers non nuls premiers entre eux $u_0$
+et $v_0$ tels que $n_0p=y_0^2+3v_0^2$.
+		\item Établir l'existence de deux entiers $u_1$ et $v_1$ inférieurs en
+valeur absolue à $\frac{n_0}2$ tels que $n_0$ divise $u_1-u_0$ et
+$v_1-v_0$. 
+
+Montrer que $n_0$ divise l'entier non nul $u_1^2+3v_1^2$ que
+l'on notera $n_0n_1$.
+		\item En déduire qu'un tel entier $m$ ne peut pas exister (on pourra
+considérer l'entier $n_0^2n_1p$).
+	\end{enumerate}
+\item Montrer que tout élément de $A$ s'écrit $m = C^2p_1...p_k$, où
+$C$ est un entier naturel non nul et les $p_i$ des nombres premiers
+distincts éléments de $A$.
+	\begin{enumerate}
+		\item Soit $p$ un nombre premier tel que $3$ divise $p-1$ et $K$ l'ensemble
+des triplets $(x, y, z)$ où les entiers $x, y$ et $z$ sont strictement compris
+entre $0$ et $p$, et tels que $p$ divise ($xyz - 1)$. Montrer que $K$
+possède $(p-1)^2$ éléments, et que $3$ divise le nombre d'éléments de $K$
+ne vérifiant pas $x=y=z$.
+		\item En déduire qu'il existe en entier $x$ strictement compris entre $1$
+et $p$ tel que $p$ divise $x^2+x+1$, puis que $p$ appartient à $A$.
+
+Décrire les éléments de $A$.
+	\end{enumerate}
+\item Soit $D$ l'ensemble des entiers $d$ tels qu'il existe un trio entier
+$(a, b, c)$ vérifiant $a + b + c= d$ et $abc\not=0$.
+
+Montrer, grâce à la question \textbf{5/} de la deuxième partie, que tout élément de $D$ possède un diviseur premier élément de $A$.
+
+Réciproquement, que peut-on dire d'un entier non nul admettant un diviseur premier élément de $A$ ?
+\item En déduire les éléments de $D$ compris aux sens large entre \np{2001} et
+\np{2010}.
+\end{enumerate}
+\end{document}

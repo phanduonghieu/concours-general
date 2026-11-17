@@ -1,0 +1,102 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize\it mardi 18 mars 1997\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill mardi 18 mars 1997
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\pagestyle{cg}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\parindent0pt
+\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice I}}
+\end{center}
+
+On a placé un jeton sur chaque sommet d'un polygone régulier à \np{1997} côtés. 
+
+Sur chacun de ces jetons est inscrit un entier relatif, la somme de ces entiers relatifs étant égale à 1. On choisit un sommet de départ et on parcourt le polygone dans le sens trigonométrique en ramassant les jetons au fur et à mesure tant que la somme des entiers inscrits sur les jetons ramassés est strictement positive.
+
+Peut-on choisir le sommet de départ de façon à ramasser tous les jetons ? Si oui, combien y-a-t-il de choix possibles ?
+
+\begin{center}\textbf{{\color{blue} Exercice II}}
+\end{center}
+
+Une capsule spatiale a la forme du solide de révolution délimité par une sphère de centre 0, de rayon R, et un cône de sommet O qui rencontre cette sphère selon un cercle de rayon $r$.
+
+Quel est le volume maximal d'un cylindre droit contenu dans cette capsule, le cylindre et la capsule ayant même axe de révolution ?
+
+\begin{center}\textbf{{\color{blue} Exercice III}}
+\end{center}
+
+C est un cube d'arête 1 et $p$ est la projection orthogonale sur un plan. Quelle est la
+valeur maximale de l'aire de $p$(C) ?
+
+\begin{center}\textbf{{\color{blue} Exercice IV}}
+\end{center}
+
+Etant donné un triangle ABC, on note $a, b, c$ les longueurs de ses côtés et $m, n, p$ les longueurs de ses médianes. 
+
+Pour tout réel $\alpha$ strictement positif, on définit le réel $\lambda(\alpha)$ par la relation :
+
+\[a^{\alpha} + b^{\alpha} + c^{\alpha} = [\lambda(\alpha)]^{}\left(m^{\alpha} + n^{\alpha} + p^{\alpha} \right)\]
+
+\begin{enumerate}
+\item Calculer $\lambda(2)$.
+\item Calculer la limite de $\lambda(\alpha)$ lorsque $\alpha$ tend vers $0$.
+\item A quelle condition portant sur $a, b, c$ le réel $\lambda(\alpha)$ est-il indépendant de $\alpha$ ?
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice V}}
+\end{center}
+
+Dans le plan, soient A et B deux points distincts.
+
+Pour tout point C extérieur à la droite (AB), on note G l'isobarycentre du triangle ABC et I le centre de son cercle inscrit.
+
+\medskip
+
+\begin{enumerate}
+\item Soit $\alpha$ un réel tel que $0 < \alpha < \pi$. 
+
+Quel est l'ensemble $\Gamma$ des points C tels que
+
+\[\left(\vect{\text{CA}},\:\vect{\text{CB}}\right) = \alpha +2k\pi.\]
+
+$k$ étant un entier ? 
+
+Lorsque C décrit $\Gamma$, montrer que G et I décrivent deux arcs de
+cercle que l'on précisera.
+\item On suppose désormais que $\dfrac{\pi}{3} < \alpha < \pi$. Comment doit-on choisir C dans $\Gamma$pour que la distance GI soit minimale ?
+\item On note $f(\alpha)$ la distance minimale GI de la question précédente. 
+
+Expliciter $f(\alpha)$ en fonction de $a =$ AB et $\alpha$. 
+
+Déterminer la valeur maximale de $f(\alpha)$ lorsque $\alpha$ décrit $\left]\dfrac{\pi}{3}~;~\pi\right[$.
+\end{enumerate}
+\end{document}

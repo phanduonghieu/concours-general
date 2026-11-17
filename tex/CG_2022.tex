@@ -1,0 +1,602 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+\chapter{Concours général des lycées - Session 2022}
+
+\section{Problème 1 : En pleine effervescence}
+
+
+\n Pour tout réel $x \geq 0$, on note $\mathrm{E}(x)$ la partie entière de $x$, c'est-à-dire le plus grand entier naturel inférieur ou égal à $x$. On a donc $\mathrm{E}(x) \in \mathbb{N}$ et $\mathrm{E}(x) \leq x<\mathrm{E}(x)+1$.\\
+Par exemple, $\mathrm{E}(2,4)=2$, $\mathrm{E}(3)=3$ et $\mathrm{E}(1,9)=1$.\\
+On dit qu'un réel $x$ est \textit{pétillant} si $x \geq 0$ et si, pour tout entier $n \geq 1$, le nombre $\mathrm{E}\left(x^{\left(2^{n}\right)}\right)+2$ est le carré d'un entier.
+
+\subsection{Mise en jambes}
+
+\begin{enumerate}
+	\item Démontrer que le réel $\frac{3}{2}$ n'est pas pétillant.
+	\item Démontrer que l'intervalle $[0;1[$ ne contient aucun réel pétillant.
+	\item \begin{enumerate}
+		\item Démontrer que, si un réel $x$ est pétillant, alors le réel $x^{2}$ est aussi pétillant.
+		\item Démontrer que, s'il existe un réel pétillant, alors il existe une infinité de réels pétillants.
+	\end{enumerate}
+	\item Démontrer qu'aucun entier naturel n'est pétillant.
+\end{enumerate}
+
+\n Dans la suite de ce problème, on considère un entier $k \geq 1$ fixé. On souhaite établir que l'intervalle $[k ; k+1[$ contient un unique réel pétillant. On note $\left(u_{n}\right)_{n \geq 1}$ la suite définie par :
+$$u_{1}=(k+1)^{2}$$
+et, pour tout entier $n \geq 1$,
+$$u_{n+1}=\left(u_{n}-1\right)^{2}$$
+
+\subsection{Existence}
+
+
+\begin{enumerate}\setcounter{enumi}{4}
+	\item Démontrer que $u_{n} \geq 3$ pour tout entier $n \geq 1$.
+	\item Démontrer que, pour tout entier $n \geq 1$, il existe un unique réel $a_{n} \geq 1$ tel que $a_{n}^{\left(2^{n}\right)}+2=u_{n}$, et un unique réel $b_{n} \geq 1$ tel que $b_{n}^{\left(2^{n}\right)}+1=u_{n}$.
+	\item Démontrer que la suite $\left(a_{n}\right)_{n \geq 1}$ est strictement croissante et que la suite $\left(b_{n}\right)_{n \geq 1}$ est strictement décroissante.
+	\item Démontrer que la suite $\left(a_{n}\right)_{n \geq 1}$ est convergente. On note $\alpha$ sa limite.
+	\item Démontrer que $k<\alpha<k+1$ et que $\alpha$ est pétillant.
+\end{enumerate}
+
+
+\subsection{Unicité}
+
+\n Soit $\gamma$ un réel pétillant contenu dans l'intervalle $[k ; k+1[$.\\
+Pour tout entier $n \geq 1$, on pose $v_{n}=\mathrm{E}\left(\gamma^{\left(2^{n}\right)}\right)+2$.
+
+\begin{enumerate}\setcounter{enumi}{9}
+	\item Démontrer que $u_{n}=v_{n}$ pour tout entier $n \geq 1$.
+	\item Avec les notations de la partie 1.2, démontrer que, pour tout entier $n \geq 1$,
+	$$a_{n} \leq \gamma \leq b_{n}$$
+	\item \begin{enumerate}
+		\item Soient $x$ et $y$ deux réels tels que $x \geq y \geq 1$.\\
+		Démontrer que, pour tout entier naturel $n \geq 1$,
+		$$x^{\left(2^{n}\right)}-y^{\left(2^{n}\right)} \geq 2^{n}(x-y)$$
+		\item Démontrer que les suites $\left(a_{n}\right)_{n \geq 1}$ et $\left(b_{n}\right)_{n \geq 1}$ convergent toutes les deux vers $\gamma$.
+	\end{enumerate}
+	\item Démontrer que $\gamma$ est l'unique réel pétillant contenu dans l'intervalle $[k ; k+1[$.
+\end{enumerate}
+
+
+\section{Problème 2 : Garder le cap}
+
+
+\n Soit $\left(O ; \vec{\imath}, \vec{\jmath}\right)$ un repère orthonormé du plan. Dans ce problème, on considère un entier $n \geq 2$ fixé et on étudie une suite de points $\left(M_{k}\right)_{k \geq 0}$ telle que $M_{0}=O$ et que, pour tout entier $k \geq 0$, le vecteur $\overrightarrow{M_{k} M_{k+1}}$ soit égal à $\vec{\imath}$ ou à $\vec{\jmath}$. Le but du problème est de démontrer qu'une telle suite de points contient toujours au moins $n$ points alignés.\\
+
+\n \textbf{Notation :} Dans toute la suite de l'exercice, une fraction $\frac{p}{q}$ peut aussi être désignée par $p / q$.
+
+\subsection{Étude des petites valeurs de $n$}
+
+
+\begin{enumerate}
+	\item Démontrer que la suite $\left(M_{k}\right)_{k \geq 0}$ contient toujours deux points alignés.
+	\item Démontrer que la suite $\left(M_{k}\right)_{k \geq 0}$ contient toujours trois points alignés.
+\end{enumerate}
+
+
+\subsection{Préliminaires}
+
+\begin{enumerate}\setcounter{enumi}{2}
+	\item Démontrer qu'il existe une suite $\left(u_{k}\right)_{k \geq 0}$ telle que, pour tout entier $k \geq 0$,
+	\begin{itemize}
+		\item[$\triangleright$] le vecteur $\overrightarrow{M_{0} M_{k}}$ soit égal à $u_{k} \vec{l}+\left(k-u_{k}\right) \vec{\jmath}$;
+		\item[$\triangleright$] le terme $u_{k+1}$ soit égal à $u_{k}$ ou bien à $1+u_{k}$.
+	\end{itemize}
+	\item Démontrer que, si l'on dispose de deux nombres réels $s$ et $t$ pour lesquels il existe $n$ entiers $k$ tels que $u_{k}=s k+t$, la suite $\left(M_{k}\right)_{k \geq 0}$ contient bien $n$ points alignés.
+\end{enumerate}
+
+\n Dans la suite, pour tout entier $k \geq 1$, on pose $v_{k}=u_{k} / k$.
+
+\begin{enumerate}\setcounter{enumi}{4}
+	\item Démontrer, pour tout entier $k \geq 1$, que $v_{k}$ est un nombre compris entre 0 et 1.
+\end{enumerate}
+
+\n Enfin, au cours de ce problème, il sera fréquemment utile d'invoquer le résultat connu sous le nom de \textit{principe des tiroirs} et qui est l'objet de la question suivante.
+
+\begin{enumerate}\setcounter{enumi}{5}
+	\item Soit $k$ et $\ell$ deux entiers naturels non nuls. On veut répartir $k \ell$ chemises parmi $k$ tiroirs. Démontrer qu'au moins un de ces $k$ tiroirs contiendra au moins $\ell$ chemises.
+\end{enumerate}
+
+
+\subsection{Barrières rationnelles}
+
+\n Dans cette partie, on considère une fraction irréductible $a / b$ comprise entre 0 et 1. Par conséquent, $a$ et $b$ sont deux entiers naturels tels que $0 \leq a \leq b$ et $1 \leq b$.
+\begin{enumerate}\setcounter{enumi}{6}
+	\item Soit $k \geq 1$ un éventuel entier tel que $v_{k} \leq a / b \leq v_{k+1}$ ou $v_{k+1} \leq a / b \leq v_{k}$. Démontrer que :
+	$$a-b \leq b u_{k}-a k \leq a $$
+	\item  En déduire que, s'il existe au moins $(b+1) n$ entiers $k$ tels que $v_{k} \leq a / b \leq v_{k+1}$ ou $v_{k+1} \leq a / b \leq v_{k}$, la suite $\left(M_{k}\right)_{k \geq 0}$ contient bien $n$ points alignés.
+\end{enumerate}
+
+
+\subsection{Couples serrés, moyennes naïves et recouvrements par des intervalles principaux}
+
+\n Soient $a / b$ et $c / d$ deux fractions irréductibles, dont les dénominateurs $b$ et $d$ sont strictement positifs. On dit que le couple $(a / b ; c / d)$ est \textit{serré} si l'égalité $b c-a d=1$ est vérifiée. En outre, on appelle \textit{moyenne naïve} des deux fractions $a / b$ et $c / d$ la fraction $(a+c) /(b+d)$. Enfin, on appelle \textit{intervalles principaux} de la fraction $a / b$ les deux intervalles $\left[\frac{a}{b}-\frac{1}{2 b n} ; \frac{a}{b}\right]$ et $\left[\frac{a}{b} ; \frac{a}{b}+\frac{1}{2 b n}\right]$. Plus précisément, on dit que $\left[\frac{a}{b}-\frac{1}{2 b n} ; \frac{a}{b}\right]$ est l'intervalle principal \textit{inférieur} de $a / b$ et que $\left[\frac{a}{b} ; \frac{a}{b}+\frac{1}{2 b n}\right]$ est l'intervalle principal \textit{supérieur} de $a / b$. De manière générale, on dira qu'un intervalle est un \textit{intervalle principal} s'il existe une fraction irréductible dont il est un intervalle principal.
+\begin{enumerate}\setcounter{enumi}{8}
+	\item Démontrer que le couple de fractions $(0 / 1 ; 1 / 1)$ est serré.
+	\item Soit $(a / b ; c / d)$ un couple de fractions serré.
+	\begin{enumerate}
+		\item Démontrer que $a / b<c / d$.
+		\item Soit $x / y$ la moyenne naïve des deux fractions $a / b$ et $c / d$. Démontrer que $x / y$ est une fraction irréductible, et que les couples $(a / b ; x / y)$ et $(x / y ; c / d)$ sont tous deux serrés.
+	\end{enumerate}
+	\item Soient $a / b$, $c / d$ et $e / f$ trois fractions irréductibles telles que les couples $(a / b ; c / d)$ et $(c / d ; e / f)$ soient serrés. Démontrer que, si $d \geq 2 n$, la fraction $c / d$ appartient à l'intervalle principal supérieur de la fraction $a / b$ et à l'intervalle principal inférieur de la fraction $e / f$.
+\end{enumerate}
+
+\n On considère maintenant le processus suivant.\\
+On part d'une liste dont les deux éléments sont les fractions irréductibles $0 / 1$ et $1 / 1$. Puis, tant que cette liste contient deux fractions consécutives $a / b$ et $c / d$ telles que $b+d<2 n$, on insère dans la liste, entre ces deux fractions, leur moyenne naïve $(a+c) /(b+d)$.
+
+\begin{enumerate}\setcounter{enumi}{11}
+	\item Démontrer que le processus ci-dessus finit nécessairement par s'arrêter, et qu'alors la liste obtenue contient au plus $4 n^{2}$ fractions, dont tout couple de fractions consécutives est un couple serré.	
+\end{enumerate}
+
+\n Soit $0 / 1=q_{1}<q_{2}<\ldots<q_{\ell}=1 / 1$ les $\ell$ fractions obtenues à l'issue du processus ci-dessus. Pour tout entier $k$ tel que $1 \leq k \leq \ell-1$, on note $r_{k}$ la moyenne naïve des fractions $q_{k}$ et $q_{k+1}$.
+
+\begin{enumerate}\setcounter{enumi}{12}
+	\item Démontrer que les dénominateurs des fractions $r_{k}$ appartiennent tous à l'intervalle $[2 n ; 4 n-1]$.
+	\item Démontrer que, pour tout entier $k$ tel que $1 \leq k \leq \ell-1$, chacun des intervalles $\left[q_{k} ; r_{k}\right]$ et $\left[r_{k} ; q_{k+1}\right]$ est inclus dans un intervalle principal.
+\end{enumerate}
+
+
+\subsection{Coincé dans un intervalle principal}
+
+
+\n Soit $a / b$ une fraction irréductible. On suppose qu'il existe un entier $\ell \geq 1$ tel que chacun des termes $v_{\ell n}, v_{\ell n+1}, \ldots, v_{2 \ell n-1}$ appartient à l'intervalle $\left[\frac{a}{b} ; \frac{a}{b}+\frac{1}{2 b n}\right]$.
+\begin{enumerate}\setcounter{enumi}{14}
+	\item Démontrer que $0 \leq b u_{k}-a k<\ell$ pour tout entier $k$ tel que $\ell n \leq k \leq 2 \ell n-1$.
+	\item En déduire que la suite $\left(M_{k}\right)_{k \geq 0}$ contient bien $n$ points alignés.
+\end{enumerate}
+
+\n On suppose maintenant qu'il existe un entier $\ell \geq 1$ tel que chacun des termes $v_{\ell n}, v_{\ell n+1}, \ldots, v_{2 \ell n-1}$ appartient à l'intervalle $\left[\frac{a}{b}-\frac{1}{2 b n} ; \frac{a}{b}\right]$.
+
+\begin{enumerate}\setcounter{enumi}{16}	
+	\item Démontrer, sous ces nouvelles hypothèses, que la suite $\left(M_{k}\right)_{k \geq 0}$ contient bien $n$ points alignés.
+\end{enumerate}
+
+
+\subsection{Conclusion}
+
+
+\begin{enumerate}\setcounter{enumi}{17}	
+	\item \begin{enumerate}
+		\item Démontrer que la suite $\left(M_{k}\right)_{k \geq 0}$ contient nécessairement $n$ points alignés.
+		\item Démontrer que $n$ des $n \times 2^{32 n^{4}}$ premiers points de la suite $\left(M_{k}\right)_{k \geq 0}$ sont alignés.\\
+		\textit{Toute réponse aboutissant à une valeur finie différente de $n \times 2^{32 n^{4}}$ sera prise en considération et valorisée selon la valeur proposée.}
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Vers l'infini, et au-delà !}
+
+\begin{enumerate}\setcounter{enumi}{18}
+	\item La suite $\left(M_{k}\right)_{k \geq 0}$ contient-elle nécessairement une infinité de points alignés ?
+\end{enumerate}
+
+\newpage
+
+\section{Problème 3 : Un tournoi par équipes}
+
+\n Si $E$ est un événement, on désigne par $\mathbb{P}(E)$ la probabilité de $E$. On pourra librement utiliser le résultat suivant : si $D_{1}, \ldots, D_{k}$ sont des événements deux à deux disjoints, alors :
+$$\mathbb{P}\left(D_{1} \cup \cdots \cup D_{k}\right)=\mathbb{P}\left(D_{1}\right)+\cdots+\mathbb{P}\left(D_{k}\right) $$
+
+\subsection{Un jeu, deux joueurs}
+
+\n Ambre dispose d'une pièce qui, à chaque lancer, donne \textsc{Pile} avec une probabilité $a \in] 0 ; 1[$ et donne \textsc{Face} avec une probabilité $1-a$. Quant à lui, Benjamin dispose d'une pièce qui, à chaque lancer, donne \textsc{Pile} avec une probabilité $b \in] 0 ; 1[$ et donne \textsc{Face} avec une probabilité $1-b$.\\
+Ils décident de jouer au jeu suivant : chacun lance sa pièce. S'ils obtiennent tous les deux \textsc{Pile} ou tous les deux \textsc{Face}, ils relancent chacun leur pièce et continuent ainsi tant qu'ils obtiennent simultanément \textsc{Pile} ou simultanément \textsc{Face}. \textit{A contrario}, ils s'arrêtent dès que l'un obtient \textsc{Pile} et l'autre \textsc{Face}. Celui qui obtient \textsc{Pile} est alors déclaré gagnant. Tous les lancers sont indépendants.\\
+Pour tout entier $n \geq 1$, on note $A_{n}$ l'événement << Ambre gagne lors du $n^{\text{ème}}$ lancer >>, $B_{n}$ l'événement << Benjamin gagne lors du $n^{\text{ème}}$ lancer >> et $C_{n}$ l'événement << chacun des deux joueurs lance au moins $n$ fois sa pièce lors de ce jeu >>.
+
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item On pose $\lambda=1-a-b+2 a b$. Démontrer que $\mathbb{P}\left(C_{2}\right)=\lambda$.
+		\item Pour tout entier $n \geq 1$, exprimer $\mathbb{P}\left(C_{n+1}\right)$ en fonction de $\mathbb{P}\left(C_{n}\right)$. En déduire une expression de $\mathbb{P}\left(C_{n}\right)$ en fonction de $n$.
+	\end{enumerate}
+	\item Soit $n \geq 1$ un entier.
+	\begin{enumerate}
+		\item Exprimer $\mathbb{P}\left(A_{n}\right)$ en fonction de $a$, $b$ et $\mathbb{P}\left(C_{n}\right)$.
+		\item En déduire une expression de $\mathbb{P}\left(A_{n}\right)$ en fonction de $a$, $b$ et $n$.
+		\item Donner une expression de $\mathbb{P}\left(B_{n}\right)$ en fonction de $a$, $b$ et $n$.
+	\end{enumerate}
+	\item On note $G_{A}$ l'événement << Ambre est gagnante >> et $G_{B}$ l'événement << Benjamin est gagnant >>.
+	\begin{enumerate}
+		\item Démontrer que $0<\lambda<1$.
+		\item Démontrer, pour tout entier $n \geq 1$, que $\mathbb{P}\left(G_{A}\right) \geq a(1-b) \times \frac{1-\lambda^{n}}{1-\lambda}$ et $\mathbb{P}\left(G_{B}\right) \geq b(1-a) \times \frac{1-\lambda^{n}}{1-\lambda}$.
+		\item On note $G_{\varnothing}$ l'événement << Ce jeu n'a aucun gagnant >>. Déduire de ce qui précède que :
+		$$\mathbb{P}\left(G_{A}\right)=\frac{a(1-b)}{1-\lambda}\quad, \quad \mathbb{P}\left(G_{B}\right)=\frac{b(1-a)}{1-\lambda} \quad\text { et } \quad\mathbb{P}\left(G_{\varnothing}\right)=0$$
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Qu'est-ce qu'un jeu régulier ?}
+
+\n Un jeu à $N$ personnes $A_{1}, A_{2}, \ldots, A_{N}$ est dit \textit{régulier} lorsqu'il possède les caractéristiques suivantes :
+\begin{itemize}
+	\item[$\triangleright$] Le jeu se déroule en un ou plusieurs tours successifs. Chaque tour ne concerne que deux joueurs. Chaque personne peut jouer plusieurs tours, mais n'est pas obligée de jouer contre chacune des autres personnes.
+	\item[$\triangleright$] À chaque tour, il ne peut y avoir qu'un seul gagnant.
+	\item[$\triangleright$] Il existe des réels strictement positifs $a_{1}, a_{2}, \ldots, a_{N}$ tels que, pour toutes personnes $A_{i}$ et $A_{j}$, le quotient des probabilités $\frac{\mathbb{P}\left(A_{i} \text { gagne contre } A_{j}\right)}{\mathbb{P}\left(A_{j} \text { gagne contre } A_{i}\right)}$ soit égal à $\frac{a_{i}}{a_{j}}$.
+\end{itemize}
+
+\vspace{-0.2cm}
+\begin{enumerate}\setcounter{enumi}{3}
+	\item Démontrer que le jeu suivant est régulier :\\
+	Les personnes $A_{1}, A_{2}, \ldots, A_{2022}$ disposent chacune d'une pièce. Pour tout $i$, à chaque lancer, la pièce de la personne $A_{i}$ donne \textsc{Pile} avec une probabilité $p_{i} \in ] 0 ; 1 [$ et donne \textsc{Face} avec une probabilité $1-p_{i}$. Le jeu se déroule en un ou plusieurs tours successifs, et à chaque tour deux personnes se rencontrent et jouent selon les modalités du jeu décrit dans la partie $3.1$.
+\end{enumerate}
+
+
+\subsection{Un tournoi régulier par équipes}
+ 
+\n Soient $A$ et $B$ deux équipes. On note $m \in \mathbb{N}^{*}$ l'effectif de $A$ et $n \in \mathbb{N}^{*}$ l'effectif de $B$. On numérote alors les membres des équipes par ordre de passage : $A_{1}, A_{2}, \ldots, A_{m}$ pour $A$ et $B_{1}, B_{2}, \ldots, B_{n}$ pour $B$. Les deux équipes $A$ et $B$ s'affrontent lors d'un tournoi constitué de plusieurs parties successives dont les issues sont indépendantes. Lors de chaque partie, la première personne de l'équipe $A$ joue contre la première personne de l'équipe $B$ et, à l'issue de cette partie, une seule de ces deux personnes est déclarée gagnante et le perdant est éliminé. Le gagnant joue alors contre une nouvelle personne de l'équipe adverse et on continue ainsi jusqu'à ce qu'une équipe n'ait plus d'adversaire, gagnant ainsi le tournoi.\\
+Par exemple, pour $m=n=3$, la personne $A_{1}$ joue contre la personne $B_{1}$. Si $A_{1}$ gagne, alors $B_{1}$ est éliminée, et $A_{1}$ joue contre $B_{2}$ lors de la seconde partie. Si, cette fois, c'est $B_{2}$ qui gagne, alors $A_{1}$ est éliminée et $B_{2}$ rencontre $A_{2}$ pour la partie suivante. Si $B_{2}$ gagne cette nouvelle partie, alors $A_{2}$ est éliminée et $B_{2}$ rencontre maintenant $A_{3}$. Si $B_{2}$ gagne à nouveau, alors $A_{3}$ est éliminée et l'équipe $B$ a remporté le tournoi. On suppose de plus que l'ensemble du tournoi constitue un jeu régulier. Il existe donc des réels strictement positifs $a_{1}, a_{2}, \ldots, a_{m}$ et $b_{1}, b_{2}, \ldots, b_{n}$ tels que, pour chaque partie qui voit s'affronter les personnes $A_{i}$ et $B_{j}$, on ait :
+$$\frac{\mathbb{P}\left(A_{i} \text { gagne contre } B_{j}\right)}{\mathbb{P}\left(B_{j} \text { gagne contre } A_{i}\right)}=\frac{a_{i}}{b_{j}} $$
+
+\begin{enumerate}\setcounter{enumi}{4}
+	\item Dans cette question uniquement, on suppose que $a_{i}=b_{j}=1$ pour tous $i$ et $j$.\\
+	On note $u_{m, n}$ la probabilité que l'équipe $A$ gagne le tournoi.
+	\begin{enumerate}\vspace{-0.1cm}
+		\item Démontrer que $u_{m, n}+u_{n, m}=1$.
+		\item Que vaut $u_{n, n}$ ?
+		\item Déterminer la valeur de $u_{1, n}$ en fonction de $n$.
+		\item Déterminer la valeur de $u_{2, n}$ en fonction de $n$.
+	\end{enumerate}\vspace{-0.1cm}
+	\item Dans cette question uniquement, on se place dans le cas $m=n=2$. Les nombres $a_{1}$, $a_{2}$, $b_{1}$ et $b_{2}$ ne sont plus supposés être égaux à 1.
+	\begin{enumerate}\vspace{-0.1cm}
+		\item Exprimer la probabilité que $A_{i}$ gagne contre $B_{j}$ en fonction de $a_{i}$ et $b_{j}$.
+		\item Démontrer que la probabilité que l'équipe $A$ gagne le tournoi est égale à :
+		$$\frac{a_{1}^{2} a_{2}^{2}+a_{1} a_{2}\left(a_{1}+a_{2}\right)\left(b_{1}+b_{2}\right)+\left(a_{1}^{2}+a_{1} a_{2}+a_{2}^{2}\right) b_{1} b_{2}}{\left(a_{1}+b_{1}\right)\left(a_{1}+b_{2}\right)\left(a_{2}+b_{1}\right)\left(a_{2}+b_{2}\right)}$$
+		Cette probabilité dépend-elle de l'ordre choisi des joueurs pour leur entrée dans le tournoi ?
+	\end{enumerate}
+\end{enumerate}
+
+\newpage
+
+\subsection{Une généralisation}
+
+\n On conserve le tournoi régulier décrit dans la partie $3.3$.\\
+Cependant, en plus des parties du tournoi, on décide de faire jouer chaque membre de l'équipe $A$ contre chacun des membres de l'équipe $B$ qu'il n'a pas rencontrés durant le tournoi, les parties supplémentaires satisfaisant toujours la propriété $(\star)$. Cela donne un total de $m n$ parties. On code les résultats de ces parties grâce à un tableau rectangulaire de $m$ lignes et $n$ colonnes. Dans la case située sur la ligne $i$ et la colonne $j$, on place un symbole $A$ si $A_{i}$ a gagné contre $B_{j}$, et un symbole $B$ sinon.\\
+Dans l'exemple de tournoi présenté en début de partie 3.3 avec $m=n=3$, on obtiendra un tableau de la forme :
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$A$ & $B$ & ? \\
+\hline 
+? & $B$ & ? \\
+\hline 
+? & $B$ & ? \\
+\hline
+\end{tabular}
+\end{center}
+où chacun des symboles ? cache un $A$ ou un $B$ selon le résultat de la partie ajoutée au tournoi.\\
+De façon générale, on dira que le tableau est \textit{gagnant} s'il correspond à un tournoi gagné par l'équipe $A$.
+
+\begin{enumerate}\setcounter{enumi}{6}
+	\item Dans cette question, on suppose que $m=2$. Indiquer les formes possibles de tous les tableaux gagnants et montrer que, pour tout entier $n \geq 1$, il y a exactement $2^{n}+n 2^{n-1}$ tableaux gagnants.
+	\item Dans cette question, on suppose toujours que $m=2$.
+	\begin{enumerate}
+		\item On note $D$ le produit de tous les nombres $\left(a_{1}+b_{j}\right)\left(a_{2}+b_{j}\right)$ lorsque $j$ décrit $\{1 ; 2 ; \ldots ; n\}$. Ainsi, on a $D=\left(a_{1}+b_{1}\right) \cdots\left(a_{1}+b_{n}\right) \times\left(a_{2}+b_{1}\right) \cdots\left(a_{2}+b_{n}\right)$.\\
+		On pourra noter $\displaystyle D=\prod_{j=1}^{n}\left(a_{1}+b_{j}\right)\left(a_{2}+b_{j}\right)$.\\ 
+		On considère un tableau $T$, gagnant ou non. Pour ce tableau, on note respectivement $x_{1}$ et $x_{2}$ le nombre de parties gagnées par $A_{1}$ et par $A_{2}$. Pour tout $j$, on note $y_{j}$ le nombre de parties gagnées par $B_{j}$.\\
+		Enfin, on organise un tournoi entre les équipes $A$ et $B$, et on note $\mathbb{P}_{T}$ la probabilité que les résultats des $m n$ parties effectuées donnent le tableau $T$.\\
+		Exprimer $\mathbb{P}_{T}$ en fonction des nombres $D, a_{1}, a_{2}, x_{1}, x_{2}, b_{1}, b_{2}, \ldots, b_{n}, y_{1}, y_{2}, \ldots, y_{n}$.
+		\item On suppose maintenant que $T$ est un tableau gagnant. On note $k$ le nombre de colonnes \begin{tabular}{|c|} \hline$A$ \\ \hline$B$\\ \hline \end{tabular} de $T$ et $\ell$ son nombre de colonnes \begin{tabular}{|c|} \hline$B$ \\ \hline$A$\\ \hline \end{tabular}.
+		\begin{enumerate}
+			\item  Justifier que $T$ ne contient aucune colonne \begin{tabular}{|c|} \hline$B$ \\ \hline$B$\\ \hline \end{tabular} et qu'aucune colonne \begin{tabular}{|c|} \hline$A$ \\ \hline$B$\\ \hline \end{tabular} n'est à droite d'une colonne \begin{tabular}{|c|} \hline$B$ \\ \hline$A$\\\hline \end{tabular}.
+			\newpage
+			\item On note $T'$ le tableau obtenu à partir de $T$ de la façon suivante :
+			\begin{itemize}
+				\item[$\triangleright$] On conserve les colonnes \begin{tabular}{|c|} \hline$A$ \\ \hline$A$\\ \hline \end{tabular} et on les laisse à leur place.
+				\item[$\triangleright$] On remplace les $k$ colonnes \begin{tabular}{|c|} \hline$A$ \\ \hline$B$\\ \hline \end{tabular} et $\ell$ colonnes \begin{tabular}{|c|} \hline$B$ \\ \hline$A$\\ \hline \end{tabular} de $T$ par $\ell$ colonnes \begin{tabular}{|c|} \hline$A$ \\ \hline$B$\\ \hline \end{tabular} suivies de $k$ colonnes \begin{tabular}{|c|} \hline$B$ \\ \hline$A$\\ \hline \end{tabular}.
+			\end{itemize}
+			Démontrer que $T'$ est un tableau gagnant.\\
+			Qu'obtient-on si l'on effectue la même transformation à partir de $T'$ ?
+		\end{enumerate}
+		\item Démontrer que la probabilité que l'équipe $A$ gagne le tournoi ne dépend pas de l'ordre choisi des joueurs de l'équipe $A$ pour leur entrée dans le tournoi.
+	\end{enumerate}
+	\item On revient au cas général ($m$ quelconque). Démontrer que la probabilité que l'équipe $A$ gagne le tournoi ne dépend pas de l'ordre choisi des joueurs pour leur entrée dans le tournoi.
+\end{enumerate}
+
+\end{document}

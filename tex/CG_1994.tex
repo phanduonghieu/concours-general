@@ -1,0 +1,115 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[dvips]{color}
+\usepackage{amsmath,amssymb,makeidx,stmaryrd}
+\usepackage[normalem]{ulem}
+\usepackage{fancybox}
+\definecolor{gris}{gray}{0.9}
+\usepackage{pst-plot,pst-tree,pstricks,pst-node,pst-text}
+\usepackage{pst-eucl}
+\usepackage{pstricks-add}
+\usepackage[left=3.5cm, right=3.5cm, top=3cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\def\bas{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}\footnotesize 1994\hfill Page : \thepage/1}}}
+\def\haut{\fcolorbox{gris}{gris}{\parbox{0.986\textwidth}{
+	\color{red}
+	\bf Concours Général de Mathématiques \hfill 1994
+	}}}
+\makeatletter
+\def\ps@cg{%
+\let\@oddhead\haut%
+\let\@evenhead\haut%
+\let\@oddfoot\bas
+\let\@evenfoot\bas}
+\makeatother
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\pagestyle{cg}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\parindent0pt
+\everymath{\displaystyle}
+\usepackage[french]{babel}
+
+\DecimalMathComma
+\usepackage[np]{numprint}
+\begin{document}
+
+\begin{center}\textbf{{\color{blue} Exercice I}}
+\end{center}
+
+Pour tout entier naturel $n$, on note $I_n$ le nombre d'entiers $p$ pour lesquels
+
+\[50^n < 7^p < 50^{n+1}\]
+
+\smallskip
+
+\begin{enumerate}
+\item Démontrer que pour tout entier $n$, \:$I_n$ vaut 2 ou 3.
+\item Démontrer qu'il existe une infinité d'entiers $n$ pour lesquels $I_n$ vaut 3 et donner le plus petit d'entre eux.
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice II}}
+\end{center}
+
+Soit $\sum$ une demi-sphère et $P$ le plan contenant son cercle de base. Un plan variable $Q$, parallèle à un plan fixe non perpendiculaire à $P$, coupe $\sum$ suivant un cercle $C$. On désigne par $C'$ le projeté orthogonal de $C$ sur $P$.
+
+Comment doit-on placer le plan $Q$ pour que le cylindre de bases $C$ et $C'$ ait un volume maximal ?
+
+\begin{center}\textbf{{\color{blue} Exercice III}}
+\end{center}
+
+On définit une application $f$ de $\N$ dans $\N$ par $f(1) = 0$ et pour tout élément $n$ de $\N^{*}$  :
+
+\[f(2n) = 2f(n) + 1 \qquad  f(2n+1) = 2f(n)\]
+
+Etant donné un entier strictement positif $p$ quelconque, on pose $u_0 = p$ et, tant que $u_k$ appartient à $\N^{*}$
+
+\[u_{k+1} = f\left(u_k\right)\]
+
+\medskip
+
+\begin{enumerate}
+\item Montrer que, pour tout choix de $p$, il existe un unique entier $v(p)$ tel que $u_{v(p)} = 0$.
+\item 
+	\begin{enumerate}
+		\item Calculer $v(\np{1994})$ .
+		
+Quel est le plus petit entier $p$ tel que $v(p) = v(\np{1994})$ ?
+		\item Étant donné un entier $N$, déterminer le plus petit entier $p$ tel que $v(p) = N$.
+	\end{enumerate}
+\end{enumerate}
+
+\begin{center}\textbf{{\color{blue} Exercice IV}}
+\end{center}
+
+Soit ABC un triangle. Si P est un point de son plan, on note L, M, N les projetés orthogonaux de P respectivement sur les droites (BC), (CA) et (AB). 
+
+Déterminer le point P pour lequel la quantité 
+
+\[\text{BL}^2  + \text{CM}^2 + \text{AN}^2\]
+
+est minimale.
+
+
+\begin{center}\textbf{{\color{blue} Exercice V}}
+\end{center}
+
+Soit $f$ une application de $\N$ dans $\N$ telle que $f(1) > 0$ et, quels que soient les entiers naturels $m$ et $n$, on a :
+
+\[f\left(m^2 + n^2\right) = [f(m)]^2 + [f(n)]^2\]
+
+\begin{enumerate}
+\item Calculer $f (k)$ pour $0 \leqslant k \leqslant 12$.
+\item Calculer $f(n)$ , $n$ étant un entier quelconque.
+\end{enumerate}
+\end{document}

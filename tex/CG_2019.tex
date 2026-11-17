@@ -1,0 +1,536 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+
+\chapter{Concours général des lycées - Session 2019}
+
+
+\section{Problème 1 : Ensembles remarquables de fonctions}
+
+\n On note $\mathscr{P}$ l'ensemble des fonctions définies sur $[0,+\infty[$ et à valeurs dans $[0,+\infty[$.\\
+Pour $f$ et $g$ dans $\mathscr{P}$, on définit la fonction $h=f \circ g$ en posant, pour tout nombre réel $x \geq 0$,
+$$h(x)=f(g(x))$$
+Si, pour tout nombre réel $x \geq 0$, on a $f(x) \geq g(x)$, on note $f \geq g$.\\
+On note $u$ et $v$ les fonctions de $\mathscr{P}$ définies, pour tout nombre réel $x \geq 0$, par :
+$$u(x)=\e^{x}-1 \q\text { et }\q v(x)=\ln (x+1)$$
+La fonction $f$ est une \textit{fonction polynomiale} si $f$ est nulle ou s'il existe un entier $d \geq 0$ et des nombres réels $a_{0}, a_{1}, \ldots, a_{d}$ avec $a_{d} \neq 0$ tels que, pour tout nombre réel $x \geq 0$,
+$$f(x)=a_{d} x^{d}+a_{d-1} x^{d-1}+\cdots+a_{1} x+a_{0}$$
+Les nombres réels $a_{0}, a_{1}, \ldots, a_{d}$ sont alors appelés coefficients de la fonction polynomiale $f$.\\
+Si $\mathscr{S}$ est un ensemble de fonctions de $\mathscr{P}$, on définit les propriétés :
+\begin{itemize}
+	\item[(P1)] $\mathscr{S}$ contient $u$ et $v$.
+	\item[(P2)] $\mathscr{S}$ contient toutes les fonctions constantes positives.
+	\item[(P3)] Si $f$ et $g$ sont dans $\mathscr{S}$, alors $f+g$ est dans $\mathscr{S}$.
+	\item[(P4)] Si $f$ et $g$ sont dans $\mathscr{S}$, alors $f \circ g$ est dans $\mathscr{S}$.
+	\item[(P5)] Si $f$ et $g$ sont dans $\mathscr{S}$ avec $f \geq g$, alors $f-g$ est dans $\mathscr{S}$.
+	\item[(P6)] Si $f$ et $g$ sont dans $\mathscr{S}$, alors $f \times g$ est dans $\mathscr{S}$.
+\end{itemize}
+
+\begin{enumerate}
+	\item Soit $\mathscr{T}$ un ensemble de fonctions de $\mathscr{P}$ qui vérifie les propriétés \textbf{(P1)}, \textbf{(P2)}, \textbf{(P3)}, \textbf{(P4)}, \textbf{(P5)} et \textbf{(P6)}.
+	\begin{enumerate}
+		\item Soit $\ell$ la fonction définie, pour tout nombre réel $x \geq 0$, par $\ell(x)=x$.\\
+		Démontrer que la fonction $\ell$ est dans $\mathscr{T}$.
+		\item Déterminer toutes les fonctions affines qui sont dans $\mathscr{T}$.
+		\item Soit $p$ la fonction polynomiale définie, pour tout nombre réel $x \geq 0$, par $p(x)=2 x^{2}-3 x+4$. Démontrer que la fonction $p$ est dans $\mathscr{T}$.
+		\item Une fonction polynomiale de $\mathscr{P}$ est-elle toujours dans $\mathscr{T}$ ?
+	\end{enumerate}
+	\item Dans cette question, on suppose que $\mathscr{U}$ est un ensemble de fonctions de $\mathscr{P}$ qui vérifie les propriétés \textbf{(P1)}, \textbf{(P2)}, \textbf{(P3)}, \textbf{(P4)} et \textbf{(P5)}, mais on ne suppose pas qu'il vérifie la propriété \textbf{(P6)}. La réponse donnée à la question \textbf{d.} est-elle encore valable ?
+	\item Dans cette question, on suppose que $\mathscr{V}$ est un ensemble de fonctions de $\mathscr{P}$ qui vérifie les propriétés \textbf{(P1)}, \textbf{(P2)}, \textbf{(P4)}, \textbf{(P5)} et \textbf{(P6)}, mais on ne suppose pas qu'il vérifie la propriété \textbf{(P3)}.
+	\begin{enumerate}
+		\item Soit $d$ un entier naturel non nul. On note $Q_{d}$ la fonction définie, pour tout nombre réel $x \geq 0$, par :
+		$$Q_{d}(x)=(x+1)^{d}-1$$
+		Montrer que $Q_{d} \in \mathscr{V}$.
+		\item Soit $d$ un entier naturel non nul. Démontrer qu'il existe des nombres entiers $a_{1}, \ldots, a_{d}$ supérieurs ou égaux à 1 tels que, pour tout nombre réel $x \geq 0$,
+		$$(x+1)^{d}=a_{d} x^{d}+a_{d-1} x^{d-1}+\cdots+a_{1} x+1$$
+		Étant donné un nombre réel $x \geq 0$, on introduira une variable aléatoire suivant une loi binomiale de paramètres $d$ et $\frac{\lambda}{1+x}$.
+		\item Soit $f$ une fonction polynomiale telle que $f(0)=0$. Montrer qu'il existe un nombre réel $c \geq 0$ et un entier naturel non nul $d$ tels que la fonction qui, à tout nombre réel $x \geq 0$, associe :
+		$$c\left(x+x^{2}+\cdots+x^{d}\right)-f(x)$$
+		est une fonction polynomiale dont tous les coefficients sont positifs ou nuls.
+		\item En déduire que, si $f$ est une fonction polynomiale de $\mathscr{P}$ telle que $f(0)=0$, alors $f$ est dans $\mathscr{V}$.
+		\item Soit $f$ une fonction dans $\mathscr{P}$.
+		\begin{itemize}
+  			\item On dit que $f$ est \textit{segmentée} si elle vérifie la propriété :\\
+  			Pour tout nombre réel $a \geq 0$, il existe un nombre réel $b \geq 0$ tel que, pour tout $x$ vérifiant $0 \leq x \leq a$,
+  			$$0 \leq f(x) \leq b$$
+  			\item On dit que $f$ est \textit{bornée} si elle vérifie la propriété :\\
+  			Il existe un nombre réel $b \geq 0$ tel que pour tout nombre réel $x \geq 0$,
+  			$$0 \leq f(x) \leq b$$
+  		\end{itemize}
+  		On note alors $\mathscr{A}$ l'ensemble des fonctions segmentées et $\mathscr{B}$ l'ensemble des fonctions segmentées qui sont nulles en 0 ou bornées.
+  		\begin{enumerate}
+  			\item Soit $f$ une fonction dans $\mathscr{P}$. On suppose $f$ bornée. Démontrer que $f$ est segmentée. La réciproque est-elle vraie ?
+  			\item Montrer que $\mathscr{A}$ satisfait les propriétés \textbf{(P1)} à \textbf{(P6)}.
+  			\item Montrer que $\mathscr{B}$ satisfait les propriétés \textbf{(P1)}, \textbf{(P2)}, \textbf{(P4)}, \textbf{(P5)} et \textbf{(P6)}, mais ne satisfait pas la propriété \textbf{(P3)}.
+  		\end{enumerate}
+  		\item Une fonction polynomiale dans $\mathscr{P}$ est-elle nécessairement dans $\mathscr{V}$ ?
+	\end{enumerate}
+\end{enumerate}
+
+
+\newpage
+
+\section{Problème 2 : Les nombres joviaux}
+
+\n Soient $n$ et $p$ deux entiers tels que $p \geq 2$ et $n \geq 1$. On dit que $p$ est \textit{jovial d'ordre} $n$ s'il existe des entiers $a_{1}, \ldots, a_{n}$ tels que :
+$$2 \leq a_{1}<a_{2}<\cdots<a_{n} \quad, \quad a_{n}=p \quad \text { et } \quad \frac{1}{a_{1}}+\cdots+\frac{1}{a_{n}}=1 $$
+Ainsi, 12 est jovial d'ordre 4 car $\frac{1}{2}+\frac{1}{4}+\frac{1}{6}+\frac{1}{12}=1$.\\
+Un entier $p \geq 2$ est dit \textit{jovial} s'il existe un entier $n \geq 1$ tel que $p$ soit jovial d'ordre $n$.
+
+\subsection{Quelques exemples}
+
+\begin{enumerate}
+	\item Montrer que, si l'entier $p$ est jovial d'ordre $n$, alors $n \leq p-1$.
+	\item Existe-t-il des entiers joviaux d'ordre $2$ ? Montrer que 2 et 4 ne sont pas joviaux.
+	\item Montrer qu'un entier premier n'est pas jovial.
+	\item Quel est le plus petit entier jovial ?
+	\item Déterminer tous les entiers joviaux d'ordre $3$.
+	\item Soit $p$ un entier jovial. Montrer que $2 p$ et $p(p+1)$ sont joviaux.
+	\item Montrer que le produit de deux entiers joviaux est jovial.
+\end{enumerate}
+
+\subsection{Deux suites d'entiers}
+
+\n On définit les suites $\left(u_{n}\right)_{n \in \mathbb{N}^{*}}$ et $\left(v_{n}\right)_{n \in \mathbb{N}^{*}}$ par $u_{1}=1$ et, pour tout entier $n \geq 1$,
+$$v_{n}=1+u_{n} \quad \text { et } \quad u_{n+1}=u_{n}\left(1+u_{n}\right)$$
+
+\begin{enumerate}
+	\item Montrer, pour tout $n \geq 3$, que $u_{n}$ est un entier jovial d'ordre $n$.
+	\item Montrer, pour tout $n \geq 1$, que $v_{n+1}=v_{1} v_{2} \cdots v_{n}+1$. 
+\end{enumerate}
+
+\subsection{Un majorant optimal pour les nombres joviaux d'ordre fixé}
+
+\n Soit $n$ un entier naturel non nul. On note $\mathscr{H}_{n}$ la propriété suivante :\\
+Si $x_{1}, \ldots, x_{n}$ sont des entiers strictement positifs et $a$ un nombre rationnel strictement positif tels que
+$$x_{1} \leq x_{2} \leq \cdots \leq x_{n} \leq a \quad \text { et } \quad \frac{1}{x_{1}}+\cdots+\frac{1}{x_{n}}+\frac{1}{a}=1$$
+alors $a+1 \leq v_{n+1}$ et $x_{1} \cdots x_{n}(a+1) \leq v_{1} \cdots v_{n} v_{n+1}$.\\
+On se propose de démontrer par récurrence sur $n$ que la propriété $\mathscr{H}_{n}$ est vraie pour tout entier $n \geq 1$.
+
+\begin{enumerate}
+	\item Démontrer que la propriété $\mathscr{H}_{1}$ est vraie.
+\end{enumerate}
+
+\n Dans les questions suivantes, on considère un entier $n \geq 2$, et on suppose que la propriété $\mathscr{H}_{n-1}$ est vraie. On considère des entiers strictement positifs $x_{1}, \ldots, x_{n}$ et un nombre rationnel strictement positif $a$ tels que :
+$$x_{1} \leq x_{2} \leq \cdots \leq x_{n} \leq a \quad \text { et } \quad \frac{1}{x_{1}}+\cdots+\frac{1}{x_{n}}+\frac{1}{a}=1$$
+
+\begin{enumerate}\setcounter{enumi}{1}
+	\item Montrer que $x_{1} \geq 2$ et que $a \leq x_{1} x_{2} \cdots x_{n}$.
+	\item On suppose dans cette question que $\frac{1}{x_{1}}+\cdots+\frac{1}{x_{n-1}}+\frac{1}{x_{n}-1} \geq 1$ et que $x_{n}>x_{n-1}$.
+	\begin{enumerate}
+		\item Montrer qu'il existe un unique nombre rationnel $q$, strictement positif, tel que :
+		$$\frac{1}{x_{1}}+\cdots+\frac{1}{x_{n-1}}+\frac{1}{q}=1$$
+		\item Montrer que $x_{n}-1 \leq q$.
+		\item En déduire que $q+1 \leq v_{n}$ puis que $x_{1} x_{2} \cdots x_{n} \leq v_{1} v_{2} \cdots v_{n}$.
+		\item En déduire que $a+1 \leq v_{n+1}$ et $x_{1} \cdots x_{n}(a+1) \leq v_{1} \cdots v_{n} v_{n+1}$.
+	\end{enumerate}
+	\item On suppose dans cette question que $\frac{1}{x_{1}}+\cdots+\frac{1}{x_{n-1}}+\frac{1}{x_{n}-1} \geq 1$ et que $x_{n}=x_{n-1}$.
+	\begin{enumerate}
+		\item Montrer que $x_{n} \geq 4$.
+		\item Montrer qu'il existe deux uniques nombres rationnels, strictement positifs, $r$ et $t$ tels que :
+		$$\frac{1}{x_{n}}+\frac{1}{x_{n}-1}=\frac{1}{x_{n}-2}+\frac{1}{r} \quad \text { et } \quad \frac{1}{x_{1}}+\cdots+\frac{1}{x_{n-2}}+\frac{1}{x_{n}-2}+\frac{1}{t}=1$$
+		\item Montrer que $r=x_{n}+1+\frac{4 x_{n}-2}{x_{n}^{2}-4 x_{n}+2}$ puis que $\left(x_{n}-2\right)(r+1) \geq x_{n}^{2}$.
+		\item Montrer que $t \geq r \geq x_{n}$.
+		\item En déduire que $a+1 \leq v_{n+1}$ et $x_{1} \cdots x_{n}(a+1) \leq v_{1} \cdots v_{n} v_{n+1}$.
+	\end{enumerate}
+	\item On suppose dans cette question que $\frac{1}{x_{1}}+\cdots+\frac{1}{x_{n-1}}+\frac{1}{x_{n}-1}<1$.
+	\begin{enumerate}
+		\item Montrer qu'il existe un unique nombre rationnel, strictement positif, $b$ tel que :
+		$$\frac{1}{x_{1}}+\cdots+\frac{1}{x_{n-1}}+\frac{1}{x_{n}-1}+\frac{1}{b}=1$$
+		\item Montrer que $\left(x_{n}-1\right)(b+1) \geq x_{n}(a+1)$.
+	\end{enumerate}
+	\item En déduire que la proposition $\mathscr{H}_{n}$ est vraie.\\
+	\textit{Indication :} Dans le cas où 
+	$$\frac{1}{x_{1}}+\cdots+\frac{1}{x_{n-1}}+\frac{1}{x_{n}-1}<1$$
+	on pourra chercher à remplacer $x_{n}$ par $x_{n}-1$ et $a$ par $b$.
+	\item Montrer, pour tout entier $n \geq 3$, que $u_{n}$ est le plus grand entier jovial d'ordre $n$.
+\end{enumerate}
+
+
+\section{Problème 3 : Plus d'une chance sur deux pour tout le monde}
+
+\subsection{Des urnes et des dés}
+
+\begin{enumerate}
+	\item Dans cette question, on suppose que l'on dispose de trois urnes $A$, $B$ et $C$ qui contiennent chacune quatre jetons indiscernables au toucher. Les jetons de $A$ portent les numéros 12, 10, 3 et 1, ceux de $B$ portent les numéros 9, 8, 7 et 2, et ceux de $C$ portent les numéros 11, 6, 5 et 4.\\
+	On tire indépendamment un jeton dans chacune des trois urnes, et on note respectivement $X_{A}, X_{B}$ et $X_{C}$ les numéros des jetons tirés dans $A$, $B$ et $C$.\\
+	Montrer que $\Prob\left(X_{A}>X_{B}\right)=\frac{9}{16}$ et que $\Prob\left(X_{B}>X_{C}\right)=\frac{9}{16}$. Que vaut $\Prob\left(X_{C}>X_{A}\right)$ ?
+	\item Dans cette question, on suppose que l'on dispose de trois dés cubiques et équilibrés $D_{1}$, $D_{2}$ et $D_{3}$. Les faces de $D_{1}$ portent les numéros $6,3,3,3,3,3$, celles de $D_{2}$ portent les numéros $5,5,5,2,2,2$, et celles de $D_{3}$ portent les numéros $4,4,4,4,4,1$.
+	\begin{enumerate}
+		\item On lance indépendamment chacun de ces trois dés et on note respectivement $X_{1}$, $X_{2}$ et $X_{3}$ les numéros indiqués par la face supérieure des dés $D_{1}$, $D_{2}$ et $D_{3}$.\\
+		Calculer les trois probabilités $\Prob\left(X_{1}>X_{2}\right)$, $\Prob\left(X_{2}>X_{3}\right)$ et $\Prob\left(X_{3}>X_{1}\right)$.
+		\item Claire et Paul jouent au jeu suivant : l'un d'eux choisit un des trois dés. Puis l'autre joueur choisit un des deux dés restants. Ils lancent chacun leur dé et celui qui obtient le plus grand numéro gagne.\\
+		Claire a-t-elle intérêt à choisir son dé avant Paul ou à le laisser choisir en premier ?
+		\item Finalement, il est décidé que c'est Paul qui choisit en premier. Quel(s) dé(s) a-t-il intérêt à choisir ?
+		\item Claire et Paul décident alors de modifier les règles. L'un d'eux choisit un des trois dés. Puis l'autre joueur choisit un des deux dés restants. Ils lancent chacun leur dé deux fois de suite et celui dont la somme des numéros est la plus grande gagne.\\
+		Paul choisit en premier et il prend le dé $D_{2}$. Quel dé Claire a-t-elle intérêt à choisir ?
+		De façon générale, avec ces nouvelles règles, Claire a-t-elle intérêt à choisir son dé avant Paul ou à le laisser choisir en premier?
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{La suite de Fibonacci et des urnes}
+
+\n La \textit{suite de Fibonacci} $\left(F_{n}\right)_{n \in \mathbb{N}}$ est définie par $F_{0}=0$, $F_{1}=1$ et pour tout entier $n \geq 0$,
+$$F_{n+2}=F_{n+1}+F_{n}$$
+
+\begin{enumerate}
+	\item Montrer, pour tout entier $n \geq 3$, que $\sqrt{2} F_{n}<F_{n+1}<2 F_{n}$.
+	\item Soit $k \geq 4$ un entier. Dans cette question, on suppose que l'on dispose de trois urnes $A$, $B$ et $C$ ainsi que de $3 F_{k}$ jetons indiscernables au toucher, numérotés de 1 à $3 F_{k}$. On répartit ces jetons de la façon suivante :
+	\begin{itemize}
+		\item les $F_{k-2}$ jetons de plus grands numéros sont placés dans $A$;
+		\item les $F_{k-1}$ jetons de plus grands numéros restants sont placés dans $B$;
+		\item les $F_{k}$ jetons de plus grands numéros restants sont placés dans $C$;
+		\item les $F_{k-1}$ jetons de plus grands numéros restants sont placés dans $A$;
+		\item les $F_{k-2}$ derniers jetons sont placés dans $B$.
+	\end{itemize}
+	\newpage
+	On tire indépendamment un jeton dans chacune des trois urnes, et on note respectivement $X_{A}$, $X_{B}$ et $X_{C}$ les numéros des jetons tirés dans $A$, $B$ et $C$.
+	\begin{enumerate}
+		\item Démontrer les trois inégalités :
+		$$\Prob\left(X_{A}>X_{B}\right)>\frac{1}{2} \q , \q \Prob\left(X_{B}>X_{C}\right)>\frac{1}{2} \q\text { et } \q \Prob\left(X_{C}>X_{A}\right)>\frac{1}{2}$$
+		\item Claire et Paul jouent au jeu suivant : l'un commence par choisir une des trois urnes ci-dessus et pioche un des jetons qu'elle contient. Puis l'autre joueur choisit une des deux autres urnes et pioche un des jetons qu'elle contient. Celui des deux qui obtient le jeton de plus grand numéro gagne.\\
+		Claire a-t-elle intérêt à choisir son dé avant Paul ou à le laisser choisir en premier ?
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Urnes non transitives}
+
+\n Soit $n \geq 3$ un entier. On dispose de trois urnes $A$, $B$ et $C$ et de $3 n$ jetons indiscernables au toucher, numérotés de 1 à $3 n$. On répartit alors les jetons dans les trois urnes de sorte que chaque urne contienne $n$ jetons. On tire alors indépendamment un jeton dans chacune des trois urnes, et on note respectivement $X_{A}$, $X_{B}$ et $X_{C}$ les numéros des jetons tirés dans $A$, $B$ et $C$.
+
+\begin{enumerate}
+	\item On suppose, dans cette question uniquement, que chacune des trois probabilités $\Prob\left(X_{A}>X_{B}\right)$, $\Prob\left(X_{B}>X_{C}\right)$ et $\Prob\left(X_{C}>X_{A}\right)$ est strictement supérieure à $\frac{1}{2}$.
+	On dispose de trois autres urnes, $D$, $E$ et $F$ et de $3 n+6$ jetons indiscernables au toucher, numérotés de 1 à $3 n+6$. Les $3 n$ jetons numérotés de 1 à $3 n$ ont été répartis comme précédemment dans les urnes $A$, $B$ et $C$. Les urnes $D, E$ et $F$ sont alors remplies de la façon suivante :
+	\begin{itemize}
+		\item l'urne $D$ reçoit le contenu de l'urne $A$, ainsi que les jetons numérotés $3 n+1$ et $3 n+6$;
+		\item l'urne $E$ reçoit le contenu de l'urne $B$, ainsi que les jetons numérotés $3 n+4$ et $3 n+5$;
+		\item l'urne $F$ reçoit le contenu de l'urne $C$, ainsi que les jetons numérotés $3 n+2$ et $3 n+3$.
+	\end{itemize}
+	Chacune des urnes $D$, $E$ et $F$ contient ainsi $n+2$ jetons. On tire alors indépendamment un jeton dans chacune des urnes $D$, $E$ et $F$, et on note respectivement $X_{D}$, $X_{E}$ et $X_{F}$ les numéros des jetons tirés dans $D$, $E$ et $F$.
+	\begin{enumerate}
+		\item Exprimer $\Prob\left(X_{D}>X_{E}\right)$ en fonction de $n$ et $\Prob\left(X_{A}>X_{B}\right)$.
+		\item Montrer que chacune des probabilités $\Prob\left(X_{D}>X_{E}\right)$, $\Prob\left(X_{E}>X_{F}\right)$ et $\Prob\left(X_{F}>X_{D}\right)$ est strictement supérieure à $\frac{1}{2}$.
+	\end{enumerate}
+	\item Soit $n \geq 3$ un entier. On note $\mathscr{H}_{n}$ la propriété suivante :\\
+	Il est possible de répartir $3 n$ jetons indiscernables au toucher, numérotés de 1 à $3 n$, dans trois urnes $A$, $B$ et $C$ de sorte que les deux conditions ci-dessous soient satisfaites.
+	\begin{itemize}
+		\item Chacune des trois urnes contient $n$ jetons.
+		\item Si l'on tire indépendamment un jeton dans chacune de ces urnes et si l'on note respectivement $X_{A}$, $X_{B}$ et $X_{C}$ les numéros des jetons tirés dans $A$, $B$ et $C$, alors chacune des probabilités $\Prob\left(X_{A}>X_{B}\right)$, $\Prob\left(X_{B}>X_{C}\right)$ et $\Prob\left(X_{C}>X_{A}\right)$ est strictement supérieure à $\frac{1}{2}$.
+	\end{itemize}
+	\begin{enumerate}
+		\item Montrer que les propriétés $\mathscr{H}_{3}$ et $\mathscr{H}_{4}$ sont vraies.
+		\item Montrer, pour tout entier $n \geq 3$, que l'affirmation $\mathscr{H}_{n}$ est vraie.
+	\end{enumerate}
+\end{enumerate}
+
+
+\end{document}

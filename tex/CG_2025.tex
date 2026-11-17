@@ -1,0 +1,346 @@
+\documentclass[11pt,a4paper,french]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{fourier}
+\usepackage{xspace}
+\usepackage[scaled=0.875]{helvet}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{amsmath,amssymb,amstext,makeidx}
+\usepackage{fancybox}
+\usepackage{tabularx}
+\usepackage[normalem]{ulem}
+\usepackage{pifont}
+\usepackage[euler]{textgreek}
+\usepackage{textcomp,enumitem,mathcomp}
+\usepackage[table]{xcolor}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage{esvect}
+%tapuscrit Jean-Claude Souque
+\newcommand{\euro}{\eurologo{}}
+\usepackage{pst-tree,pst-plot,pst-text,pst-eucl,pst-bar,pst-func,pst-math,pstricks-add}
+%\usepackage[squaren, Gray, cdot]{SIunits}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+%\usepackage[left=2.1cm, right=2.1cm, top=1.9cm, bottom=2.7cm]{geometry}
+\usepackage[left=3.5cm, right=3.5cm, top=2cm, bottom=3cm]{geometry}
+\newcommand{\vect}[1]{\overrightarrow{\,\mathstrut#1\,}}
+\renewcommand{\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand{\labelenumi}{\textbf{\theenumi.}}
+\renewcommand{\theenumii}{\textbf{\alph{enumii}}}
+\renewcommand{\labelenumii}{\textbf{\theenumii.}}
+\def\Oij{$\left(\text{O},~\vv{\imath},~\vv{\jmath}\right)$}
+\def\Oijk{$\left(\text{O},~\vv{\imath},~\vv{\jmath},~\vv{k}\right)$}
+\def\Ouv{$\left(\text{O},~\vv{u},~\vv{v}\right)$}
+\usepackage{fancyhdr}
+\makeatletter
+\def\hlinewd#1{%
+\noalign{\ifnum0=`}\fi\hrule \@height #1 %
+\futurelet\reserved@a\@xhline}
+\makeatother
+
+\usepackage[dvips]{hyperref}
+\hypersetup{%
+pdfauthor = {APMEP},
+pdfsubject = {Concours Général},
+pdftitle = {session 2025},
+allbordercolors = white,
+pdfstartview=FitH}
+
+\usepackage[np]{numprint}
+\renewcommand\arraystretch{1.4}
+\newcommand{\e}{\text{e}}
+%\frenchbsetup{StandardLists=true}
+\usepackage{babel}
+\usepackage[francais]{turnthepage}
+\renewcommand{\turnthepage}{\textbf{ Tournez la page S.V.P.} }
+\begin{document}
+
+\setlength\parindent{0mm}
+
+\rhead{\textbf{A. P{}. M. E. P{}.}}
+\lhead{\small { Session 2025}}
+\lfoot{\small{Concours Général}}
+\rfoot{}
+%\renewcommand \footrulewidth{.2pt}
+\pagestyle{fancy}
+\thispagestyle{empty}
+
+% \begin{center}
+% {\Large\decofourleft ~ \textbf{Concours général des lycées \decofourright\\ Session 2025}}
+% \end{center}
+
+\begin{center}
+CONCOURS GÉNÉRAL DES LYCÉES
+
+\medskip
+
+SESSION DE 2025
+
+\medskip\
+
+MATHÉMATIQUES
+
+\medskip
+
+(Classes de terminale voie générale spécialité mathématiques)
+
+\medskip
+
+DURÉE : 5 HEURES
+\end{center}
+
+\bigskip
+
+\emph{L’usage de la calculatrice avec mode examen actif est autorisé.}
+
+\emph{L’usage de la calculatrice sans mémoire \og type collège\fg{} est autorisé.}
+
+\vspace{2cm}
+\begin{center}
+\fbox{
+\begin{minipage}[]{0.8\textwidth}
+
+\begin{center}
+Consignes aux candidats
+\end{center}
+
+\begin{itemize}
+\item  Ne pas utiliser d’encre claire
+\item N’utiliser ni colle, ni agrafe
+\item Ne joindre aucun brouillon
+\item Ne pas composer dans la marge
+\item Numéroter chaque page en bas à droite (numéro de page / nombre total de pages)
+\item Sur chaque copie, renseigner l’en-tête + l’identification du concours :
+\end{itemize}
+\textbf{Concours / Examen : CGL \hfill Épreuve : Mathématiques \hfill Matière : MATH \hfill Session : 2025}
+\end{minipage}
+}
+\end{center}
+
+\vspace{2cm}
+
+\emph{La clarté et la précision de la rédaction seront prises en compte dans l’appréciation de la copie.}
+
+\smallskip
+
+\emph{Le sujet comporte trois problèmes indépendants. Le candidat peut traiter les questions dans l’ordre de son choix, à condition de l’indiquer
+clairement dans la copie.}
+
+\smallskip
+
+\emph{Dans toute question, le candidat est autorisé à utiliser les résultats de questions précédentes même s’il ne les a pas démontrés, mais à condition de le mentionner explicitement.}
+
+\newpage
+\begin{center}
+\textbf{Exercice 1 : Addition sur une parabole}
+\end{center}
+
+Le plan est muni d'un repère orthonormé \Oij. Pour tout point M du plan, on note $(x_M~;~ y_M)$ ses coordonnées.
+
+Soient $\mathcal{P}$ la parabole d'équation $y= x^2$ et $\Delta$ la droite d'équation $y =-1$.
+
+Pour tous points $A$ et $B$ de $\mathcal{P}$ tels que $y_A\not=y_B$, on note $A\oplus B$ le point de $\mathcal{P}$ dont l'abscisse est celle du point d'intersection des droites $(AB)$ et $\Delta$.
+
+\begin{center}
+\textbf{Partie 1 : propriétés de} $\oplus$. 
+\end{center}
+
+\begin{enumerate}
+\item Soient $A$ et $B$ deux points de $\mathcal{P}$ tels que $y_A\not= y_B$. Exprimer $x_{A\oplus B}$ en fonction de $x_A$ et $x_B$. 
+\item Soient $A$, $B$ et $C$ trois points de $\mathcal{P}$. On suppose que
+ \[y_A\not=y_B,\quad, y_{A\oplus B}\not=y_C, \quad y_B\not=y_C,\quad y_A \not= y_{B\oplus C}.\]
+ Démontrer que les points $(A\oplus B)\oplus C$ et $A\oplus (B \oplus C) $ sont confondus.
+ \end{enumerate}
+ 
+
+Pour tout point $A$ de $\mathcal{P}$ distinct du point $O$ (de coordonnées $(0;0)$), on note $A \oplus A$ le point de $\mathcal{P}$ dont l'abscisse est celle du point d'intersection de la tangente à $\mathcal{P}$ en $A$ et de $\Delta$.
+\begin{enumerate}[resume]
+\item Soit $A$ un point de $\mathcal{P}$ distinct de $O$.
+\begin{enumerate}
+\item  Exprimer $x_{A \oplus A}$ en fonction de $x_{A}$.
+\item Soit $B$ un point de $\mathcal{P}$ tel que 
+\[y_{A\oplus A}\not=y_B, \quad y_A\not=y_B,\quad y_A \not=y_{A\oplus B}\]
+
+Démontrer que les points $(A\oplus A) \oplus B$ et $A\oplus(A \oplus B)$ sont confondus.
+\end{enumerate}
+\end{enumerate}
+\vspace{0.5cm}
+
+\begin{center}
+\textbf{Partie 2 : étude d'une suite de points}
+\end{center}
+
+Soit $A$ un point de $\mathcal{P}$. On lui assocte une suite de points $(A_n)$ définie par $A_0 = A$ et la relation de récurrence :
+
+\[\text{pour tout entier } n\geqslant 0,\quad  A_{n+1}=\begin{cases}A_n \oplus A_n, & \text{si }A_n\not=0\\0, & \text{sinon. }\end{cases}\] 
+
+Pour alléger les notations, on pose $x_n= x_{A_n}$. 
+\begin{enumerate}[resume]
+\item  On suppose, dans cette question, que $A$ est le point de coordonnées $(3;9)$.
+\begin{enumerate}
+\item  Démontrer que, pour tout $n$ dans $\N$, on a $x_n\not= 0$.
+ \item Démontrer que la suite $(x_n)$ ne converge pas.
+\end{enumerate}
+\end{enumerate}
+
+\medskip
+
+On rappelle que, pour tout $x $ dans $Q^*$, il existe un unique couple d'entiers $(a, b)$ tels que $b \geqslant 1, \mathrm{PGCD}(a, b) = 1$ et $x= \dfrac{a}{b}$. On note alors $H(x)$ le plus grand des entiers $\vert a \vert $ et $\vert b\vert$, soit  $H(x) = \mathrm{max}\{\vert a\vert, \vert b \vert\}$.
+
+Par exemple $H\left(\dfrac{-4}{3}\right)=4$.
+
+ On convient de plus que $H(0)= 1$.
+
+\smallskip
+
+ Pour tout point $P$ de la parabole $\mathcal{P}$, tel que $x_p$ appartient à $\Q$, on pose 
+\[h(P)= \ln(H(x_p)).\]
+
+\begin{enumerate}[resume]
+ \item Démontrer que, pour tout $c$ dans $\N^*$, l'ensemble $E(c)= \{P \in\mathcal{P}, x_p\in \Q \text{ et } h(P)\leqslant c \} $ est fini.
+\item Soit $(a,b)\in \Z^* \times \N^*$. Démontrer que, si PGCD $(a, b) = 1$, alors 
+
+PGCD $ (a^2-b^2,  ab) =1$.
+\item Démontrer qu'il existe deux réels $m$ et $M$ tels que pour tout point $P$ de la parabole $\mathcal{P}$ tel que $x_p$
+appartient à $\Q^*$, on a
+\[m+h(P\oplus P)\leqslant 2h(P)\leqslant h(P\oplus P)+M.\]
+
+\item Soit $(u_n)$ une suite réelle. On pose
+
+\[v_0=0 \ \text{ et, pour tout } n\geqslant 1,\quad v_n=\sum_{k=0}^{n-1} \vert u_{k+1}-u_k\vert.\]
+
+
+On suppose que la suite $(v_n)$ est majorée et on souhaite démontrer que la suite $(u_n)$ converge :
+\begin{enumerate}
+\item  Démontrer que la suite $(v_n)$ converge.
+\item Démontrer que pour tout entier naturel $n$, on a
+\[0\leqslant u_{n+1}- u_n + \vert u_{n+1} - u_n\vert\leqslant  2\vert u_{n+1} - u_n\vert .\]
+\item En déduire que la suite $(u_n+ v_n)$ converge. 
+\item Conclure.
+\end{enumerate}
+\item Soit à nouveau le point $A$ de coordonnées (3;9) et soit $(A_n)$ la suite récurrente associée à $A$. Pour
+tout entier naturel $n$, on pose $ t_n=\frac{h(A_n)}{2^n}$. Démontrer que la suite $(t_n)$ converge.
+\end{enumerate}
+
+\bigskip
+
+\begin{center}
+\textbf{Exercice 2 : Suite positive et suite bornée}
+\end{center}
+
+
+Pour tout réel $\alpha$, on appelle suite associée à $\alpha$ la suite $(u_n)$ définie par $u_0=u_1 = 1 $ et
+ \[u_{n+2}=u^2_{n+1}-\alpha u_n^4\]
+pour tout entier $n \geqslant 0$. On dit que  $\alpha$ \emph{vérifie la propriété} $\mathcal{P}$ si tous les termes de la suite $(u_n)$ assoctée à $\alpha$ sont strictement positifs, et que $\alpha$ \emph{vérifie la propriété} $\mathcal{B}$ si la suite $(u_n)$ associée à $\alpha$ est bornée.
+
+\medskip
+\begin{center}
+\textbf{Partie 1 : Propriété $\mathcal{P}$}
+\end{center}
+
+\medskip
+
+\begin{enumerate}
+\item  Quels sont les réels $ \alpha $ qui vérifient la propriété $\mathcal{P}$ et qui appartiennent 
+\begin{enumerate}
+\item  à l'intervalle $[1~;~+\infty[$ ? 
+\item à l'intervalle $]-\infty~;~0]$?
+\end{enumerate}
+\item Soit $\alpha$ un réel appartenant à l'intervalle $]0; 1[$ et $(u_n)$ la suite qui lui est associée; on suppose, dans cette question, que $\alpha$ vérifie la propriété $\mathcal{P}$.
+\begin{enumerate}
+\item  Démontrer que $0<u_{n+1}\leqslant u_n\leqslant 1$ pour tout entier $n \geqslant 0$.
+\item Quelle est la limite de la suite $(u_n)$?
+\item Pour tout réel $n \geqslant 0$, on pose $x_n=\dfrac{u_{n+1}}{u_n^2}$. Exprimer $x_{n+1}$ en fonction de $\alpha$ et de $x_n$.
+\item Démontrer que la suite $(x_n)$ admet une limite finie, que l'on notera $x_{\infty}$ et exprimer $x_{\infty}^2 (1- x_{\infty})$ en fonction de $\alpha$.
+\item En déduire que $\alpha\leqslant \dfrac{4}{27}$.
+\end{enumerate}
+\item  Quels sont les réels $\alpha$ qui vérifient la propriété $\mathcal{P}$? 
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\begin{center}
+Partie 2 : Propriété $\mathcal{B}$
+\end{center}
+
+\medskip
+
+\begin{enumerate}[resume]
+\item  Quels sont les réels $\alpha$ qui vérifient la propriété $\mathcal{B}$ et qui appartiennent
+\begin{enumerate}
+\item  à l'intervalle $]-\infty~;~0[$? 
+\item à l'intervalle [0:1]? 
+\end{enumerate}
+\item Soit $\alpha$ un réel appartenant à l'intervalle $]2~;~+\infty[$ et $(u_n)$ la suite qui lui est associée. Pour tout $n\geqslant 0$, on note $v_n$, le plus grand des réels $\vert u_0\vert$, $\vert u_1\vert,\dots,\vert u_n\vert$, soit 
+
+$v_n = \mathrm{max}\{\vert u_0\vert,\vert u_1\vert,\dots,\vert u_n\vert\}$. 
+\begin{enumerate}
+\item  Démontrer, pour tout entier $n \geqslant 1$, que $v_n=\vert u_{n-1}\vert$, ou $v_n=\vert u_n\vert$. 
+\item Le réel $\alpha$ vérifie-t-il la propriété $\mathcal{B}$?
+\end{enumerate}
+\item Soit $\alpha$ un réel appartenant à l'intervalle $\left[\dfrac{9}{7}~;~2\right]$ et $(u_n)$ la suite qui lui est associée.
+\begin{enumerate}
+\item  Pour tout réel $x$, on pose $ P(x)= ax^3- x -1$ et $Q(x) =8x^3 -116x^2 + 494x- 441$. Démontrer que
+
+\[P\left(\dfrac{11-2\alpha}{7}\right)=\dfrac{(2-\alpha)Q(\alpha)}{7^3}\]
+
+\item Étudier les variations de la fonction $x\mapsto P(x)$ sur l'intervalle $[1~;~+\infty[$ et de la fonction $x\mapsto Q(x)$ sur l'intervalle $[1~;~2]$.
+\item Quel est le signe de $Q(\alpha)$?
+\item Comparer les réels $\dfrac{11-2\alpha}{7}$ et $-u_3$.
+\item Le réel $\alpha$ vérifie-t-il la propriété $\mathcal{B}$ ?
+\end{enumerate}
+\item Soit $\alpha$ un réel appartenant à l'intervalle $\left]1~;~\frac{9}{7}\right[$. Pour tout réel $x$, on pose $S_0(x)= x$, $S_1(x) = 1$, puis
+\[S_{k+2}(x)=S_{k+1}(x)^2-\alpha S_k(x)^4\]
+
+ pour tout entier $k\geqslant 0$. On \emph{admet} pour l'instant qu'il existe un réel $\mathrm{t}(\alpha) > 1$ tel que 
+
+\[1< S_4(x)\leqslant S_3(x)^2\leqslant \mathrm{t}(\alpha)^2S_4(x)\]
+
+pour tout réel $x \in [1~;~\mathrm{t}(\alpha)]$.
+\begin{enumerate}
+\item  Soit $n \geqslant 0$ un entier tel que $1\leqslant u_{n+1}\leqslant u_n^2<\mathrm{t}(\alpha)^2u_{n+1}$ ; On pose $x_n=\sqrt{\dfrac{u_n^2}{u_{n+1}}}$. 
+
+Démontrer que $ u_{n+k}=u_{n+1}^{2^{k-1}}S_k(x_n)  $
+pour tout entier $k\geqslant 1$.
+ \item Le réel  $\alpha$ vérifie-t-il la propriété $\mathcal{B}$ ?
+ \end{enumerate}
+\item On démontre maintenant que l'unique réel positif $\mathrm{t}(\alpha)$ tel que $\mathrm{t}(\alpha)^4 = \dfrac{\alpha+2}{3}$ vérifie les hypothèses
+de la question \textbf{7.} 
+\begin{enumerate}
+\item  Démontrer que $S_4(x)\leqslant S_3(x)^2$ pour tout réel $x$.
+\item Démontrer que $0< S_2(x)^2\leqslant\dfrac{7(\alpha-1)}{12}$ pour tout réel $x\in[1~;~\mathrm{t}(\alpha)] $
+\item Démontrer que $1< S_4(x)$ pour tout réel $x\in[1;\mathrm{t}(\alpha)]$.
+\item Démontrer que $S_3(x)^2\leqslant \dfrac{2+x^4}{3}S_4(x)\leqslant x^2S_4(x)$ lorsque $x =\mathrm{t}(\alpha)$.
+\item Étudier les variations de la fonction $x \mapsto \dfrac{S_4(x)}{S_3(x)^2}$ sur l'intervalle $[1~;~\mathrm{t}(\alpha)]$.
+\item Conclure.
+\end{enumerate}
+ \item Quels sont les réels $\alpha$ qui vérifient la propriété $\mathcal{B}$ ?
+ 
+\end{enumerate}
+
+\vspace{1cm}
+
+\begin{center}
+\textbf{Exercice 3}
+\end{center}
+
+On dit qu'une fonction $f$ vérifie la propriété $\mathcal{E}$ si, pour tout réel $x$, 
+\[f(x+1)= \dfrac{1}{2}+\sqrt{f(x)-f(x)^2}.\]
+\begin{enumerate}
+\item  Proposer une fonction continue qui vérifie la propriété $\mathcal{E}$.
+\item On rappelle qu'une fonction $g$ définie sur $\R$ est périodique s'il existe un réel $T > 0$ tel que
+\[\text{pour tout réel } x,~ g(x+T) = g(x).\]
+Soit $f$ une fonction vérifiant $\mathcal{E}$. Démontrer que $f$ est périodique. 
+\item Proposer une infinité de fonctions continues $f$ vérifiant $\mathcal{E}$ et $f(0) =\dfrac{1}{2}$.
+
+\end{enumerate}
+
+
+
+
+\end{document}

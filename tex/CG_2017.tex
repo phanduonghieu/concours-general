@@ -1,0 +1,487 @@
+\documentclass[landscape,twocolumn,leqno,a4paper,10pt]{report} %leqno affiche les numéros d'équations à gauche
+
+\usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry}
+
+
+
+%----------------- Codage de la langue et de la police--------------------------------------------------------------------------
+\usepackage[french]{babel} 		% Permet de spécifier au compilateur que l'on désire taper son document en français.
+\usepackage[utf8x]{inputenc} 	% Permet de taper directement à l'écran, dans le fichier .tex, les caractères accentués.
+\usepackage[T1]{fontenc} 		% Permet juste d'utiliser une nouvelle norme LATEX concernant le codage des caractères.
+%\usepackage{lmodern}		% Pack de police --> Pas besoin puisque j'utilise Fourier
+
+%------------------------ Packages utiles-------------------------------------------------------------------------------------------
+
+\usepackage{graphicx}	% Pour insérer des images
+\usepackage{caption}		% Légende
+
+\newcommand\hmmax{0}		% Alors c'est une astuce assez mystérieuse pour dépasser la limite de polices latex.
+							% En effet, le package bm est lourd et avec tout ce que l'on met, on obtient un message d'erreur : Too many math alphabets used in version normal.			
+\newcommand\bmmax{0}		% Cette astuce règle le problème, il faut tout de même mettre ces compteurs avant le package bm
+
+\usepackage{amsmath,amssymb}	% Permettent d'obtenir des caractères mathématiques (de toute beauté !).
+\usepackage{amsthm}		% Pour pouvoir faire les newthm
+\usepackage{mathtools}	% Corrige des bugs dans amsmath et le complète
+\usepackage{numprint}	% Pour les espacements dans les nombres : \numprint{10000} = 10 000
+\usepackage{fourier}		% REMARQUE : [upright] impose aux majuscules d'être droite dans le mode mathématique 
+\usepackage{pifont} 		% Importe une large gamme de symboles, on utilise \ding{numéro}
+\usepackage{xargs} 		% Permet de définir des macros à plusieurs paramètres optionnels.
+\usepackage{fancyhdr} 	% Package pour les entêtes et bas de page
+\pagestyle{fancy} 			% Accompagne \usepackage{fancyhdr}
+\usepackage{bm} 		% Permet de mettre en gras du contenu mathématiques via \bm{..}
+\usepackage{mathrsfs} 	% Pour les lettres cursives
+\usepackage{enumitem} 	% Pour pouvoir personnaliser les listes
+
+\frenchbsetup{StandardLists=true} % Afin d'éviter tout conflit entre les extensions enumitem et french babel. 
+
+\usepackage{sectsty}	% Pour colorer les titres
+\usepackage{titlesec} 	% Pour personnaliser les titres
+\usepackage{setspace} 	% Pour changer la taille des interlignes
+       	               
+\usepackage{array,multirow,makecell}
+\usepackage{hlist}		% Package Christian Tellechea sur les listes numérotées gauche vers droite
+\setdefaulthlist{left margin = 2mm, label sep= 0.2mm}	% réglages package hlist
+				
+
+%------------ Les packages de dessin sous pstricks : il faut changer la compilation de latex pour compiler ces dessins------------------
+% Options\Configurer Texmaker\Compil rapide\ Latex+dvips+ps2pdf+Voir PDF
+
+\usepackage[pdf]{pstricks} 	% Pour faire des dessins
+\usepackage{pstricks-add,pst-plot,pst-tree,pst-node,pst-math,pst-eucl,pst-func,pst-3dplot}% ,pst-text,pst-eps,pst-fill,pst-grad
+\usepackage{multido}		% Pour faire des multido
+\usepackage{lastpage} 	% Pour le compteur de la dernière page, on appelle alors celle-ci avec lastage
+
+
+
+\usepackage[colorlinks=true, 
+			%allcolors=blue
+			]{hyperref}		% ATTENTION : doit être importé après la majorité des packages sauf tabularx et breakrules (par exemple)
+\hypersetup{			% Paramétrage des hyperliens
+	colorlinks = true,   		% Colorise les liens
+	breaklinks = true,		% Permet les retours à la ligne pour les liens trop longs
+	urlcolor = blue,		% Couleur des hyperliens
+	linkcolor = black,		% Couleur des liens internes aux documents (index, figures, tableaux, équations, ...)
+	citecolor = blue		% Couleur des liens vers les références bibliographiques
+	}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%------------------------- Définition des commandes -----------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%--------------------- Raccourcis fontes--------------------------------------------------------------
+% REMARQUE : le package fourier met la même police pour mathcal et mathscr, on remet donc mathcal normalement et on utilise la définition de fourier (un peu plus grasse) pour mathscr
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}	
+\DeclareMathAlphabet{\mathscr}{FMS}{futm}{m}{n}
+
+%---------------------------- Raccourcis des espaces--------------------------------------------------------------------------------------------
+\newcommand\n{\noindent}
+\newcommand\q{\quad}
+\newcommand\qq{\quad\quad}
+
+%--------------------- Raccourcis en mode mathématiques-------------------------------------------------------------------------------------
+\newcommand{\et}{\text{ et }}
+\newcommand{\ou}{\text{ ou }}
+\newcommand{\SSI}{\Longleftrightarrow}
+\let\si\relax
+\newcommand{\si}{\text{ si }}
+\newcommand{\sinon}{\text{ sinon }}
+\renewcommand{\epsilon}{\varepsilon}		% epsilon beaucoup plus joli
+\renewcommand{\geq}{\geqslant} 
+\renewcommand{\leq}{\leqslant}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\textbf}[1]{\begingroup\bfseries\mathversion{bold}#1\endgroup}		% Très important, permet de passer en gras même avec le mode mathématiques
+
+\newcommand{\Mod}[1]{\allowbreak\if@display\mkern5mu\else\mkern5mu\fi\left[#1\right]}	% Pour modulo entre crochets [.] avec un espacement convenable 
+
+
+%---------------------------------- Raccourcis calcul diff----------------------------------------------------------------------------------------
+\renewcommand{\d}{\;\mathrm{d}}	% Pour le d droit de l'intégrale car ce n'est pas une variable...
+
+
+%-------------------------------- Raccourcis des ensembles----------------------------------------------------------------------------
+\newcommand\R{\mathbb{R}}
+\newcommand\C{\mathbb{C}}
+\newcommand\K{\mathbb{K}}
+\newcommand\Q{\mathbb{Q}}
+\newcommand\D{\mathbb{D}}
+\newcommand\Z{\mathbb{Z}}
+\newcommand\N{\mathbb{N}}
+\newcommand\U{\mathbb{U}}
+
+
+%------------------------------- Dimensions intelignes, items...-----------------------------------------------------------------------------------------------
+\onehalfspacing	% Pour que l'interligne soit de 1.5. Pour que l'interligne soit de la valeur que l'on souhaite, de base : \setstretch{1}
+
+\setlist[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setlist[2]{font=\bfseries,itemsep=0.2mm,leftmargin=4mm}
+\setenumerate[1]{font=\bfseries,itemsep=0.2mm,leftmargin=6mm}
+\setenumerate[2]{font=\bfseries, label=\alph*., leftmargin=4mm}
+%%\setenumerate[profondeur]{font=\bfseries, label=\ding{221} \color{blue}} permet de changer en a) b) les sous-items d'une liste enumerate
+%% itemsep = correspond à l'interligne entre chaque item
+% de base : labelsep=2mm et permet de changer la distance entre l’étiquette et le texte des éléments
+% leftmargin =4mm spécifie la marge à gauche de la liste
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}	% Pour que les puces par défaut soit des points.
+%\AtBeginDocument{\renewcommand{\labelitemi}{\ding{86}}}	% Pour que les puces par défaut soit des étoiles.
+\AtBeginDocument{\renewcommand{\labelitemii}{$\ast$}}		% Pour que les puces par défaut pour une sous-liste soit des astérisques.
+\newcommand{\itemmm}{\item[$\ast$]}				% \itemmm devient l'item \ast
+\newcommand{\itemmmm}{\item[\footnotesize$\circledcirc$\normalsize]}
+\newcommand{\itemmmmm}{\item[\footnotesize$\astrosun$\normalsize]}
+\newcommand{\itemmmmmm}{\item[\footnotesize$\multimap$\normalsize]}
+\newcommand{\itemmmmmmmmm}{\item[$\divideontimes$]}
+\newcommand{\etoile}{\item[$\star$]}
+\newcommand{\etoilee}{\item[$\bigstar$]}
+\newcommand{\losange}{\item[$\diamondsuit$]}
+\newcommand{\carre}{\item[\LARGE$\centerdot$]}
+\newcommand{\carreombre}{\item[\ding{112}]}
+
+\setlength{\columnsep}{30pt} 		% Permet d'écarter les deux colonnes du twocolumn de 30pt, pratique pour écarter le texte de la ligne centrale
+\setlength{\columnseprule}{0.5pt}	% Affiche une ligne verticale entre chaque item et entre chaque page du twocolumn
+						% \columnseprule=0cm 	% Permet d'enlever le trait vertical entre chaque colonne
+%\renewcommand\tabenumsep{0.5cm\hskiplem}	% Ecarte de 0.5cm les items de tabenum, sinon ils sont trop collés...
+
+
+\newlength{\tagmarginsep} 		% On crée une longueur
+\setlength{\tagmarginsep}{0cm}		% Permet de régler la position d'un tag pour une équation mettre avant l'équation : \setlength{\tagmarginsep}{x cm} pour que le tag se rapproche de l'équation
+\everydisplay{\displayindent=\tagmarginsep \displaywidth=\dimexpr\linewidth-2\tagmarginsep}	% Va avec ce qu'il y a juste avant
+
+
+%-------------------- Définition des couleurs-----------------------------------------------------------------------------------------
+
+\definecolor{violetfonce}{RGB}{126,62,142}
+\definecolor{magentafonce}{RGB}{128, 0, 128}
+\newrgbcolor{magentafonce}{.5 0 .5}			% Une autre façon de définir une couleur, permet surtout d'utiliser \magenta
+\definecolor{violet1}{cmyk}{0.5,1,0,0}
+\definecolor{violet2}{cmyk}{0.24998, 1, 0, 0}
+\definecolor{violet3}{cmyk}{0, 1, 0.25, 0}
+
+
+
+\newcommand\tred{\textcolor{red}}
+\newcommand\tredf{\textcolor{rougefonce}}
+\newcommand\tdred{\textcolor{deepred}}
+\newcommand\tblue{\textcolor{blue}}
+\newcommand\tbluef{\textcolor{bleufonce}}
+\newcommand\tgreen{\textcolor{vertfonce}}
+\newcommand\torange{\textcolor{orange}}
+\newcommand\tmagenta{\textcolor{magentafonce}}
+
+
+%------------------ Changement paramètres des parties, sous parties---------------------------------------------------------
+
+
+\sectionfont{\color{violet1}}			% Utilisation du package sectsty
+\subsectionfont{\color{violet2}}
+\subsubsectionfont{\color{violet3}}
+
+
+%--------------------------------- Raccourcis probabilités--------------------------------------------------------------------------------
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\normale}[2]{\mathcal{N}\left(#1;#2 \right)}	% Pour la loi Normale : 	$\normale{\mu}{\sigma^2}$
+\newcommand{\Unif}[1]{\mathcal{U}\left(#1\right)}			% Pour la loi uniforme :	$\Unif{[a;b]}$
+\newcommand{\Ber}[1]{\mathcal{B}\left(#1\right)}			% Pour la loi de Bernoulli : $\Ber{p}$
+\newcommand{\Bino}[2]{\mathcal{B}\left(#1;#2\right)}		% Pour la loi Binomiale :	$\Bino{n}{p}$
+\newcommand*{\binomial}[2]{% 
+  \ensuremath{ 
+    \begin{pmatrix} 
+      #2\\ 
+      #1
+    \end{pmatrix}}}				% Pour le coefficient binomial : $\binom{k}{n}$
+\renewcommand{\binom}{\binomial} 	% La commande \binom existait déjà mais n'était pas pratique
+
+
+
+%----------------------------------- Opérateurs---------------------------------------------------------------------------------------------------
+
+\newcommand{\barre}[1]{\overline{#1}}  									% Barre au dessus du texte, pratique pour le conjugué des complexes
+\newcommandx{\Sum}[3][3=\white]{{\displaystyle\sum\limits_{\substack{#1 #3}}^{#2}}}		% $\Sum{k=0}{n}[<option>]$ où [<option>] est placée à la suite de k=0 si l'on tape de façon classique, et en-dessous si l'on met [\\ k\neq k_0]
+															% On peut juste taper : $\Sum{k=0}{n}$ et cela fonctionne
+															% \displaystyle impose de gérer les tailles comme en mode mathématique : ici on aura donc toujours de grande somme que ce soit en math comme dans le texte
+\newcommandx{\Prod}[3][3=\white]{{\displaystyle\prod\limits_{\substack{#1 #3}}^{#2}}}		% $\Prod{k=0}{n}[<option>]$	idem pour l'option
+\newcommand{\Int}[4]{{\displaystyle\int_{#1}^{#2} #3  \d #4}}   					% $\Int{0}{\pi}{\cos(t)}{t}$
+\newcommandx{\Lim}[3][3=\white]{\lim\limits_{\substack{#1 \to #2 #3}}}		% $\Lim{x}{0}[<option>]$	idem pour l'option
+
+
+%------------------------------------ Délimiteurs--------------------------------------------------------------------------------------------------
+%\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}			% Valeur absolue | |
+%\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}			% Doubles barres verticales : norme d'un vecteur || ||
+
+%--------------------------------------- Vecteurs----------------------------------------------------------------------------------------------------
+ 
+\newcommand{\Oij}{\left(O;\vec{\imath},\vec{\jmath}\right)}
+\newcommand{\Oijk}{\left(O;\vec{\imath},\vec{\jmath},\vec{k}\right)}
+\newcommand{\Ouv}{\left(O;\vec{u},\vec{v}\right)}
+\newcommand{\Ouvw}{\left(O;\vec{u},\vec{v},\vec{w}\right)}
+
+%------------------------------------ Systèmes d'équations-------------------------------------------------------------------------------------------
+% Remarque \syst et \syste ne font pas d'alignement mais ils sont bien, si l'on veut de l'alignement, on utilisera \systeme du package "systeme"
+\newcommand*{\syst}[2]{%			% Systèmes 2 éq. à ? inconnues : 	\syst{ax+by+c=0}{a'x+b'y+c'=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2 
+      \end{array}  
+    \right. }
+ 
+\newcommand*{\syste}[3]{% 			% Systèmes 3 éq. à ? inconnues : 	\syste{ax+by+c=0}{a'x+b'y+c'=0}{a''x+b''y+c''=0}
+  \left\{\begin{array}{ll} 
+        #1\\ 
+        #2\\
+        #3 
+      \end{array}  
+    \right.}
+
+
+
+%------------------------------------------ Autre----------------------------------------------------------------------------------------------------------
+\newcommand{\boite}[2]{\noindent\parbox[]{#1 cm}{#2} }  									% Boite autre façon de faire minipage en gros
+
+
+%---------------------------- En-têtes et bas de pages----------------------------------------------------------------------------
+% A chaque fois : *head* pour le haut et *foot* pour le bas
+% L = left, C = center, R = right 
+% L = toutes les pages, LE = toutes les pages paires, LO = toutes les pages impaires, idem CE, CO, ...
+
+
+\newcommand{\fcours}[1]{								% f pour fancy				   
+	\pagestyle{fancy}									% Efface le style qui a pu être mis avant
+	\renewcommand{\headrulewidth}{0pt} 
+	\renewcommand{\footrulewidth}{0.5pt} 
+	%\fancyhead[L]{}									
+	%\fancyhead[C]{}
+	%\fancyhead[R]{}									
+	\fancyfoot[L]{\vspace{-1mm}\footnotesize \textit{#1}} 			% Classe : <Seconde> 
+	\fancyfoot[C]{\vspace{-1mm}\footnotesize \thepage/\pageref{LastPage}}
+	\fancyfoot[R]{\vspace{-1.8mm}\textit{\footnotesize C. Marguerite}}	% N'apparaîtra pas si on met les marges avec moins de bottom=1.3cm dans le package geometry
+ }												% Fin de la commande
+					%% Mettre au début du document : \fcours{Seconde} par exemple
+					%% \usepackage[a4paper,top=0.4cm,bottom=1cm,left=0.4cm,right=0.4cm,marginparwidth=0.5cm,footskip=0.6cm]{geometry} 
+
+
+
+
+%---------------------------- Réglages chapitres + table des matières------------------------------------------------------
+\titleformat{\part}[display]
+{\centering\normalfont\Huge\bfseries}
+{\partname}
+{20pt}
+{\rule{6cm}{1pt}\raisebox{-2.1pt}[10pt][10pt]{\quad\decofourleft\decoone\decofourright\quad}\rule{6cm}{1pt} ~\\\vspace{20pt}}
+
+\makeatletter
+\renewcommand\chapter{\global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
+\def\@topnewpage[#1]{#1}
+\makeatother										% Pour avoir le chapitre sur une demie page
+
+\titleformat{\chapter}{\centering\normalfont\Large\bfseries\scshape\color{magentafonce}}{}{1em}{}
+\titlespacing*{\chapter}{0pt}{-18pt plus 0pt minus 2pt}{0pt plus 2pt minus 2pt}		% Réglages espacements (à gauche, au-dessus, en-dessous) de la commande \chapter
+
+\makeatletter
+\newcommand{\twocolumntoc}{		
+  \section*{\huge\centering\contentsname
+    \@mkboth{%
+      \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+  \@starttoc{toc}%
+}
+\makeatother										% Permet de mettre la table des matières en twocolumn 
+												% Mettre après \begin{doc..} \twocolumntoc \clearpage 		% Remplace \tableofcontents par \twocolumntoc en twocolumn
+
+\makeatletter
+\renewcommand{\thesection}{\@arabic\c@section}
+\makeatother										% Enlève la numérotation des chapitres devant les sections
+
+\setcounter{tocdepth}{3} 								% Permet d'afficher dans la table des matières suivant une certaine profondeur : -1=part, 0=chapter, 1=section, ...
+\setcounter{secnumdepth}{3}							% Pour avoir la numérotation des subsubsections avec les classes book et report
+
+\newcommand{\nocontentsline}[3]{}
+\let\oldaddcontentsline\addcontentsline
+\newcommand{\tocless}[2]{\let\addcontentsline\nocontentsline #1{#2}\let\addcontentsline\oldaddcontentsline}	% Pour retirer une section de la table des matières : \tocless\section{...}
+
+
+
+
+
+\setstretch{1}
+\begin{document}
+\fcours{Concours général}
+
+\chapter{Concours général des lycées - Session 2017}
+
+
+\section{Problème 1 : Parties de $\C$ de type $S$}
+
+
+\n Une partie $\mathscr{A}$ non vide de $\mathbb{C}$ (ensemble des nombres complexes) est dite de type $S$, si pour tout $z_{1} \in \mathscr{A}$ et $z_{2} \in \mathscr{A}$ le produit $z_{1} z_{2}$ et la somme $z_{1}^{2}+z_{2}^{2}$ sont encore dans $\mathscr{A}$.\\
+
+\n Dans tout le problème $\mathscr{A}$ désigne une partie de $\mathbb{C}$ de type $S$.\\
+
+\n On note $b(\mathscr{A})$ le nombre de nombres complexes $z$ de $\mathscr{A}$ dont le module $|z|$ est inférieur ou égal à 1 . On note $b(\mathscr{A})=\infty$ si ce nombre est infini.
+
+\subsection{Quelques exemples simples}
+
+\begin{enumerate}
+	\item Les ensembles suivants sont des parties de $\mathbb{C}$ de type $S$ (on ne demande pas de le vérifier), préciser pour chacun d'eux la valeur de $b(\mathscr{A})$ :
+	\begin{enumerate}
+		\item $\mathscr{A}=\{0\}$.
+		\item $\mathscr{A}=\mathbb{C}$.
+		\item $\mathscr{A}=\mathbb{N}$.
+		\item $\mathscr{A}=\mathbb{N}^{*}$.
+	\end{enumerate}
+	\item \begin{enumerate}
+		\item Donner une partie $\mathscr{A}$ de type $S$ telle que $b(\mathscr{A})=0$.
+		\item Donner une partie $\mathscr{A}$ de type $S$ telle que $b(\mathscr{A})=3$.
+	\end{enumerate}
+	\item On note $\overline{\mathscr{A}}=\{\bar{z}, z \in \mathscr{A}\}$, c'est-à-dire la partie de $\mathbb{C}$ constituée des nombres complexes conjugués des éléments de $\mathscr{A}$. Montrer que $\overline{\mathscr{A}}$ est de type $S$ et préciser $b\left(\overline{\mathscr{A}}\right)$.
+\end{enumerate}
+
+
+\subsection{Deux exemples de parties de $\mathbb{C}$ de type $S$}
+
+
+\begin{enumerate}
+	\item On définit le complexe $j$ par $j=\e^{2 i \pi / 3}=-\frac{1}{2}+\frac{1}{2} i \sqrt{3}$ et on note $\mathbb{Z}[j]=\left\{a+b j,(a, b) \in \mathbb{Z}^{2}\right\}$, c'est-à-dire la partie de $\mathbb{C}$ constituée de tous les nombres complexes de la forme $a+b j$, avec $a \in \mathbb{Z}$ et $b \in \mathbb{Z}$.
+	\begin{enumerate}
+		\item Calculer $1+j+j^{2}$.
+		\item Justifier que $\mathbb{Z}[j]$ est de type $S$.
+		\item Montrer que $b(\mathbb{Z}[j])=7$.
+		\item On note $\mathbb{Z}[j]^{*}=\mathbb{Z}[j] \setminus\{0\}$ (les éléments non nuls de $\mathbb{Z}[j]$ ).\\
+		Justifier que $\mathbb{Z}[j]^{*}$ est de type $S$ et déterminer $b\left(\mathbb{Z}[j]^{*}\right)$.
+	\end{enumerate}
+	\item On définit la partie $\mathscr{R}$ de $\mathbb{C}$ par
+	$$\mathscr{R}=\left\{z \in \mathbb{C}, z^{2} \in \mathbb{Z}[j]\right\}$$
+	Ainsi un nombre complexe $z$ est dans $\mathscr{R}$ si et seulement si son carré est dans $\mathbb{Z}[j]$.
+	\begin{enumerate}
+		\item Montrer que $\mathscr{R}$ est de type $S$.
+		\item Déterminer $b(\mathscr{R})$.
+	\end{enumerate}
+\end{enumerate}
+
+\subsection{À la recherche des valeurs possibles de $b(\mathscr{A})$}
+
+
+\begin{enumerate}
+	\item On suppose qu'il existe $a \in \mathscr{A}$ tel que $0<|a|<1$. Montrer que $b(\mathscr{A})=\infty$.
+	\item On considère, dans cette question, un nombre complexe $a$ de module 1. On note $\arg(a)$ l'unique argument de $a$ inclus dans l'intervalle $]-\pi, \pi]$. On suppose de plus que $\arg(a)$ n'est ni un multiple de $\frac{\pi}{6}$, ni un multiple de $\frac{\pi}{4}$.
+	\begin{enumerate}
+		\item Montrer que si $\arg(a) \in\left ] \frac{\pi}{6}, \frac{2 \pi}{3}\right[$, alors l'un des deux nombres complexes $a^{2}+a^{4}$ ou $a^{4}+a^{8}$ possède un module non nul et strictement inférieur à $1$.
+		\item De même montrer que si $\arg(a) \in\left ] 0, \frac{\pi}{6}\right[$, il existe $n \in \mathbb{N}^{*}$ tel que $0<\left|a^{2 n}+a^{4 n}\right|<1$.
+		\item Montrer que si $\arg(a) \in \left ]-\frac{2 \pi}{3}, 0\right[$, alors il existe $n \in \mathbb{N}^{*}$ tel que $0<\left|a^{2 n}+a^{4 n}\right|<1$.
+		\item Conclure qu'il existe toujours $n \in \mathbb{N}^{*}$ tel que $0<\left|a^{2 n}+a^{4 n}\right|<1$.
+	\end{enumerate}
+	\item On suppose, dans cette question, que $b(\mathscr{A})$ est fini et supérieur ou égal à $2$.
+	\begin{enumerate}
+		\item Montrer qu'il existe $a \in \mathscr{A}$ tel que $|a|=1$.
+		\item Quelles sont alors les valeurs possibles pour $\arg(a)$ ?
+		\item En déduire que $b(\mathscr{A}) \leq 17$.
+	\end{enumerate}
+	\item Donner une partie $\mathscr{A}$ de type $S$ telle que $b(\mathscr{A})=5$.
+	\item Donner une partie $\mathscr{A}$ de type $S$ telle que $b(\mathscr{A})=9$.
+	\item Quelles sont les valeurs possibles de $b(\mathscr{A})$ ?
+\end{enumerate}
+
+
+\section{Problème 2 : C'est probablement bon}
+
+
+\subsection{Franck passe un premier examen}
+
+\n Franck doit réussir un examen qui consiste en un Q.C.M. (questionnaire à choix multiples) de dix questions numérotées de 1 à $10$. Il doit répondre à ces questions dans l'ordre et s'il ne répond pas à une question, \textit{on ne prendra pas en compte les réponses qu'il pourrait apporter aux questions suivantes}.\\
+
+\n Chaque bonne réponse rapporte un point, chaque mauvaise réponse fait perdre un point et ne pas répondre à une question ne rapporte aucun point.\\
+
+\n Franck réussira son premier examen si sa note finale est d'au moins \textit{sept} points.\\
+
+\n Franck connaît les bonnes réponses des \textit{six} premières questions. Par contre, pour chacune des quatre questions suivantes, il a une probabilité $p$ de trouver la bonne réponse, avec $0<p<1$.
+
+\begin{enumerate}
+	\item Prouver que si Franck ne répond pas à la question numérotée 9 , il a intérêt à ne pas répondre à la question numérotée 8 pour réussir son examen.
+	\item Franck a-t-il intérêt à répondre à la question numérotée 10 ?
+	\item Déterminer, selon la valeur de $p$, quelle est la meilleure stratégie pour Franck.
+\end{enumerate}
+
+
+\subsection{Franck passe un second examen}
+
+\n Franck passe maintenant un second examen, consistant encore en un Q.C.M, formé cette fois de 50 questions. Les modalités de cet examen sont les mêmes que celles du précédent. Ainsi Franck doit répondre à ces questions dans l'ordre et s'il ne répond pas à une question, \textit{on ne prendra pas en compte les réponses qu'il pourrait apporter aux questions suivantes}. Chaque bonne réponse rapporte un point, chaque mauvaise réponse fait perdre un point et ne pas répondre à une question ne rapporte aucun point.\\
+
+\n Cependant, pour réussir cette fois, Franck doit obtenir une note finale d'au moins 25 points. Franck connaît les réponses aux 24 premières questions. Par contre, pour chacune des 26 questions suivantes, il a une probabilité $p$ de trouver la bonne réponse, avec $0<p<1$.\\
+
+\n Pour tout entier $k$ vérifiant $1 \leq k \leq 26$, on note $P_{k}$ la probabilité que Franck réussisse son examen en ne répondant qu'aux seules $24+k$ premières questions.
+
+\begin{enumerate}
+	\item Prouver que, pour tout entier $k$ vérifiant $1 \leq k \leq 13$, on a $P_{2 k-1}>P_{2 k}$.
+	\item Prouver que, pour tout entier $k$ vérifiant $0 \leq k \leq 12$, on a :
+	$$P_{2 k+1}=\sum_{i=k+1}^{2 k+1}\binom{i}{2k+1} p^{i}(1-p)^{2 k+1-i}$$
+	\item Démontrer que, pour tout entier $k$ vérifiant $0 \leq k \leq 11$, on a :
+	$$P_{2 k+3}-P_{2 k+1}=\binom{k+1}{2k+1} p^{k+1}(1-p)^{k+1}(2 p-1)$$
+	\textit{On pourra utiliser librement la formule de Pascal pour} $0<m<n$ : $\binom{m}{n}=\binom{m-1}{n-1}+\binom{m}{n-1}$.
+	\item Déterminer, selon la valeur de $p$, quelle est la meilleure stratégie pour Franck.
+\end{enumerate}
+
+
+\section{Problème 3 : Dans l'espace tout entier}
+
+\n On rappelle qu'un nombre rationnel est un nombre qui peut s'écrire sous la forme $\frac{a}{b}$, où $a$ et $b$ sont des entiers, avec $b \neq 0$. En particulier, la somme, la différence, le produit et le quotient de deux nombres rationnels est un nombre rationnel.\\
+
+\n L'espace usuel $\mathscr{E}$ est rapporté à un repère orthonormé $\left(O ; \vec{i}, \vec{j}, \vec{k}\right)$. Un point $M(x ; y ; z)$ de $\mathscr{E}$ est dit \textit{entier} lorsque ses trois coordonnées $x$, $y$ et $z$ sont des entiers.\\
+De même, un point $M(x ; y)$ du plan $\mathscr{P}$ rapporté au repère $\left(O ; \vec{i}, \vec{j}\right)$ sera dit \textit{entier} lorsque ses deux coordonnées $x$ et $y$ sont des entiers.\\
+
+\n Dans tout le problème, les triangles seront supposés \textit{non aplatis}.
+
+\subsection{Quelques résultats préliminaires}
+
+\begin{enumerate}
+	\item Soit $A B C$ un triangle du plan $\mathscr{P}$ rapporté au repère $\left (O ; \vec{i}, \vec{j}\right )$, et $H$ le pied de sa hauteur issue de $A$ (c'est-à-dire $H$ est le point d'intersection entre la droite $(B C)$ avec la perpendiculaire passant par $A$ ).
+	\begin{enumerate}
+		\item Prouver que :
+		$$\overrightarrow{A H}=\overrightarrow{A B}+\frac{\overrightarrow{B A} \cdot \overrightarrow{B C}}{B C^{2}} \times \overrightarrow{B C}$$
+		\item En déduire que si $A$, $B$ et $C$ sont des points entiers du plan $\mathscr{P}$ alors les coordonnées de $H$ sont des nombres rationnels.
+		\item Si $A B C$ est un triangle de l'espace $\mathscr{E}$, les résultats établis aux questions \textbf{a.} et \textbf{b.} ci-dessus sont-ils encore valables ?
+	\end{enumerate}
+	\item Existe-t-il un triangle équilatéral dont les sommets sont trois points entiers du plan $\mathscr{P}$ rapporté au repère $\left (O ; \vec{i}, \vec{j}\right )$ ?
+	\item Soit $n$ un entier naturel. Prouver que si $\sqrt{n}$ est un nombre rationnel alors il existe un entier $m$ tel que $n=m^{2}$.
+	\item \begin{enumerate}
+		\item Prouver que si $x$ est un entier alors il existe un entier $t$ tel que $x^{2}$ soit égal à $8 t$ ou à $8 t+1$ ou à $8 t+4$.
+		\item Prouver que si $a, b, c$ et $d$ sont des entiers tels que $7 a^{2}=b^{2}+c^{2}+d^{2}$, alors $a=b=c=d=0$.
+	\end{enumerate}
+\end{enumerate}
+
+
+\subsection{Étude des triangles de l'espace $\mathscr{E}$ à sommets entiers}
+
+
+\n On rappelle que si $\theta$ est la mesure en radian d'un angle non droit d'un triangle (non aplati), on a $\tan (\theta)=\frac{\sin (\theta)}{\cos (\theta)}$.\\
+
+\n Un entier $k \geq 1$ est dit \textit{sans facteur carré}, si $k=1$ ou s'il peut se décomposer en un produit de nombres premiers deux à deux distincts.
+
+\begin{enumerate}
+	\item Donner un triangle équilatéral dont les sommets sont trois points entiers de l'espace $\mathscr{E}$.
+	\item Soit $T$ un triangle dont les trois sommets sont des points entiers de l'espace $\mathscr{E}$.
+	\begin{enumerate}
+		\item Prouver que, pour tout angle $\theta$ non droit de $T$, le nombre $\tan ^{2}(\theta)$ est rationnel.
+		\item Prouver qu'il existe un unique entier $k \geq 1$, sans facteur carré, tel que pour tout angle $\theta$ non droit de $T$, le nombre $\tan (\theta)$ puisse s'écrire sous la forme $r \sqrt{k}$, où $r$ est un nombre rationnel non nul.
+		\item En utilisant la question \textbf{1.} de la partie 1, prouver qu'il existe des entiers $a_{1}$, $a_{2}$, $a_{3}$, $u_{1}$, $u_{2}$ et $u_{3}$ non tous nuls vérifiant le système :
+		$$E(3, k)\left\{\begin{array}{c}
+k\left(a_{1}^{2}+a_{2}^{2}+a_{3}^{2}\right)=u_{1}^{2}+u_{2}^{2}+u_{3}^{2} \\
+a_{1} u_{1}+a_{2} u_{2}+a_{3} u_{3}=0
+\end{array}\right.$$
+	(\textit{Remarque} : L'entier $k$ est celui trouvé à la question \textbf{2.b.})
+	\end{enumerate}
+	\item Soit $k$ un entier strictement positif et sans facteur carré. On suppose qu'il existe des entiers $a_{1}$, $a_{2}$, $a_{3}$, $u_{1}$, $u_{2}$ et $u_{3}$ non tous nuls vérifiant le système $E(3, k)$.\\
+	Soit $T$ un triangle de l'espace $\mathscr{E}$. On suppose que, pour tout angle $\theta$ non droit de $T$, le nombre $\tan (\theta)$ peut s'écrire sous la forme $r \sqrt{k}$, où $r$ est un nombre rationnel non nul.\\
+	Montrer qu'il existe un triangle dont les trois sommets sont entiers et ayant les mêmes angles que $T$.
+	\item \begin{enumerate}
+		\item Soit $T$ un triangle isocèle de l'espace $\mathscr{E}$ dont les côtés sont de longueurs 3, 3 et 2.\\
+		Existe-t-il un triangle de l'espace $\mathscr{E}$ dont les trois sommets sont entiers et ayant les mêmes angles que $T$ ?
+		\item Soit $T$ un triangle isocèle de l'espace $\mathscr{E}$ dont les côtés sont de longueurs 2, 2 et 3.\\
+		Existe-t-il un triangle de l'espace $\mathscr{E}$ dont les trois sommets sont entiers et ayant les mêmes angles que $T$ ?
+	\end{enumerate}
+	\textit{Remarque} : On pourra librement utiliser l'identité suivante, valable pour tous réels $a$, $b$, $c$, $d$, $e$ et $f$ :
+	$$\left(a^{2}+b^{2}+c^{2}\right)\left(d^{2}+e^{2}+f^{2}\right)-(a d+b e+c f)^{2}=(a e-b d)^{2}+(a f-c d)^{2}+(b f-c e)^{2}$$
+\end{enumerate}
+
+\end{document}
